@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+echo "🔍 Running full lint, format check, and build before push..."
+bun run lint || { echo "❌ Lint failed"; exit 1; }
+bun run format || { echo "❌ Format check failed"; exit 1; }
+bun run build || { echo "❌ Build failed"; exit 1; }
+echo "✅ All checks passed. Pushing..."

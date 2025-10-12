@@ -13,7 +13,8 @@
       "!.next",
       "!dist",
       "!build",
-      "!prisma/generated"
+      "!prisma/generated",
+      "!src/components/ui"
     ]
   },
   "formatter": {

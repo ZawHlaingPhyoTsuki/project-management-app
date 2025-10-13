@@ -2,14 +2,46 @@ import {
   AlignStartHorizontal,
   AudioLines,
   Calendar,
+  Link,
   Rows3,
 } from "lucide-react";
-import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AvatarGroup, AvatarGroupTooltip } from "@/components/ui/avatar-group";
+import { Button } from "@/components/ui/button";
+import { Label } from "../ui/label";
+
+const AVATARS = [
+  {
+    src: "https://pbs.twimg.com/profile_images/1593304942210478080/TUYae5z7_400x400.jpg",
+    fallback: "CN",
+    tooltip: "Shadcn",
+  },
+  {
+    src: "https://pbs.twimg.com/profile_images/1909615404789506048/MTqvRsjo_400x400.jpg",
+    fallback: "SK",
+    tooltip: "Skyleen",
+  },
+  {
+    src: "https://pbs.twimg.com/profile_images/1677042510839857154/Kq4tpySA_400x400.jpg",
+    fallback: "AW",
+    tooltip: "Adam Wathan",
+  },
+  {
+    src: "https://pbs.twimg.com/profile_images/1783856060249595904/8TfcCN0r_400x400.jpg",
+    fallback: "GR",
+    tooltip: "Guillermo Rauch",
+  },
+  {
+    src: "https://pbs.twimg.com/profile_images/1534700564810018816/anAuSfkp_400x400.jpg",
+    fallback: "JH",
+    tooltip: "Jhey",
+  },
+];
 
 export default function SecondHeader() {
   return (
-    <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
-      <div className="flex w-full items-center gap-1 px-1.5 lg:gap-2 lg:px-3.5">
+    <header className="flex h-(--header-height) shrink-0 items-center justify-between gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) px-1.5 lg:px-3.5">
+      <div className="flex items-center gap-1 lg:gap-2  ">
         <Button variant="ghost">
           <Rows3 />
           List
@@ -25,6 +57,27 @@ export default function SecondHeader() {
         <Button variant="ghost">
           <AudioLines />
           Analytics
+        </Button>
+      </div>
+      <div className="flex gap-2 items-center">
+        <Label className="hidden lg:block">Last updated 3 days ago</Label>
+        <AvatarGroup variant="motion" className="h-12 -space-x-3">
+          {AVATARS.map((avatar) => (
+            <Avatar
+              key={avatar.src}
+              className="size-8 border-3 border-background"
+            >
+              <AvatarImage src={avatar.src} />
+              <AvatarFallback>{avatar.fallback}</AvatarFallback>
+              <AvatarGroupTooltip>
+                <p>{avatar.tooltip}</p>
+              </AvatarGroupTooltip>
+            </Avatar>
+          ))}
+        </AvatarGroup>
+        <Button variant="secondary" size="sm">
+          <Link />
+          Share
         </Button>
       </div>
     </header>

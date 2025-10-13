@@ -34,7 +34,7 @@ export function NavWorkspace({
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>Workspaces</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible

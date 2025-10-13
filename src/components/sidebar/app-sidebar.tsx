@@ -15,8 +15,9 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import type { User } from "better-auth";
-import { BookOpen, Bot, Settings2, SquareTerminal } from "lucide-react";
+import { Bot, SquareTerminal } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type * as React from "react";
 import { NavMain } from "@/components/sidebar/nav-main";
 import { NavSecondary } from "@/components/sidebar/nav-secondary";
@@ -51,12 +52,12 @@ const data = {
     },
     {
       title: "Projects",
-      url: "#",
+      url: "/dashboard/projects",
       icon: IconFolder,
     },
     {
       title: "Drafts",
-      url: "#",
+      url: "/dashboard/drafts",
       icon: IconFolder,
     },
     {
@@ -66,12 +67,12 @@ const data = {
     },
     {
       title: "Analytics",
-      url: "#",
+      url: "/dashboard/analytics",
       icon: IconChartBar,
     },
     {
       title: "Team",
-      url: "#",
+      url: "/dashboard/teams",
       icon: IconUsers,
     },
   ],
@@ -111,17 +112,17 @@ const data = {
   ],
   workspace: [
     {
-      title: "Playground",
+      title: "Trello Workspace",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
+          title: "Board",
           url: "#",
         },
         {
-          title: "Starred",
+          title: "Members",
           url: "#",
         },
         {
@@ -149,52 +150,6 @@ const data = {
         },
       ],
     },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
   ],
 };
 
@@ -203,8 +158,11 @@ interface AppSideBarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ user, ...props }: AppSideBarProps) {
+  const pathname = usePathname();
+  console.log(pathname);
+
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="offcanvas" {...props} className="no-scrollbar">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -220,8 +178,8 @@ export function AppSidebar({ user, ...props }: AppSideBarProps) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
+      <SidebarContent className="no-scrollbar">
+        <NavMain items={data.navMain} pathname={pathname} />
         <NavWorkspace items={data.workspace} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>

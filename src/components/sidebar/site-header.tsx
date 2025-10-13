@@ -21,7 +21,7 @@ export function SiteHeader() {
             className="size-7 hidden sm:flex"
           >
             <a
-              href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard"
+              href="https://github.com/ZawHlaingPhyoTsuki/project-management-app/tree/main"
               rel="noopener noreferrer"
               target="_blank"
               className="dark:text-foreground"

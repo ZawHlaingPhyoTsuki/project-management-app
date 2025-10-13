@@ -1,22 +1,56 @@
-import { ChartAreaInteractive } from "@/components/Sidebar/chart-area-interactive";
-import { DataTable } from "@/components/Sidebar/data-table";
-import { SectionCards } from "@/components/Sidebar/section-cards";
-import { SiteHeader } from "@/components/Sidebar/site-header";
+"use client";
 
-import data from "./data.json";
+import SecondHeader from "@/components/dashboard/SecondHeader";
+import TaskCard from "@/components/dashboard/TaskCard";
+import TaskList from "@/components/dashboard/TaskList";
+import { SiteHeader } from "@/components/sidebar/site-header";
 
 export default function Page() {
   return (
     <>
       <SiteHeader />
+      <SecondHeader />
       <div className="flex flex-1 flex-col">
-        <div className="@container/main flex flex-1 flex-col gap-2">
-          <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            <SectionCards />
-            <div className="px-4 lg:px-6">
-              <ChartAreaInteractive />
+        <div className="@container/main flex flex-1 flex-col">
+          {/* Kanban Board Container */}
+          <div className="flex-1 px-4 py-4 overflow-x-auto custom-scrollbar-horizontal">
+            <div className="flex gap-4 lg:gap-6 min-w-max h-full">
+              <TaskList title="To Do">
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+              </TaskList>
+              <TaskList title="In Progress">
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+              </TaskList>
+              <TaskList title="Review">
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+              </TaskList>
+              <TaskList title="Done">
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+              </TaskList>
+              <TaskList title="Backlog">
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+                <TaskCard />
+              </TaskList>
             </div>
-            <DataTable data={data} />
           </div>
         </div>
       </div>

@@ -300,7 +300,10 @@ export default function SignUpForm() {
 
             <FieldDescription className="text-center">
               Already have an account?{" "}
-              <Link href="/sign-in" className="underline underline-offset-4">
+              <Link
+                href="/sign-in"
+                className="underline underline-offset-4 pl-1"
+              >
                 Sign In
               </Link>
             </FieldDescription>

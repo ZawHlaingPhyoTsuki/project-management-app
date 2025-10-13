@@ -102,15 +102,7 @@ export default function LoginForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <div className="flex items-center justify-between">
-                    <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Link
-                      href="/"
-                      className="text-sm text-foreground hover:text-primary transition-all duration-150 border-b border-transparent hover:border-primary"
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
+                  <FieldLabel htmlFor="password">Password</FieldLabel>
                   <Input
                     id="password"
                     type="password"
@@ -124,21 +116,27 @@ export default function LoginForm() {
               )}
             />
 
-            {/* Remember me */}
-            <Controller
-              name="rememberMe"
-              control={form.control}
-              render={({ field }) => (
-                <Field orientation="horizontal">
-                  <Checkbox
-                    id="rememberMe"
-                    checked={field.value}
-                    onCheckedChange={(v) => field.onChange(!!v)}
-                  />
-                  <FieldLabel htmlFor="rememberMe">Remember me</FieldLabel>
-                </Field>
-              )}
-            />
+            <Field orientation="horizontal">
+              {/* Remember me */}
+              <Controller
+                name="rememberMe"
+                control={form.control}
+                render={({ field }) => (
+                  <Field orientation="horizontal">
+                    <Checkbox
+                      id="rememberMe"
+                      checked={field.value}
+                      onCheckedChange={(v) => field.onChange(!!v)}
+                    />
+                    <FieldLabel htmlFor="rememberMe">Remember me</FieldLabel>
+                  </Field>
+                )}
+              />
+              {/* Forgot password */}
+              <Button variant="link" asChild className="px-0">
+                <Link href="/">Forgot password?</Link>
+              </Button>
+            </Field>
 
             {/* Submit */}
             <Field>
@@ -192,7 +190,10 @@ export default function LoginForm() {
             </Field>
             <FieldDescription className="text-center">
               Don&apos;t have an account?{" "}
-              <Link href="/sign-up" className="underline underline-offset-4">
+              <Link
+                href="/sign-up"
+                className="underline underline-offset-4 pl-1"
+              >
                 Sign up
               </Link>
             </FieldDescription>

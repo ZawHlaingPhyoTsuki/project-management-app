@@ -1,0 +1,11 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated"
+  runtime      = "bun"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}

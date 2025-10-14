@@ -17,7 +17,7 @@ const AVATARS = [
     tooltip: "Shadcn",
   },
   {
-    src: "https://pbs.twimg.com/profile_images/1909615404789506048/MTqvRsjo_400x400.jpg",
+    src: "https://pbs.twimg.com/profile_images/1534700564810018816/anAuSfkp_400x400.jpg",
     fallback: "SK",
     tooltip: "Skyleen",
   },

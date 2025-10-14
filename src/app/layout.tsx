@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Project Management App",
+  title: "Tsukuyomi",
   description: "project management app",
 };
 

@@ -49,13 +49,13 @@ export default function TaskCard({
   progress = "1/4",
 }: TaskCardProps) {
   return (
-    <Card className="py-4 cursor-grab hover:shadow-md transition-shadow duration-200 bg-muted">
+    <Card className="cursor-grab bg-muted py-4 transition-shadow duration-200 hover:shadow-md">
       <CardHeader className="px-4 pb-3">
         <CardTitle className="flex justify-between text-base">
           {title}
           <SquarePen
             size={16}
-            className="text-muted-foreground hover:text-foreground cursor-pointer"
+            className="cursor-pointer text-muted-foreground hover:text-foreground"
           />
         </CardTitle>
         <CardDescription className="text-sm">{description}</CardDescription>
@@ -74,23 +74,20 @@ export default function TaskCard({
             </Badge>
           )}
         </div>
-        <Separator
-          className="my-4 bg-muted-foreground/40
-         border border-dashed"
-        />
-        <div className="flex justify-between items-center">
+        <Separator className="my-4 border border-dashed bg-muted-foreground/40" />
+        <div className="flex items-center justify-between">
           {/* Info Badge */}
           <div className="flex gap-2 px-4">
             <Button variant="secondary" size="sm" className="h-6 text-xs">
-              <Calendar className="w-3 h-3 mr-1" />
+              <Calendar className="mr-1 h-3 w-3" />
               {date}
             </Button>
             <Button variant="secondary" size="sm" className="h-6 text-xs">
-              <MessageSquare className="w-3 h-3 mr-1" />
+              <MessageSquare className="mr-1 h-3 w-3" />
               {comments}
             </Button>
             <Button variant="secondary" size="sm" className="h-6 text-xs">
-              <LoaderCircle className="w-3 h-3 mr-1" />
+              <LoaderCircle className="mr-1 h-3 w-3" />
               {progress}
             </Button>
           </div>

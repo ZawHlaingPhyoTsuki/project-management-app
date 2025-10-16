@@ -40,8 +40,8 @@ const AVATARS = [
 
 export default function SecondHeader() {
   return (
-    <header className="flex h-(--header-height) shrink-0 items-center justify-between gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) px-1.5 lg:px-3.5">
-      <div className="flex items-center gap-1 lg:gap-2  ">
+    <header className="flex h-(--header-height) shrink-0 items-center justify-between gap-2 border-b px-1.5 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) lg:px-3.5">
+      <div className="flex items-center gap-1 lg:gap-2">
         <Button variant="ghost">
           <Rows3 />
           List
@@ -59,9 +59,9 @@ export default function SecondHeader() {
           Analytics
         </Button>
       </div>
-      <div className="flex gap-2 items-center">
+      <div className="flex items-center gap-2">
         <Label className="hidden lg:block">Last updated 3 days ago</Label>
-        <AvatarGroup variant="motion" className="h-12 -space-x-3">
+        <AvatarGroup variant="motion" className="-space-x-3 h-12">
           {AVATARS.map((avatar) => (
             <Avatar
               key={avatar.src}

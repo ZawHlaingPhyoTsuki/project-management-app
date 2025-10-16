@@ -17,7 +17,7 @@ export default function TaskList({
   return (
     <Card className="w-100 flex-shrink-0 gap-0 pt-4 pb-0">
       <CardHeader className="">
-        <CardTitle className="text-lg font-semibold flex justify-between items-center">
+        <CardTitle className="flex items-center justify-between font-semibold text-lg">
           {title}
           <div className="flex gap-1">
             <Button size="icon-sm" variant="ghost">
@@ -32,7 +32,7 @@ export default function TaskList({
       <CardContent
         className={cn(
           className,
-          "px-4 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar-vertical",
+          "custom-scrollbar-vertical max-h-[70vh] space-y-4 overflow-y-auto px-4",
         )}
       >
         {children}

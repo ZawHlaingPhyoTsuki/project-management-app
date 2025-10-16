@@ -28,6 +28,9 @@
       "recommended": true,
       "suspicious": {
         "noUnknownAtRules": "off"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "info"
       }
     },
     "domains": {

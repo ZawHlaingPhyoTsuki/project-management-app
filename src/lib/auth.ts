@@ -13,6 +13,16 @@ export const auth = betterAuth({
       // Send an email to the user with a link to reset their password
     },
   },
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        required: false,
+        defaultValue: "",
+        input: false,
+      },
+    },
+  },
   // socialProviders: {
   //   google: {
   //     clientId: getEnvVar("GOOGLE_CLIENT_ID"),

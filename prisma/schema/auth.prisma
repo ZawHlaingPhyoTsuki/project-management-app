@@ -9,6 +9,13 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
+  workspaces       Workspace[]
+  workspaceMembers WorkspaceMember[]
+  boardMembers     BoardMember[]
+  taskCards        TaskCard[]
+  ShareableLink    ShareableLink[]
+  Invitation       Invitation[]
+
   @@unique([email])
   @@map("user")
 }

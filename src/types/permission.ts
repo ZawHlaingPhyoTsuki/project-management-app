@@ -9,11 +9,9 @@ export enum Action {
   VIEW = "view",
   UPDATE = "update",
   DELETE = "delete",
-}
 
-export enum Role {
-  OWNER = "OWNER",
-  ADMIN = "ADMIN",
-  MEMBER = "MEMBER",
-  VIEWER = "VIEWER",
+  INVITE = "invite",
+  REMOVE = "remove",
+  ARCHIVE = "archive",
+  ASSIGN = "assign",
 }

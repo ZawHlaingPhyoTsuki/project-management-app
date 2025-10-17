@@ -99,10 +99,10 @@ export default function SignUpForm() {
           },
           onSuccess: async () => {
             router.push("/dashboard");
+            toast.success("Account created successfully!");
           },
         },
       });
-      toast.success("Account created successfully!");
     } catch {
       toast.error("Failed to create account. Please try again.");
     } finally {

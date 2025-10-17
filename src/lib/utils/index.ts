@@ -5,4 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export * from "./generateToken";
 export * from "./getEnv";
+// export * from "./checkRole";

@@ -13,14 +13,10 @@ export const auth = betterAuth({
       // Send an email to the user with a link to reset their password
     },
   },
-  user: {
-    additionalFields: {
-      role: {
-        type: "string",
-        required: false,
-        defaultValue: "",
-        input: false,
-      },
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 300, // 5 minutes
     },
   },
   // socialProviders: {

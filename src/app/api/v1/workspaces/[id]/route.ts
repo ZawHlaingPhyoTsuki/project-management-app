@@ -8,7 +8,7 @@ import { Action, Resource } from "@/types/permission";
 // GET /api/v1/workspaces/:id - Get a workspace
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // Check Authentication
@@ -19,10 +19,12 @@ export async function GET(
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { id } = await params;
+
     // Find Workspace belonging to logged in user
     const workspace = await prisma.workspace.findFirst({
       where: {
-        id: params.id,
+        id: id,
         members: {
           some: {
             userId: session.user.id,
@@ -74,7 +76,7 @@ export async function GET(
 // PUT /api/v1/workspaces/:id - Update a workspace
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // Check Authentication
@@ -85,14 +87,17 @@ export async function PUT(
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check Permissions
+    const { id } = await params;
+
+    // Find Workspace belonging to logged in user
     const workspaceMember = await prisma.workspaceMember.findFirst({
       where: {
-        workspaceId: params.id,
+        workspaceId: id,
         userId: session.user.id,
       },
     });
 
+    // Check Permissions
     if (
       !workspaceMember ||
       !can(workspaceMember.role, Resource.WORKSPACE, Action.UPDATE)
@@ -107,7 +112,7 @@ export async function PUT(
     const { name, description } = await req.json();
 
     const workspace = await prisma.workspace.update({
-      where: { id: params.id },
+      where: { id: id },
       data: {
         ...(name && { name }),
         ...(description !== undefined && { description }),
@@ -132,7 +137,7 @@ export async function PUT(
 // DELETE /api/v1/workspaces/:id - Delete a workspace
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // Check Authentication
@@ -143,14 +148,17 @@ export async function DELETE(
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check Permissions
+    const { id } = await params;
+
+    // Find Workspace belonging to logged in user
     const workspaceMember = await prisma.workspaceMember.findFirst({
       where: {
-        workspaceId: params.id,
+        workspaceId: id,
         userId: session.user.id,
       },
     });
 
+    // Check Permissions
     if (
       !workspaceMember ||
       !can(workspaceMember.role, Resource.WORKSPACE, Action.DELETE)
@@ -163,7 +171,7 @@ export async function DELETE(
 
     // Delete Workspace
     await prisma.workspace.delete({
-      where: { id: params.id },
+      where: { id: id },
     });
 
     return Response.json({

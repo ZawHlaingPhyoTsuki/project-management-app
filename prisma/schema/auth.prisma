@@ -15,6 +15,7 @@ model User {
   taskCards        TaskCard[]
   ShareableLink    ShareableLink[]
   Invitation       Invitation[]
+  Board            Board[]
 
   @@unique([email])
   @@map("user")

@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 
-// POST /api/v1/share/links/:linkId/disable - Disable a shareable link
+// POST /api/v1/share/links/:linkId/enable - Enable a shareable link
 export async function POST(
   _req: NextRequest,
   { params }: { params: Promise<{ linkId: string }> },
@@ -34,16 +34,16 @@ export async function POST(
 
     const updatedLink = await prisma.shareableLink.update({
       where: { id: linkId },
-      data: { isActive: false },
+      data: { isActive: true },
     });
 
     return Response.json({
       success: true,
       data: updatedLink,
-      message: "Shareable link disabled successfully",
+      message: "Shareable link enabled successfully",
     });
   } catch (error) {
-    console.error("Disable shareable link error:", error);
+    console.error("Enable shareable link error:", error);
     return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }

@@ -1,17 +1,17 @@
 export enum Resource {
-  WORKSPACE = "workspace",
-  BOARD = "board",
-  TASK = "task",
+  WORKSPACE = "WORKSPACE",
+  BOARD = "BOARD",
+  TASK = "TASK",
 }
 
 export enum Action {
-  CREATE = "create",
-  VIEW = "view",
-  UPDATE = "update",
-  DELETE = "delete",
-
-  INVITE = "invite",
-  REMOVE = "remove",
-  ARCHIVE = "archive",
-  ASSIGN = "assign",
+  CREATE = "CREATE",
+  VIEW = "VIEW",
+  UPDATE = "UPDATE",
+  DELETE = "DELETE", // ❌ Permanently removes from database
+  INVITE = "INVITE",
+  REMOVE = "REMOVE", // 👥 Remove a user from workspace/board & 🚫 Unassign a user from a task
+  ARCHIVE = "ARCHIVE", // 📦 Moves to trash
+  RESTORE = "RESTORE", // 🔄 Recover from trash
+  ASSIGN = "ASSIGN",
 }

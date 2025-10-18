@@ -12,9 +12,11 @@ datasource db {
 
 // -- Workspace
 model Workspace {
-  id          String  @id @default(cuid())
+  id          String    @id @default(cuid())
   name        String
   description String?
+  isArchived  Boolean   @default(false)
+  archivedAt  DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -51,9 +53,11 @@ enum Role {
 
 // -- Board
 model Board {
-  id          String  @id @default(cuid())
+  id          String    @id @default(cuid())
   name        String
   description String?
+  isArchived  Boolean   @default(false)
+  archivedAt  DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -64,6 +68,8 @@ model Board {
   workspaceId   String
   workspace     Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   Invitation    Invitation[]
+  createdById   String
+  createdBy     User            @relation(fields: [createdById], references: [id])
 
   @@map("board")
 }
@@ -87,6 +93,8 @@ model TaskList {
   name      String
   position  Int
   taskCards TaskCard[]
+  isArchived Boolean   @default(false)
+  archivedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -104,6 +112,8 @@ model TaskCard {
   description String?
   dueDate     DateTime?
   position    Int
+  isArchived  Boolean   @default(false)
+  archivedAt  DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

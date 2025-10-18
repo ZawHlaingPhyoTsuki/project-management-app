@@ -3,36 +3,37 @@ import { Role } from "../../prisma/generated/enums";
 
 export const permissions: Record<Resource, Partial<Record<Action, Role[]>>> = {
   [Resource.WORKSPACE]: {
-    [Action.CREATE]: [Role.ADMIN],
+    [Action.CREATE]: [],
     [Action.VIEW]: [Role.ADMIN, Role.OWNER, Role.MEMBER, Role.VIEWER],
     [Action.UPDATE]: [Role.ADMIN, Role.OWNER],
-    [Action.DELETE]: [Role.ADMIN],
+    [Action.DELETE]: [Role.OWNER], // 🗑️ PERMANENT deletion
 
-    [Action.INVITE]: [Role.ADMIN, Role.OWNER],
-    [Action.REMOVE]: [Role.ADMIN, Role.OWNER],
-    [Action.ARCHIVE]: [Role.ADMIN, Role.OWNER],
+    [Action.INVITE]: [Role.ADMIN, Role.OWNER], // 👥 Invite members to workspace
+    [Action.REMOVE]: [Role.ADMIN, Role.OWNER], // 👥 Remove members
+    [Action.ARCHIVE]: [Role.ADMIN, Role.OWNER], // 📦 Soft delete to trash
+    [Action.RESTORE]: [Role.OWNER, Role.ADMIN], // 🔄 Recover from trash
   },
   [Resource.BOARD]: {
     [Action.CREATE]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
     [Action.VIEW]: [Role.ADMIN, Role.OWNER, Role.MEMBER, Role.VIEWER],
     [Action.UPDATE]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
-    [Action.DELETE]: [Role.ADMIN, Role.OWNER],
+    [Action.DELETE]: [Role.OWNER, Role.ADMIN], // 🗑️ PERMANENT deletion
 
-    [Action.INVITE]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
-    [Action.REMOVE]: [Role.ADMIN, Role.OWNER],
-    [Action.ARCHIVE]: [Role.ADMIN, Role.OWNER],
-    [Action.ASSIGN]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
+    [Action.INVITE]: [Role.ADMIN, Role.OWNER, Role.MEMBER], // 👥 Invite members to board
+    [Action.REMOVE]: [Role.ADMIN, Role.OWNER], // 👥 Remove members
+    [Action.ARCHIVE]: [Role.ADMIN, Role.OWNER], // 📦 Soft delete to trash
+    [Action.RESTORE]: [Role.OWNER, Role.ADMIN], // 🔄 Recover from trash
   },
   [Resource.TASK]: {
     [Action.CREATE]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
     [Action.VIEW]: [Role.ADMIN, Role.OWNER, Role.MEMBER, Role.VIEWER],
     [Action.UPDATE]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
-    [Action.DELETE]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
+    [Action.DELETE]: [Role.ADMIN, Role.OWNER], // 🗑️ PERMANENT deletion
 
-    [Action.ASSIGN]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
-    [Action.ARCHIVE]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
-    [Action.INVITE]: [],
-    [Action.REMOVE]: [],
+    [Action.ARCHIVE]: [Role.OWNER, Role.ADMIN, Role.MEMBER], // 📦 Soft delete to trash
+    [Action.RESTORE]: [Role.OWNER, Role.ADMIN, Role.MEMBER], // 🔄 Recover from trash
+    [Action.ASSIGN]: [Role.OWNER, Role.ADMIN, Role.MEMBER], // 📋 Assign Task
+    [Action.REMOVE]: [Role.OWNER, Role.ADMIN, Role.MEMBER], // 👥 Unassign users
   },
 };
 

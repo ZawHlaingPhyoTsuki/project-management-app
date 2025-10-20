@@ -10,6 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { TAG_COLORS, type TagColor } from "@/lib/utils/tagColors";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 
@@ -31,10 +33,17 @@ const AVATARS = [
   },
 ];
 
+interface Tag {
+  id: string;
+  name: string;
+  color: TagColor; // Using predefined color names
+  description?: string;
+}
+
 interface TaskCardProps {
   title?: string;
   description?: string;
-  categories?: string[];
+  tags?: Tag[];
   date?: string;
   comments?: number;
   progress?: string;
@@ -43,7 +52,13 @@ interface TaskCardProps {
 export default function TaskCard({
   title = "Design system update",
   description = "Enhance design system for consistency and usability",
-  categories = ["Design", "Marketing", "New Releases", "Design1", "Design2"],
+  tags = [
+    { id: "1", name: "Design", color: "blue" },
+    { id: "2", name: "Marketing", color: "red" },
+    { id: "3", name: "New Releases", color: "green" },
+    { id: "4", name: "Design1", color: "yellow" },
+    { id: "5", name: "Design2", color: "purple" },
+  ],
   date = "Jan 25",
   comments = 4,
   progress = "1/4",
@@ -61,16 +76,27 @@ export default function TaskCard({
         <CardDescription className="text-sm">{description}</CardDescription>
       </CardHeader>
       <CardContent className="px-0">
-        {/* Category Badge */}
-        <div className="flex flex-wrap gap-2 px-4">
-          {categories.slice(0, 3).map((badge) => (
-            <Badge key={badge} variant="secondary" className="text-xs">
-              {badge}
-            </Badge>
-          ))}
-          {categories.length > 3 && (
+        {/* Dynamic Colored Tags */}
+        <div className="flex flex-wrap gap-2 px-4 cursor-default">
+          {tags.slice(0, 3).map((tag) => {
+            const colorClasses = TAG_COLORS[tag.color];
+            return (
+              <Badge
+                key={tag.id}
+                variant="secondary"
+                className={cn(
+                  "text-xs font-medium border",
+                  colorClasses.bg,
+                  colorClasses.text,
+                )}
+              >
+                {tag.name}
+              </Badge>
+            );
+          })}
+          {tags.length > 3 && (
             <Badge variant="secondary" className="text-xs">
-              +{categories.length - 3}
+              +{tags.length - 3}
             </Badge>
           )}
         </div>
@@ -78,21 +104,21 @@ export default function TaskCard({
         <div className="flex items-center justify-between">
           {/* Info Badge */}
           <div className="flex gap-2 px-4">
-            <Button variant="secondary" size="sm" className="h-6 text-xs">
+            <Button variant="outline" size="sm" className="h-6 text-xs">
               <Calendar className="mr-1 h-3 w-3" />
               {date}
             </Button>
-            <Button variant="secondary" size="sm" className="h-6 text-xs">
+            <Button variant="outline" size="sm" className="h-6 text-xs">
               <MessageSquare className="mr-1 h-3 w-3" />
               {comments}
             </Button>
-            <Button variant="secondary" size="sm" className="h-6 text-xs">
+            <Button variant="outline" size="sm" className="h-6 text-xs">
               <LoaderCircle className="mr-1 h-3 w-3" />
               {progress}
             </Button>
           </div>
           {/* Avatars */}
-          <div className="flex gap-1 pr-3">
+          <div className="flex gap-1 pr-3 cursor-default">
             {AVATARS.slice(0, 2).map((avatar, index) => {
               if (AVATARS.length > 2 && index === 1) {
                 return (
@@ -104,7 +130,6 @@ export default function TaskCard({
                 );
               }
 
-              // Otherwise show normal avatar
               return (
                 <Avatar key={avatar.src} className="size-7">
                   <AvatarImage src={avatar.src} alt={avatar.tooltip} />

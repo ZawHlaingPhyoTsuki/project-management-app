@@ -27,6 +27,7 @@ model Workspace {
   Invitation    Invitation[]
   createdById   String
   createdBy     User              @relation(fields: [createdById], references: [id])
+  Tag           Tag[]
 
   @@map("workspace")
 }
@@ -89,18 +90,18 @@ model BoardMember {
 
 // -- Task List (columns in the board)
 model TaskList {
-  id        String     @id @default(cuid())
-  name      String
-  position  Int
-  taskCards TaskCard[]
+  id         String    @id @default(cuid())
+  name       String
+  position   Int
   isArchived Boolean   @default(false)
   archivedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  boardId String
-  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId   String
+  board     Board      @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  taskCards TaskCard[]
 
   @@map("task_list")
 }
@@ -119,9 +120,10 @@ model TaskCard {
   updatedAt DateTime @updatedAt
 
   taskListId String
-  taskList   TaskList @relation(fields: [taskListId], references: [id], onDelete: Cascade)
+  taskList   TaskList      @relation(fields: [taskListId], references: [id], onDelete: Cascade)
   assigneeId String?
-  assignee   User?    @relation(fields: [assigneeId], references: [id])
+  assignee   User?         @relation(fields: [assigneeId], references: [id])
+  tags       TaskCardTag[]
 
   @@map("card")
 }
@@ -189,4 +191,38 @@ enum InvitationStatus {
   DECLINED
   EXPIRED
   CANCELLED
+}
+
+// -- Tag
+model Tag {
+  id          String  @id @default(cuid())
+  name        String
+  color       String 
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  taskCards TaskCardTag[]
+
+  @@unique([workspaceId, name])
+  @@map("tag")
+}
+
+model TaskCardTag {
+  id String @id @default(cuid())
+
+  taskCardId String
+  taskCard   TaskCard @relation(fields: [taskCardId], references: [id], onDelete: Cascade)
+
+  tagId String
+  tag   Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([taskCardId, tagId])
+  @@map("task_card_tag")
 }

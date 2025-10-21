@@ -33,9 +33,7 @@ export async function GET(
         },
       },
       include: {
-        assignee: {
-          select: { id: true, name: true, email: true, image: true },
-        },
+        assignees: true,
         taskList: {
           select: { id: true, name: true, boardId: true },
         },
@@ -122,9 +120,7 @@ export async function PUT(
         ...(taskListId && { taskListId }),
       },
       include: {
-        assignee: {
-          select: { id: true, name: true, email: true, image: true },
-        },
+        assignees: true,
         taskList: {
           select: { id: true, name: true, boardId: true },
         },

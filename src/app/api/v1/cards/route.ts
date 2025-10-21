@@ -43,9 +43,7 @@ export async function GET(req: NextRequest) {
     const taskCards = await prisma.taskCard.findMany({
       where,
       include: {
-        assignee: {
-          select: { id: true, name: true, email: true, image: true },
-        },
+        assignees: true,
         taskList: {
           select: { id: true, name: true, boardId: true },
         },
@@ -131,12 +129,10 @@ export async function POST(req: NextRequest) {
         taskListId,
         position: finalPosition,
         dueDate: dueDate ? new Date(dueDate) : null,
-        assigneeId: assigneeId || null,
+        // assigneeId: assigneeId || null,
       },
       include: {
-        assignee: {
-          select: { id: true, name: true, email: true, image: true },
-        },
+        assignees: true,
         taskList: {
           select: { id: true, name: true, boardId: true },
         },

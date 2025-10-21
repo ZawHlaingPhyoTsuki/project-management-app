@@ -1,26 +1,26 @@
 // utils/tagColors.ts
 export const TAG_COLORS = {
-  blue: {
+  BLUE: {
     bg: "bg-blue-200",
     text: "text-blue-700",
   },
-  red: {
+  RED: {
     bg: "bg-red-200",
     text: "text-red-700",
   },
-  green: {
+  GREEN: {
     bg: "bg-green-200",
     text: "text-green-700",
   },
-  yellow: {
+  YELLOW: {
     bg: "bg-yellow-200",
     text: "text-yellow-700",
   },
-  purple: {
+  PURPLE: {
     bg: "bg-purple-200",
     text: "text-purple-700",
   },
-  pink: {
+  PINK: {
     bg: "bg-pink-200",
     text: "text-pink-700",
   },
@@ -28,6 +28,12 @@ export const TAG_COLORS = {
 
 export type TagColor = keyof typeof TAG_COLORS;
 
-export const getTagColorClasses = (color: TagColor) => {
-  return TAG_COLORS[color];
+export const DEFAULT_TAG_COLOR: TagColor = "BLUE";
+
+export const getTagColorClasses = (color: string) => {
+  const tagColor = Object.keys(TAG_COLORS).includes(color)
+    ? (color as TagColor)
+    : DEFAULT_TAG_COLOR;
+
+  return TAG_COLORS[tagColor];
 };

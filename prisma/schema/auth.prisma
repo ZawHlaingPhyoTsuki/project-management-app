@@ -12,10 +12,10 @@ model User {
   workspaces       Workspace[]
   workspaceMembers WorkspaceMember[]
   boardMembers     BoardMember[]
-  taskCards        TaskCard[]
   ShareableLink    ShareableLink[]
   Invitation       Invitation[]
   Board            Board[]
+  TaskCardAssignee TaskCardAssignee[]
 
   @@unique([email])
   @@map("user")

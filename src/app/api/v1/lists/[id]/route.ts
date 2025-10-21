@@ -34,9 +34,7 @@ export async function GET(
       include: {
         taskCards: {
           include: {
-            assignee: {
-              select: { id: true, name: true, email: true, image: true },
-            },
+            assignees: true,
           },
           orderBy: { position: "asc" },
         },

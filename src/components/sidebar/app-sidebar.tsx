@@ -159,7 +159,6 @@ interface AppSideBarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ user, ...props }: AppSideBarProps) {
   const pathname = usePathname();
-  console.log(pathname);
 
   return (
     <Sidebar collapsible="offcanvas" {...props} className="no-scrollbar">

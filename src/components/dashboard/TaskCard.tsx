@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { TAG_COLORS, type TagColor } from "@/lib/utils/tagColors";
+import { getTagColorClasses } from "@/lib/utils/tagColors";
+import type { TaskCardWithAssigneeAndTags } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 
@@ -33,53 +34,52 @@ const AVATARS = [
   },
 ];
 
-interface Tag {
-  id: string;
-  name: string;
-  color: TagColor; // Using predefined color names
-  description?: string;
-}
-
 interface TaskCardProps {
-  title?: string;
-  description?: string;
-  tags?: Tag[];
-  date?: string;
-  comments?: number;
-  progress?: string;
+  task: TaskCardWithAssigneeAndTags;
 }
 
-export default function TaskCard({
-  title = "Design system update",
-  description = "Enhance design system for consistency and usability",
-  tags = [
-    { id: "1", name: "Design", color: "blue" },
-    { id: "2", name: "Marketing", color: "red" },
-    { id: "3", name: "New Releases", color: "green" },
-    { id: "4", name: "Design1", color: "yellow" },
-    { id: "5", name: "Design2", color: "purple" },
-  ],
-  date = "Jan 25",
-  comments = 4,
-  progress = "1/4",
-}: TaskCardProps) {
+export default function TaskCard({ task }: TaskCardProps) {
+  const formatDueDate = (date: Date | string | null): string => {
+    if (!date) return "No date";
+
+    // If it's already a Date object
+    if (date instanceof Date) {
+      return date.getDate().toString();
+    }
+
+    // If it's a string, convert to Date first
+    if (typeof date === "string") {
+      const dateObj = new Date(date);
+      return !Number.isNaN(dateObj.getTime())
+        ? dateObj.getDate().toString()
+        : "Invalid date";
+    }
+
+    return "No date";
+  };
   return (
     <Card className="cursor-grab bg-muted py-4 transition-shadow duration-200 hover:shadow-md">
       <CardHeader className="px-4 pb-3">
-        <CardTitle className="flex justify-between text-base">
-          {title}
+        <CardTitle className="flex justify-between items-start gap-2 text-base">
+          <span className="flex-1 line-clamp-2 break-words min-w-0">
+            {task.title}
+          </span>
           <SquarePen
             size={16}
-            className="cursor-pointer text-muted-foreground hover:text-foreground"
+            className="cursor-pointer text-muted-foreground hover:text-foreground flex-shrink-0"
           />
         </CardTitle>
-        <CardDescription className="text-sm">{description}</CardDescription>
+        <CardDescription className="text-sm">
+          {task.description}
+        </CardDescription>
       </CardHeader>
       <CardContent className="px-0">
         {/* Dynamic Colored Tags */}
         <div className="flex flex-wrap gap-2 px-4 cursor-default">
-          {tags.slice(0, 3).map((tag) => {
-            const colorClasses = TAG_COLORS[tag.color];
+          {task.tags.slice(0, 3).map((tag) => {
+            // console.log(tag);
+            // const colorClasses = TAG_COLORS[tag.color];
+            const colorClasses = getTagColorClasses(tag.color);
             return (
               <Badge
                 key={tag.id}
@@ -94,9 +94,9 @@ export default function TaskCard({
               </Badge>
             );
           })}
-          {tags.length > 3 && (
+          {task.tags.length > 3 && (
             <Badge variant="secondary" className="text-xs">
-              +{tags.length - 3}
+              +{task.tags.length - 3}
             </Badge>
           )}
         </div>
@@ -104,17 +104,19 @@ export default function TaskCard({
         <div className="flex items-center justify-between">
           {/* Info Badge */}
           <div className="flex gap-2 px-4">
-            <Button variant="outline" size="sm" className="h-6 text-xs">
-              <Calendar className="mr-1 h-3 w-3" />
-              {date}
-            </Button>
+            {task.dueDate ? (
+              <Button variant="outline" size="sm" className="h-6 text-xs">
+                <Calendar className="mr-1 h-3 w-3" />
+                {formatDueDate(task.dueDate)}
+              </Button>
+            ) : null}
             <Button variant="outline" size="sm" className="h-6 text-xs">
               <MessageSquare className="mr-1 h-3 w-3" />
-              {comments}
+              {/* {comments} */}dd
             </Button>
             <Button variant="outline" size="sm" className="h-6 text-xs">
               <LoaderCircle className="mr-1 h-3 w-3" />
-              {progress}
+              {/* {progress} */} progress
             </Button>
           </div>
           {/* Avatars */}

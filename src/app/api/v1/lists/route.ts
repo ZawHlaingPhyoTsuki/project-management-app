@@ -23,26 +23,25 @@ export async function GET(req: NextRequest) {
       return Response.json({ error: "Board ID is required" }, { status: 400 });
     }
 
-    // Check board access
-    const boardMember = await prisma.boardMember.findFirst({
-      where: {
-        boardId,
-        userId: session.user.id,
-      },
-    });
+    // // Check board access
+    // const boardMember = await prisma.boardMember.findFirst({
+    //   where: {
+    //     boardId,
+    //     userId: session.user.id,
+    //   },
+    // });
 
-    if (!boardMember) {
-      return Response.json({ error: "Board access denied" }, { status: 403 });
-    }
+    // if (!boardMember) {
+    //   return Response.json({ error: "Board access denied" }, { status: 403 });
+    // }
 
     const taskLists = await prisma.taskList.findMany({
       where: { boardId },
       include: {
         taskCards: {
           include: {
-            assignee: {
-              select: { id: true, name: true, email: true, image: true },
-            },
+            assignees: true,
+            tags: true,
           },
           orderBy: { position: "asc" },
         },

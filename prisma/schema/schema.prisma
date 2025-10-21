@@ -50,6 +50,8 @@ enum Role {
   ADMIN
   MEMBER
   VIEWER
+
+  @@map("role")
 }
 
 // -- Board
@@ -121,11 +123,22 @@ model TaskCard {
 
   taskListId String
   taskList   TaskList      @relation(fields: [taskListId], references: [id], onDelete: Cascade)
-  assigneeId String?
-  assignee   User?         @relation(fields: [assigneeId], references: [id])
-  tags       TaskCardTag[]
+  assignees  TaskCardAssignee[]
+  tags       Tag[]
 
   @@map("card")
+}
+
+model TaskCardAssignee {
+  id          String   @id @default(cuid())
+  taskCardId  String
+  taskCard    TaskCard @relation(fields: [taskCardId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  assignedAt  DateTime @default(now())
+
+  @@unique([taskCardId, userId])
+  @@map("task_card_assignee")
 }
 
 // -- ShareableLink
@@ -150,11 +163,14 @@ model ShareableLink {
   workspace   Workspace? @relation(fields: [workspaceId], references: [id])
 
   @@index([token])
+  @@map("shareable_link")
 }
 
 enum ResourceType {
   WORKSPACE
   BOARD
+
+  @@map("resource_type")
 }
 
 // -- Invitation
@@ -191,13 +207,15 @@ enum InvitationStatus {
   DECLINED
   EXPIRED
   CANCELLED
+
+  @@map("invitation_status")
 }
 
 // -- Tag
 model Tag {
   id          String  @id @default(cuid())
   name        String
-  color       String 
+  color       TagColor
   description String?
 
   createdAt DateTime @default(now())
@@ -205,24 +223,19 @@ model Tag {
 
   workspaceId String
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-
-  taskCards TaskCardTag[]
+  taskCards   TaskCard[] // Direct many-to-many relationship
 
   @@unique([workspaceId, name])
   @@map("tag")
 }
 
-model TaskCardTag {
-  id String @id @default(cuid())
+enum TagColor {
+  BLUE
+  RED
+  GREEN
+  YELLOW
+  PURPLE
+  PINK
 
-  taskCardId String
-  taskCard   TaskCard @relation(fields: [taskCardId], references: [id], onDelete: Cascade)
-
-  tagId String
-  tag   Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-
-  @@unique([taskCardId, tagId])
-  @@map("task_card_tag")
+  @@map("tag_color")
 }

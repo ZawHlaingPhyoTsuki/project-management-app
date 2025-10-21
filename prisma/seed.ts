@@ -4,28 +4,28 @@ import {
   PrismaClient,
   ResourceType,
   Role,
+  TagColor,
 } from "./generated/client";
 
 const prisma = new PrismaClient();
 
-// Available tag colors from your constants
+// Available tag colors from your Prisma enum
 const TAG_COLORS = [
-  "blue",
-  "red",
-  "green",
-  "yellow",
-  "purple",
-  "pink",
+  TagColor.BLUE,
+  TagColor.RED,
+  TagColor.GREEN,
+  TagColor.YELLOW,
+  TagColor.PURPLE,
+  TagColor.PINK,
 ] as const;
 
 async function main() {
   console.log("🌱 Starting seed...");
 
-  // Clear existing data
+  // Clear existing data - note: no more taskCardTag
   await prisma.$transaction([
-    prisma.taskCardTag.deleteMany(),
-    prisma.tag.deleteMany(),
     prisma.taskCard.deleteMany(),
+    prisma.tag.deleteMany(),
     prisma.taskList.deleteMany(),
     prisma.boardMember.deleteMany(),
     prisma.board.deleteMany(),
@@ -98,7 +98,7 @@ async function main() {
   const tagData = workspaces.flatMap((workspace) =>
     Array.from({ length: faker.number.int({ min: 5, max: 15 }) }, () => ({
       id: faker.string.uuid(),
-      name: faker.word.adjective() + " " + faker.word.noun(),
+      name: `${faker.word.adjective()} ${faker.word.noun()}`,
       color: faker.helpers.arrayElement(TAG_COLORS),
       description: faker.datatype.boolean(0.4) ? faker.lorem.sentence() : null,
       createdAt: faker.date.past({ years: 1 }),
@@ -172,12 +172,18 @@ async function main() {
   );
 
   await prisma.taskList.createMany({ data: taskListData });
-  const taskLists = await prisma.taskList.findMany();
+  const taskLists = await prisma.taskList.findMany({
+    include: {
+      board: true,
+    },
+  });
   console.log(`📝 Created ${taskLists.length} task lists`);
 
-  // Create task cards in batch
-  const taskCardData = taskLists.flatMap((taskList) =>
-    Array.from(
+  // Create task cards with tags directly
+  console.log("📄 Creating task cards with tags...");
+
+  for (const taskList of taskLists) {
+    const taskCardsForList = Array.from(
       { length: faker.number.int({ min: 3, max: 8 }) },
       (_, cardIndex) => ({
         id: faker.string.uuid(),
@@ -200,29 +206,39 @@ async function main() {
           ? faker.helpers.arrayElement(users).id
           : null,
       }),
-    ),
-  );
-
-  await prisma.taskCard.createMany({ data: taskCardData });
-  const taskCards = await prisma.taskCard.findMany();
-  console.log(`📄 Created ${taskCards.length} task cards`);
-
-  // Create task card tags in batch
-  const taskCardTagData = taskCards.flatMap((taskCard) => {
-    const selectedTags = faker.helpers.arrayElements(
-      tags,
-      faker.number.int({ min: 0, max: 3 }),
     );
-    return selectedTags.map((tag) => ({
-      id: faker.string.uuid(),
-      taskCardId: taskCard.id,
-      tagId: tag.id,
-      createdAt: faker.date.recent({ days: 10 }),
-    }));
-  });
 
-  await prisma.taskCardTag.createMany({ data: taskCardTagData });
-  console.log(`🔖 Created ${taskCardTagData.length} task card tags`);
+    // Create task cards for this list
+    await prisma.taskCard.createMany({ data: taskCardsForList });
+
+    // Get the created task cards for this list
+    const createdTaskCards = await prisma.taskCard.findMany({
+      where: { taskListId: taskList.id },
+    });
+
+    // Connect tags to task cards
+    for (const taskCard of createdTaskCards) {
+      const selectedTags = faker.helpers.arrayElements(
+        tags.filter((tag) => tag.workspaceId === taskList.board.workspaceId),
+        faker.number.int({ min: 0, max: 3 }),
+      );
+
+      if (selectedTags.length > 0) {
+        // Connect tags to this task card using the direct many-to-many relationship
+        await prisma.taskCard.update({
+          where: { id: taskCard.id },
+          data: {
+            tags: {
+              connect: selectedTags.map((tag) => ({ id: tag.id })),
+            },
+          },
+        });
+      }
+    }
+  }
+
+  const taskCards = await prisma.taskCard.findMany();
+  console.log(`📄 Created ${taskCards.length} task cards with tags`);
 
   // Create shareable links in batch
   const shareableLinkData = workspaces.flatMap((workspace) =>
@@ -282,7 +298,6 @@ async function main() {
   console.log(`   📝 ${taskLists.length} task lists`);
   console.log(`   📄 ${taskCards.length} task cards`);
   console.log(`   🏷️  ${tags.length} tags`);
-  console.log(`   🔖 ${taskCardTagData.length} task card tags`);
   console.log(`   🔗 ${shareableLinkData.length} shareable links`);
   console.log(`   ✉️  ${invitationData.length} invitations`);
 }

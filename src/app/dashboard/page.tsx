@@ -1,10 +1,12 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import AddTaskList from "@/app/dashboard/_components/AddTaskList";
+import TaskCard from "@/app/dashboard/_components/TaskCard";
+import TaskList from "@/app/dashboard/_components/TaskList";
 import SecondHeader from "@/components/dashboard/SecondHeader";
-import TaskCard from "@/components/dashboard/TaskCard";
-import TaskList from "@/components/dashboard/TaskList";
 import { SiteHeader } from "@/components/sidebar/site-header";
+import { dummyTaskLists } from "@/constants/dummyData";
 import { getTaskList } from "@/services/taskListService";
 
 export default function Page() {
@@ -15,8 +17,12 @@ export default function Page() {
     });
   }
 
+  // biome-ignore lint/correctness/noUnusedVariables: <no problem>
   const { data } = useTaskList();
-  console.log(data?.data);
+  // console.log(data?.data);
+
+  //  const taskLists = data?.data || dummyTaskLists;
+  const taskLists = dummyTaskLists;
 
   return (
     <>
@@ -27,48 +33,16 @@ export default function Page() {
           {/* Kanban Board Container */}
           <div className="custom-scrollbar-horizontal flex-1 overflow-x-auto px-4 py-4">
             <div className="flex h-full min-w-max gap-4 lg:gap-6">
-              {data?.data.map((taskList) => (
-                <TaskList key={taskList.id} title={taskList.name}>
-                  {taskList.taskCards.map((task) => (
-                    <TaskCard key={task.id} task={task} />
-                  ))}
-                </TaskList>
-              ))}
-              {/* <TaskList title="To Do">
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-              </TaskList>
-              <TaskList title="In Progress">
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-              </TaskList>
-              <TaskList title="Review">
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-              </TaskList>
-              <TaskList title="Done">
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-              </TaskList>
-              <TaskList title="Backlog">
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-                <TaskCard />
-              </TaskList> */}
+              {taskLists
+                .sort((a, b) => a.position - b.position)
+                .map((taskList) => (
+                  <TaskList key={taskList.id} title={taskList.name}>
+                    {taskList.taskCards.map((task) => (
+                      <TaskCard key={task.id} task={task} />
+                    ))}
+                  </TaskList>
+                ))}
+              <AddTaskList />
             </div>
           </div>
         </div>

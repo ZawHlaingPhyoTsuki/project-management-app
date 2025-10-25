@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { title, description, taskListId, position, dueDate, assigneeId } =
+    const { title, description, taskListId, position, dueDate } =
       await req.json();
 
     if (!title || !taskListId) {

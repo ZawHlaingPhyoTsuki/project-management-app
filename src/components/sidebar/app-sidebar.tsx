@@ -34,11 +34,6 @@ import {
 import { NavWorkspace } from "./nav-documents";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "https://github.com/shadcn.png",
-  },
   navMain: [
     {
       title: "Dashboard",
@@ -51,23 +46,8 @@ const data = {
       icon: IconListDetails,
     },
     {
-      title: "Projects",
-      url: "/dashboard/projects",
-      icon: IconFolder,
-    },
-    {
-      title: "Drafts",
-      url: "/dashboard/drafts",
-      icon: IconFolder,
-    },
-    {
       title: "Schedule",
       url: "#",
-      icon: IconChartBar,
-    },
-    {
-      title: "Analytics",
-      url: "/dashboard/analytics",
       icon: IconChartBar,
     },
     {

@@ -7,13 +7,14 @@ import type {
 
 export type {
   Board,
+  Tag,
   TaskCard,
   TaskList,
   User,
 } from "../../prisma/generated/client";
 
 export interface TaskCardWithAssigneeAndTags extends TaskCard {
-  assignee: User | null;
+  assignees: User[];
   tags: Tag[];
 }
 

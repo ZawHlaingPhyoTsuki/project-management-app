@@ -1,8 +1,8 @@
 import { Ellipsis, Plus } from "lucide-react";
 import type * as React from "react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
 
 interface TaskListProps extends React.PropsWithChildren {
   className?: string;
@@ -15,9 +15,9 @@ export default function TaskList({
   children,
 }: TaskListProps) {
   return (
-    <Card className="w-100 flex-shrink-0 gap-0 pt-4 pb-0">
+    <Card className="w-90 flex-shrink-0 gap-0 pt-4 pb-0">
       <CardHeader className="">
-        <CardTitle className="flex items-center justify-between font-semibold text-lg">
+        <CardTitle className="flex items-center justify-between font-semibold text-base tracking-widest">
           {title}
           <div className="flex gap-1">
             <Button size="icon-sm" variant="ghost">

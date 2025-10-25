@@ -122,7 +122,7 @@ model TaskCard {
   updatedAt DateTime @updatedAt
 
   taskListId String
-  taskList   TaskList      @relation(fields: [taskListId], references: [id], onDelete: Cascade)
+  taskList   TaskList           @relation(fields: [taskListId], references: [id], onDelete: Cascade)
   assignees  TaskCardAssignee[]
   tags       Tag[]
 
@@ -130,12 +130,12 @@ model TaskCard {
 }
 
 model TaskCardAssignee {
-  id          String   @id @default(cuid())
-  taskCardId  String
-  taskCard    TaskCard @relation(fields: [taskCardId], references: [id], onDelete: Cascade)
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  assignedAt  DateTime @default(now())
+  id         String   @id @default(cuid())
+  taskCardId String
+  taskCard   TaskCard @relation(fields: [taskCardId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  assignedAt DateTime @default(now())
 
   @@unique([taskCardId, userId])
   @@map("task_card_assignee")
@@ -213,7 +213,7 @@ enum InvitationStatus {
 
 // -- Tag
 model Tag {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String
   color       TagColor
   description String?
@@ -222,7 +222,7 @@ model Tag {
   updatedAt DateTime @updatedAt
 
   workspaceId String
-  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspace   Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   taskCards   TaskCard[] // Direct many-to-many relationship
 
   @@unique([workspaceId, name])

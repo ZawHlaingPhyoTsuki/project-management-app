@@ -73,6 +73,7 @@ export async function POST(req: NextRequest) {
     const { name, boardId, position } = await req.json();
 
     // Validations
+    // will add valiation with zod later
 
     if (!name || !boardId) {
       return Response.json(

@@ -20,6 +20,8 @@ import {
 
 export function NavWorkspace({
   items,
+  title,
+  emptyMessage,
 }: {
   items: {
     title: string;
@@ -31,10 +33,12 @@ export function NavWorkspace({
       url: string;
     }[];
   }[];
+  title: string;
+  emptyMessage?: string;
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Workspaces</SidebarGroupLabel>
+      <SidebarGroupLabel>{title}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible

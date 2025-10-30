@@ -37,24 +37,45 @@ const AVATARS = [
     tooltip: "Jhey",
   },
 ];
+type ViewMode = "list" | "board" | "calendar" | "analytics";
 
-export default function SecondHeader() {
+interface SecondHeaderProps {
+  currentView: ViewMode;
+  setView: (view: ViewMode) => void;
+}
+
+export default function SecondHeader({
+  currentView,
+  setView,
+}: SecondHeaderProps) {
   return (
     <header className="flex h-(--header-height) shrink-0 items-center justify-between gap-2 border-b px-1.5 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) lg:px-3.5">
       <div className="flex items-center gap-1 lg:gap-2">
-        <Button variant="ghost">
-          <Rows3 />
-          List
-        </Button>
-        <Button variant="ghost">
+        <Button
+          variant={currentView === "board" ? "secondary" : "ghost"}
+          onClick={() => setView("board")}
+        >
           <AlignStartHorizontal />
           Board
         </Button>
-        <Button variant="ghost">
-          <Calendar />
-          Calender
+        <Button
+          variant={currentView === "list" ? "secondary" : "ghost"}
+          onClick={() => setView("list")}
+        >
+          <Rows3 />
+          List
         </Button>
-        <Button variant="ghost">
+        <Button
+          variant={currentView === "calendar" ? "secondary" : "ghost"}
+          onClick={() => setView("calendar")}
+        >
+          <Calendar />
+          Calendar
+        </Button>
+        <Button
+          variant={currentView === "analytics" ? "secondary" : "ghost"}
+          onClick={() => setView("analytics")}
+        >
           <AudioLines />
           Analytics
         </Button>

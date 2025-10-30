@@ -1,13 +1,15 @@
+import path from "node:path";
 import { faker } from "@faker-js/faker";
+import dotenv from "dotenv";
+import prisma from "@/lib/db";
 import {
   InvitationStatus,
-  PrismaClient,
   ResourceType,
   Role,
   TagColor,
 } from "./generated/client";
 
-const prisma = new PrismaClient();
+dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 // Available tag colors from your Prisma enum
 const TAG_COLORS = [
@@ -22,8 +24,9 @@ const TAG_COLORS = [
 async function main() {
   console.log("🌱 Starting seed...");
 
-  // Clear existing data - note: no more taskCardTag
+  // Clear existing data - include TaskCardAssignee
   await prisma.$transaction([
+    prisma.taskCardAssignee.deleteMany(),
     prisma.taskCard.deleteMany(),
     prisma.tag.deleteMany(),
     prisma.taskList.deleteMany(),
@@ -179,11 +182,11 @@ async function main() {
   });
   console.log(`📝 Created ${taskLists.length} task lists`);
 
-  // Create task cards with tags directly
-  console.log("📄 Creating task cards with tags...");
+  // Create task cards WITHOUT assigneeId (since we'll use TaskCardAssignee)
+  console.log("📄 Creating task cards...");
 
-  for (const taskList of taskLists) {
-    const taskCardsForList = Array.from(
+  const taskCardData = taskLists.flatMap((taskList) =>
+    Array.from(
       { length: faker.number.int({ min: 3, max: 8 }) },
       (_, cardIndex) => ({
         id: faker.string.uuid(),
@@ -202,43 +205,69 @@ async function main() {
         createdAt: faker.date.past({ years: 1 }),
         updatedAt: faker.date.recent({ days: 30 }),
         taskListId: taskList.id,
-        assigneeId: faker.datatype.boolean(0.7)
-          ? faker.helpers.arrayElement(users).id
-          : null,
       }),
+    ),
+  );
+
+  await prisma.taskCard.createMany({ data: taskCardData });
+  const taskCards = await prisma.taskCard.findMany();
+  console.log(`📄 Created ${taskCards.length} task cards`);
+
+  // Create multiple assignees for task cards
+  console.log("👥 Creating task card assignees...");
+
+  const taskCardAssigneeData = taskCards.flatMap((taskCard) => {
+    // Random number of assignees (0-4 users per task card)
+    const numberOfAssignees = faker.number.int({ min: 0, max: 4 });
+    if (numberOfAssignees === 0) return [];
+
+    // Select random users to assign
+    const assigneeUsers = faker.helpers.arrayElements(users, numberOfAssignees);
+
+    return assigneeUsers.map((user) => ({
+      id: faker.string.uuid(),
+      taskCardId: taskCard.id,
+      userId: user.id,
+      assignedAt: faker.date.recent({ days: 30 }),
+    }));
+  });
+
+  await prisma.taskCardAssignee.createMany({ data: taskCardAssigneeData });
+  console.log(
+    `👥 Created ${taskCardAssigneeData.length} task card assignee relationships`,
+  );
+
+  // Connect tags to task cards
+  console.log("🏷️  Connecting tags to task cards...");
+
+  for (const taskCard of taskCards) {
+    // Find the task list and board to get workspace for tag filtering
+    const taskList = taskLists.find((tl) => tl.id === taskCard.taskListId);
+    if (!taskList) continue;
+
+    const workspaceTags = tags.filter(
+      (tag) => tag.workspaceId === taskList.board.workspaceId,
     );
 
-    // Create task cards for this list
-    await prisma.taskCard.createMany({ data: taskCardsForList });
+    const selectedTags = faker.helpers.arrayElements(
+      workspaceTags,
+      faker.number.int({ min: 0, max: 3 }),
+    );
 
-    // Get the created task cards for this list
-    const createdTaskCards = await prisma.taskCard.findMany({
-      where: { taskListId: taskList.id },
-    });
-
-    // Connect tags to task cards
-    for (const taskCard of createdTaskCards) {
-      const selectedTags = faker.helpers.arrayElements(
-        tags.filter((tag) => tag.workspaceId === taskList.board.workspaceId),
-        faker.number.int({ min: 0, max: 3 }),
-      );
-
-      if (selectedTags.length > 0) {
-        // Connect tags to this task card using the direct many-to-many relationship
-        await prisma.taskCard.update({
-          where: { id: taskCard.id },
-          data: {
-            tags: {
-              connect: selectedTags.map((tag) => ({ id: tag.id })),
-            },
+    if (selectedTags.length > 0) {
+      // Connect tags to this task card using the direct many-to-many relationship
+      await prisma.taskCard.update({
+        where: { id: taskCard.id },
+        data: {
+          tags: {
+            connect: selectedTags.map((tag) => ({ id: tag.id })),
           },
-        });
-      }
+        },
+      });
     }
   }
 
-  const taskCards = await prisma.taskCard.findMany();
-  console.log(`📄 Created ${taskCards.length} task cards with tags`);
+  console.log("✅ Connected tags to task cards");
 
   // Create shareable links in batch
   const shareableLinkData = workspaces.flatMap((workspace) =>
@@ -291,15 +320,61 @@ async function main() {
   await prisma.invitation.createMany({ data: invitationData });
   console.log(`✉️  Created ${invitationData.length} invitations`);
 
+  // Print statistics
   console.log("✅ Seed completed!");
   console.log(`   👥 ${users.length} users`);
   console.log(`   🏢 ${workspaces.length} workspaces`);
   console.log(`   📋 ${boards.length} boards`);
   console.log(`   📝 ${taskLists.length} task lists`);
   console.log(`   📄 ${taskCards.length} task cards`);
+  console.log(
+    `   👥 ${taskCardAssigneeData.length} task card assignee relationships`,
+  );
   console.log(`   🏷️  ${tags.length} tags`);
   console.log(`   🔗 ${shareableLinkData.length} shareable links`);
   console.log(`   ✉️  ${invitationData.length} invitations`);
+
+  // Print some examples of task cards with multiple assignees
+  const taskCardsWithMultipleAssignees = await prisma.taskCard.findMany({
+    where: {
+      assignees: {
+        some: {}, // At least one assignee
+      },
+    },
+    include: {
+      assignees: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+      taskList: {
+        include: {
+          board: {
+            include: {
+              workspace: true,
+            },
+          },
+        },
+      },
+    },
+    take: 5,
+  });
+
+  console.log("\n📊 Examples of task cards with multiple assignees:");
+  taskCardsWithMultipleAssignees.forEach((taskCard, index) => {
+    console.log(`   ${index + 1}. "${taskCard.title}"`);
+    console.log(`      Workspace: ${taskCard.taskList.board.workspace.name}`);
+    console.log(`      Board: ${taskCard.taskList.board.name}`);
+    console.log(
+      `      Assignees: ${taskCard.assignees.map((a) => a.user.name).join(", ")}`,
+    );
+    console.log(`      Total Assignees: ${taskCard.assignees.length}`);
+  });
 }
 
 main()

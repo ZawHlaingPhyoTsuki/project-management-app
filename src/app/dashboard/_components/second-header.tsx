@@ -8,7 +8,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarGroup, AvatarGroupTooltip } from "@/components/ui/avatar-group";
 import { Button } from "@/components/ui/button";
-import { Label } from "../ui/label";
+import { Label } from "@/components/ui/label";
 
 const AVATARS = [
   {
@@ -37,6 +37,7 @@ const AVATARS = [
     tooltip: "Jhey",
   },
 ];
+
 type ViewMode = "list" | "board" | "calendar" | "analytics";
 
 interface SecondHeaderProps {

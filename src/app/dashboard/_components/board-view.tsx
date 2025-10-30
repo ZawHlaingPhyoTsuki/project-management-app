@@ -1,5 +1,5 @@
 import type { TaskListWithCards } from "@/types";
-import AddTaskList from "./AddTaskList";
+import AddTaskList from "./add-task-list";
 import TaskCard from "./task-card";
 import TaskList from "./task-list";
 

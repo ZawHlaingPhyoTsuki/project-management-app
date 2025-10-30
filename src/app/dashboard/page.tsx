@@ -2,11 +2,11 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import SecondHeader from "@/components/dashboard/SecondHeader";
+import SecondHeader from "@/app/dashboard/_components/second-header";
 import { SiteHeader } from "@/components/sidebar/site-header";
 import { dummyTaskLists } from "@/constants/dummyData";
 import { taskListService } from "@/services/tasklist-service";
-import BoardView from "./_components/BoardView";
+import BoardView from "./_components/board-view";
 
 type ViewMode = "list" | "board" | "calendar" | "analytics";
 
@@ -59,7 +59,6 @@ export default function Page() {
 
   return (
     <>
-      <SiteHeader />
       <SecondHeader setView={setView} currentView={view} />
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col">

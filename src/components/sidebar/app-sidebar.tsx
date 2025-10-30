@@ -6,11 +6,9 @@ import {
   IconHelp,
   IconInnerShadowTop,
   IconListDetails,
-  IconPlus,
   IconReport,
   IconSettings,
 } from "@tabler/icons-react";
-import { useQuery } from "@tanstack/react-query";
 import type { User } from "better-auth";
 import { BarChart3, Calendar, FolderKanban, Users } from "lucide-react";
 import Link from "next/link";
@@ -30,29 +28,6 @@ import {
 } from "@/components/ui/sidebar";
 import { NavWorkspace } from "./nav-documents";
 
-// Mock data - replace with actual API calls
-const mockWorkspaces = [
-  {
-    id: "1",
-    name: "Product Development",
-    description: "Main product workspace",
-    boards: [
-      { id: "1", name: "Sprint Board", url: "/dashboard/boards/1" },
-      { id: "2", name: "Backlog", url: "/dashboard/boards/2" },
-      { id: "3", name: "Bug Tracking", url: "/dashboard/boards/3" },
-    ],
-  },
-  {
-    id: "2",
-    name: "Marketing",
-    description: "Marketing campaigns",
-    boards: [
-      { id: "4", name: "Content Calendar", url: "/dashboard/boards/4" },
-      { id: "5", name: "Campaign Planning", url: "/dashboard/boards/5" },
-    ],
-  },
-];
-
 interface AppSideBarProps extends React.ComponentProps<typeof Sidebar> {
   user: User;
 }
@@ -60,22 +35,11 @@ interface AppSideBarProps extends React.ComponentProps<typeof Sidebar> {
 export function AppSidebar({ user, ...props }: AppSideBarProps) {
   const pathname = usePathname();
 
-  // Fetch workspaces and boards (replace with your actual API calls)
-  const { data: workspaces = [] } = useQuery({
-    queryKey: ["workspaces"],
-    queryFn: async () => {
-      // Replace with your actual API call
-      // const response = await fetch("/api/workspaces");
-      // return response.json();
-      return mockWorkspaces;
-    },
-  });
-
   const data = {
     navMain: [
       {
         title: "Dashboard",
-        url: "/dashboard",
+        url: "/dashboard?view=board",
         icon: IconDashboard,
       },
       {
@@ -121,24 +85,43 @@ export function AppSidebar({ user, ...props }: AppSideBarProps) {
         icon: IconHelp,
       },
     ],
-    workspace: workspaces.map((workspace) => ({
-      title: workspace.name,
-      url: `/dashboard/workspaces/${workspace.id}`,
-      icon: FolderKanban,
-      isActive: pathname.includes(`/workspaces/${workspace.id}`),
-      items: [
-        ...workspace.boards.map((board) => ({
-          title: board.name,
-          url: board.url,
-        })),
-        {
-          title: "Create New Board",
-          url: `/dashboard/workspaces/${workspace.id}/create-board`,
-          icon: IconPlus,
-          isCreate: true,
-        },
-      ],
-    })),
+    workspace: [
+      {
+        title: "Workspaces",
+        url: "/dashboard/workspaces",
+        icon: FolderKanban,
+        isActive: true,
+        items: [
+          {
+            title: "Boards",
+            url: "/dashboard/boards/cmhd8gfwr0005jxw6bv6a26h3",
+          },
+          {
+            title: "Marketing",
+            url: "/dashboard/workspaces/2",
+          },
+        ],
+      },
+      {
+        title: "Boards",
+        url: "/dashboard/boards",
+        icon: FolderKanban,
+        items: [
+          {
+            title: "Sprint Board",
+            url: "/dashboard/boards/1",
+          },
+          {
+            title: "Backlog",
+            url: "/dashboard/boards/2",
+          },
+          {
+            title: "Bug Tracking",
+            url: "/dashboard/boards/3",
+          },
+        ],
+      },
+    ],
   };
 
   return (

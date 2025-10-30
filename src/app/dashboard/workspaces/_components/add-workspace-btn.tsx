@@ -14,27 +14,31 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useWorkspace } from "@/hooks/use-workspace";
+import { useWorkspaceStore } from "@/store/use-workspace-store";
 
-export default function AddWorkspace() {
-  const [listName, setListName] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+export default function AddWorkspaceBtn() {
+  const [workspaceName, setWorkspaceName] = useState("");
+  const [workspaceDescription, setWorkspaceDescription] = useState("");
+  const { isWorkspaceModalOpen, setIsWorkspaceModalOpen } = useWorkspaceStore();
   const { createWorkspace, isCreating } = useWorkspace();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!listName.trim()) {
+    if (!workspaceName.trim()) {
       return;
     }
 
     try {
       await createWorkspace({
-        name: listName.trim(),
+        name: workspaceName.trim(),
+        description: workspaceDescription.trim() || null,
       });
 
-      setListName("");
-      setIsOpen(false);
+      setWorkspaceName("");
+      setIsWorkspaceModalOpen(false);
     } catch (error) {
       console.error("Failed to create workspace:", error);
       // You can add toast notification here
@@ -42,7 +46,7 @@ export default function AddWorkspace() {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isWorkspaceModalOpen} onOpenChange={setIsWorkspaceModalOpen}>
       <DialogTrigger asChild>
         <Button variant="secondary" size="sm" type="button">
           <Plus />
@@ -64,11 +68,22 @@ export default function AddWorkspace() {
               <Input
                 id="name"
                 name="name"
-                value={listName}
-                onChange={(e) => setListName(e.target.value)}
+                value={workspaceName}
+                onChange={(e) => setWorkspaceName(e.target.value)}
                 placeholder="Enter workspace name..."
                 disabled={isCreating}
                 autoFocus
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="description">Description (Optional)</Label>
+              <Textarea
+                id="description"
+                value={workspaceDescription}
+                onChange={(e) => setWorkspaceDescription(e.target.value)}
+                placeholder="Enter board description..."
+                disabled={isCreating}
+                rows={3}
               />
             </div>
           </div>
@@ -78,7 +93,10 @@ export default function AddWorkspace() {
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={!listName.trim() || isCreating}>
+            <Button
+              type="submit"
+              disabled={!workspaceName.trim() || isCreating}
+            >
               {isCreating ? "Creating..." : "Create Workspace"}
             </Button>
           </DialogFooter>

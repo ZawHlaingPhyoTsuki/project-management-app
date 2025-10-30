@@ -15,14 +15,14 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useTaskLists } from "@/hooks/use-task-list";
+import { useTaskList } from "@/hooks/use-task-list";
 import { useBoardStore } from "@/store/use-board-store";
 
 export default function AddTaskList() {
   const [listName, setListName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const { currentBoardId } = useBoardStore();
-  const { createTaskList, isCreating } = useTaskLists();
+  const { createTaskList, isCreating } = useTaskList();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

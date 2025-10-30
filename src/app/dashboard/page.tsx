@@ -1,11 +1,9 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import SecondHeader from "@/app/dashboard/_components/second-header";
-import { SiteHeader } from "@/components/sidebar/site-header";
 import { dummyTaskLists } from "@/constants/dummyData";
-import { taskListService } from "@/services/tasklist-service";
+// import { taskListService } from "@/services/tasklist-service";
 import BoardView from "./_components/board-view";
 
 type ViewMode = "list" | "board" | "calendar" | "analytics";
@@ -15,17 +13,17 @@ export default function Page() {
   const router = useRouter();
   const view = (searchParams.get("view") as ViewMode) || "board";
 
-  function useTaskList() {
-    return useQuery({
-      queryKey: ["taskList"],
-      queryFn: () => taskListService.getTaskLists("boardId"),
-    });
-  }
+  // function useTaskList() {
+  //   return useQuery({
+  //     queryKey: ["taskList"],
+  //     queryFn: () => taskListService.getTaskLists("boardId"),
+  //   });
+  // }
 
-  const { data } = useTaskList();
+  // const { data } = useTaskList();
   //  const taskLists = data?.data || dummyTaskLists;
-  const taskLists = data?.data;
-  // const taskLists = dummyTaskLists;
+  // const taskLists = data?.data;
+  const taskLists = dummyTaskLists;
 
   const setView = (newView: ViewMode) => {
     const params = new URLSearchParams(searchParams.toString());

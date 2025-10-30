@@ -1,18 +1,47 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { WorkspaceType } from "@/app/dashboard/workspaces/_components/workspace-list";
-import { workspaceService } from "@/services/workspace-service";
+import { createWorkspace } from "@/actions/create-workspace";
+import { deleteWorkspace } from "@/actions/delete-workspace";
+import { getAllWorkspacesAction } from "@/actions/get-workspace";
 
-export const useWorkspace = (initialData?: WorkspaceType[]) => {
+export interface WorkspaceType {
+  id: string;
+  name: string;
+  description?: string | null;
+  createdAt: Date;
+  _count: {
+    members: number;
+    boards: number;
+  };
+  members: Array<{
+    user: {
+      id: string;
+      name: string | null;
+      email: string;
+      image: string | null;
+    };
+  }>;
+}
+
+export const useWorkspace = () => {
   const queryClient = useQueryClient();
 
+  // Get all workspaces
   const { data: workspaces, isLoading } = useQuery({
     queryKey: ["workspaces"],
-    queryFn: workspaceService.getAllWorkspaces,
-    initialData: initialData ? { data: initialData } : undefined,
+    queryFn: getAllWorkspacesAction,
   });
 
+  // Create a new workspace
   const createWorkspaceMutation = useMutation({
-    mutationFn: workspaceService.createWorkspace,
+    mutationFn: createWorkspace,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+    },
+  });
+
+  // Delete a workspace
+  const deleteWorkspaceMutation = useMutation({
+    mutationFn: deleteWorkspace,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
     },
@@ -23,5 +52,7 @@ export const useWorkspace = (initialData?: WorkspaceType[]) => {
     isLoading,
     createWorkspace: createWorkspaceMutation.mutateAsync,
     isCreating: createWorkspaceMutation.isPending,
+    deleteWorkspace: deleteWorkspaceMutation.mutateAsync,
+    isDeleting: deleteWorkspaceMutation.isPending,
   };
 };

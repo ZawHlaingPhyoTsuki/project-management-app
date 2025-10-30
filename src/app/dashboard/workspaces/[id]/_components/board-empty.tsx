@@ -2,11 +2,11 @@
 
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { useWorkspaceStore } from "@/store/use-workspace-store";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useBoardStore } from "@/store/use-board-store";
 
 export default function BoardEmpty() {
-  const { setIsWorkspaceModalOpen } = useWorkspaceStore();
+  const { setIsBoardModalOpen } = useBoardStore();
 
   return (
     <Card className="text-center py-12">
@@ -16,14 +16,14 @@ export default function BoardEmpty() {
             className="rounded-full py-2"
             variant="secondary"
             size="icon"
-            onClick={() => setIsWorkspaceModalOpen(true)}
+            onClick={() => setIsBoardModalOpen(true)}
           >
             <Plus className="h-6 w-6 text-muted-foreground" />
           </Button>
           <div>
-            <h3 className="font-semibold text-lg">No workspaces yet</h3>
+            <h3 className="font-semibold text-lg">No boards yet</h3>
             <p className="text-muted-foreground mt-1">
-              Create your first workspace to get started
+              Create your first board to get started
             </p>
           </div>
         </div>

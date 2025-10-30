@@ -1,8 +1,8 @@
 import { headers } from "next/headers";
-import { getAllWorkspacesAction } from "@/actions/workspace-action";
-import { SiteHeader } from "@/components/sidebar/site-header";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import Header from "./_components/header";
+import Header from "../../../components/add-header";
+import AddWorkspaceBtn from "./_components/add-workspace-btn";
 import WorkspaceList from "./_components/workspace-list";
 
 export default async function WorkspacesPage() {
@@ -11,28 +11,15 @@ export default async function WorkspacesPage() {
   });
 
   if (!session) {
-    return null;
+    redirect("/sign-in");
   }
-
-  const result = await getAllWorkspacesAction(session.user.id);
-
-  if (!result.success) {
-    return (
-      <>
-        <SiteHeader />
-        <Header />
-        <div className="p-6">
-          <div className="text-red-500">Error: {result.error}</div>
-        </div>
-      </>
-    );
-  }
-
-  const workspaces = result.data ?? [];
 
   return (
     <>
-      <Header />
+      <Header>
+        <AddWorkspaceBtn />
+      </Header>
+
       <div className="flex flex-1 flex-col p-6">
         <div className="@container/main flex flex-1 flex-col">
           <div className="flex items-center justify-between mb-6">
@@ -44,7 +31,7 @@ export default async function WorkspacesPage() {
             </div>
           </div>
 
-          <WorkspaceList initialData={workspaces ?? []} />
+          <WorkspaceList />
         </div>
       </div>
     </>

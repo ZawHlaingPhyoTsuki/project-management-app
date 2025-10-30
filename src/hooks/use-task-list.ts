@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { taskListService } from "@/services/tasklist-service";
+import { createTaskList } from "@/actions/create-tasklist";
 
-export const useTaskLists = () => {
+export const useTaskList = () => {
   const queryClient = useQueryClient();
 
   const createTaskListMutation = useMutation({
-    mutationFn: taskListService.createTaskList,
-    onSuccess: (data, variables) => {
+    mutationFn: createTaskList,
+    onSuccess: (_data, variables) => {
       // Invalidate and refetch task lists for the specific board
       queryClient.invalidateQueries({
         queryKey: ["task-lists", variables.boardId],

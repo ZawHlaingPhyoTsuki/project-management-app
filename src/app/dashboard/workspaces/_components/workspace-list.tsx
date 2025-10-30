@@ -4,31 +4,8 @@ import { useWorkspace } from "@/hooks/use-workspace";
 import WorkspaceCard from "./workspace-card";
 import WorkspaceEmpty from "./workspace-empty";
 
-export interface WorkspaceType {
-  id: string;
-  name: string;
-  description?: string | null;
-  createdAt: Date;
-  _count: {
-    members: number;
-    boards: number;
-  };
-  members: Array<{
-    user: {
-      id: string;
-      name: string | null;
-      email: string;
-      image: string | null;
-    };
-  }>;
-}
-
-interface WorkspaceListProps {
-  initialData: WorkspaceType[];
-}
-
-export default function WorkspaceList({ initialData }: WorkspaceListProps) {
-  const { workspaces, isLoading } = useWorkspace(initialData);
+export default function WorkspaceList() {
+  const { workspaces, isLoading } = useWorkspace();
 
   if (isLoading) {
     return (

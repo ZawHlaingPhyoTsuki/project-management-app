@@ -1,7 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createWorkspace } from "@/actions/create-workspace";
-import { deleteWorkspace } from "@/actions/delete-workspace";
-import { getAllWorkspacesAction } from "@/actions/get-workspace";
+import {
+  createWorkspace,
+  deleteWorkspace,
+  getAllWorkspacesAction,
+} from "@/actions/workspaces";
 
 export interface WorkspaceType {
   id: string;

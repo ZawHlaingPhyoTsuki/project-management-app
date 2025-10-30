@@ -21,7 +21,6 @@ import {
 export function NavWorkspace({
   items,
   title,
-  emptyMessage,
 }: {
   items: {
     title: string;
@@ -34,7 +33,6 @@ export function NavWorkspace({
     }[];
   }[];
   title: string;
-  emptyMessage?: string;
 }) {
   return (
     <SidebarGroup>

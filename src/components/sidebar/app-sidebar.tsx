@@ -143,11 +143,7 @@ export function AppSidebar({ user, ...props }: AppSideBarProps) {
       </SidebarHeader>
       <SidebarContent className="no-scrollbar">
         <NavMain items={data.navMain} pathname={pathname} />
-        <NavWorkspace
-          items={data.workspace}
-          title="Workspaces & Boards"
-          emptyMessage="No workspaces yet. Create your first workspace!"
-        />
+        <NavWorkspace items={data.workspace} title="Workspaces & Boards" />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

@@ -27,7 +27,7 @@ export default function AddBoardBtn({ workspaceId }: AddBoardBtnProps) {
   const [boardName, setBoardName] = useState("");
   const [boardDescription, setBoardDescription] = useState("");
   const { isBoardModalOpen, setIsBoardModalOpen } = useBoardStore();
-  const { createBoard, isCreating } = useBoard();
+  const { createBoard, isCreating } = useBoard(workspaceId);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

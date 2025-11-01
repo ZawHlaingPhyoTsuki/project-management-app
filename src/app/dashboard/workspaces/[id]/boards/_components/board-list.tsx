@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { useBoard } from "@/hooks/use-board";
 import BoardCard from "./board-card";
 import BoardEmpty from "./board-empty";
@@ -14,17 +14,10 @@ export default function BoardList({ workspaceId }: BoardListProps) {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <Skeleton className="h-8 w-48 mb-2" />
-            <Skeleton className="h-4 w-32" />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {[...Array(4)].map(() => (
-            <Skeleton key={crypto.randomUUID()} className="h-40 rounded-lg" />
-          ))}
+      <div className="flex justify-center items-center min-h-[400px]">
+        <div className="text-center space-y-4">
+          <Spinner className="h-8 w-8 mx-auto" />
+          <p className="text-muted-foreground">Loading boards...</p>
         </div>
       </div>
     );

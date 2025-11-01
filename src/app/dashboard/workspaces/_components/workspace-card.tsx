@@ -65,12 +65,12 @@ export default function WorkspaceCard({ workspace }: WorkspaceCardProps) {
       const result = await deleteWorkspace({ workspaceId: workspace.id });
 
       if (result.success) {
-        toast("Workspace deleted", {
+        toast.success("Workspace deleted", {
           description: `${workspace.name} has been successfully deleted.`,
         });
         setShowDeleteDialog(false);
       } else {
-        toast("Error", {
+        toast.error("Error", {
           description: result.error || "Failed to delete workspace",
         });
       }
@@ -87,7 +87,7 @@ export default function WorkspaceCard({ workspace }: WorkspaceCardProps) {
           <div className="flex-1">
             <h3 className="font-semibold text-lg mb-2 line-clamp-2">
               <Link
-                href={`/dashboard/workspaces/${workspace.id}`}
+                href={`/dashboard/workspaces/${workspace.id}/boards`}
                 className="hover:text-primary transition-colors"
               >
                 {workspace.name}

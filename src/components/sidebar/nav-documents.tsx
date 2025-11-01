@@ -1,7 +1,14 @@
 "use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
-
+import {
+  ChevronRight,
+  KanbanSquare,
+  Layout,
+  Settings,
+  Users,
+} from "lucide-react";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import {
   Collapsible,
   CollapsibleContent,
@@ -17,50 +24,88 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { useWorkspace } from "@/hooks/use-workspace";
 
-export function NavWorkspace({
-  items,
-  title,
-}: {
-  items: {
-    title: string;
-    url: string;
-    icon?: LucideIcon;
-    isActive?: boolean;
-    items?: {
-      title: string;
-      url: string;
-    }[];
-  }[];
-  title: string;
-}) {
+export function NavWorkspace({ title }: { title: string }) {
+  const { workspaces, isLoading } = useWorkspace();
+  const reversedWorkspaces = workspaces ? [...workspaces].reverse() : [];
+
+  // Define the sub-items for each workspace
+  const getWorkspaceSubItems = (workspace: (typeof reversedWorkspaces)[0]) => [
+    {
+      title: "Boards",
+      url: `/dashboard/workspaces/${workspace.id}/boards`,
+      icon: KanbanSquare,
+      count: workspace._count.boards,
+    },
+    {
+      title: "Members",
+      url: `/dashboard/workspaces/${workspace.id}/members`,
+      icon: Users,
+      count: workspace._count.members,
+    },
+    {
+      title: "Settings",
+      url: `/dashboard/workspaces/${workspace.id}/settings`,
+      icon: Settings,
+    },
+  ];
+
+  console.log(reversedWorkspaces);
+
+  if (isLoading) {
+    return (
+      <SidebarGroup>
+        <SidebarGroupLabel>{title}</SidebarGroupLabel>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton>
+              <span>Loading...</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroup>
+    );
+  }
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>{title}</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
-          <Collapsible
-            key={item.title}
-            asChild
-            defaultOpen={item.isActive}
-            className="group/collapsible"
-          >
+        {reversedWorkspaces.map((workspace) => (
+          <Collapsible key={workspace.id} asChild className="group/collapsible">
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                <SidebarMenuButton tooltip={workspace.name}>
+                  <Layout />
+                  <span>{workspace.name}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
-                  {item.items?.map((subItem) => (
+                  {getWorkspaceSubItems(workspace).map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
-                          <span>{subItem.title}</span>
-                        </a>
+                        <Link
+                          href={subItem.url}
+                          className="flex items-center justify-between w-full"
+                        >
+                          <div className="flex items-center gap-2">
+                            {subItem.icon && (
+                              <subItem.icon className="h-4 w-4" />
+                            )}
+                            <span>{subItem.title}</span>
+                          </div>
+                          {subItem.count !== undefined && (
+                            <Badge
+                              variant="secondary"
+                              className="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums"
+                            >
+                              {subItem.count}
+                            </Badge>
+                          )}
+                        </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

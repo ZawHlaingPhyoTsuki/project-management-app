@@ -50,7 +50,7 @@ export const useWorkspace = () => {
   });
 
   return {
-    workspaces: workspaces?.data as WorkspaceType[] | undefined,
+    workspaces: workspaces?.data,
     isLoading,
     createWorkspace: createWorkspaceMutation.mutateAsync,
     isCreating: createWorkspaceMutation.isPending,

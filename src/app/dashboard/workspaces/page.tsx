@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import Header from "@/components/add-header";
 import { auth } from "@/lib/auth";
-import Header from "../../../components/add-header";
 import AddWorkspaceBtn from "./_components/add-workspace-btn";
 import WorkspaceList from "./_components/workspace-list";
 

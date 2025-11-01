@@ -1,8 +1,9 @@
-// TaskCard component with safe data handling
 "use client";
 
 import { Calendar, MessageSquare, Plus, SquarePen } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,12 +15,6 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { getTagColorClasses } from "@/lib/utils/tagColors";
 import type { TaskCardWithAssigneeAndTags } from "@/types";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../../../components/ui/avatar";
-import { Button } from "../../../components/ui/button";
 
 interface TaskCardProps {
   task: TaskCardWithAssigneeAndTags;

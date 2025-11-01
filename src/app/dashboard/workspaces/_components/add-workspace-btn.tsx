@@ -38,6 +38,7 @@ export default function AddWorkspaceBtn() {
       });
 
       setWorkspaceName("");
+      setWorkspaceDescription("");
       setIsWorkspaceModalOpen(false);
     } catch (error) {
       console.error("Failed to create workspace:", error);

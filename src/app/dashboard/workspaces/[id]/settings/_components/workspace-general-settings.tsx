@@ -25,7 +25,7 @@ import { useUpdateWorkspace } from "@/hooks/use-workspace";
 import {
   UpdateWorkspaceSchema,
   type UpdateWorkspaceType,
-} from "@/lib/validations/workspace";
+} from "@/validations/workspace";
 
 interface WorkspaceGeneralSettingsProps {
   workspace: {
@@ -119,7 +119,7 @@ export default function WorkspaceGeneralSettings({
           </Button>
         ) : (
           <Button
-            variant="outline"
+            variant="destructive"
             size="icon"
             onClick={handleCancel}
             disabled={isUpdating}
@@ -204,7 +204,7 @@ export default function WorkspaceGeneralSettings({
               form="workspace-settings-form"
               disabled={isUpdating || !form.formState.isDirty}
             >
-              <Save className="h-4 w-4 mr-2" />
+              <Save className="h-4 w-4" />
               {isUpdating ? "Saving..." : "Save Changes"}
             </Button>
           </div>

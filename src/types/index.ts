@@ -26,7 +26,4 @@ export interface TaskListWithCards extends TaskList {
 export interface ApiResponse<T> {
   data: T[];
   success: boolean;
-  //   total?: number;
-  //   page?: number;
-  //   limit?: number;
 }

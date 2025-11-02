@@ -1,11 +1,14 @@
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import Header from "@/components/add-header";
+import { getWorkspaceById } from "@/actions/workspaces";
+import { CreateBoardDialog } from "./_components/create-board-dialog";
+import { BoardGrid } from "./_components/board-grid";
+import { BoardArchive } from "./_components/board-archive";
+import { getWorkspaceBoards } from "@/actions/boards/get-board";
+import DashboardContentWrapper from "@/components/dashboard-content-wrapper";
 import { auth } from "@/lib/auth";
-import AddBoardBtn from "./_components/add-board-btn";
-import BoardList from "./_components/board-list";
+import { headers } from "next/headers";
 
-export default async function WorkspaceDetailPage({
+export default async function WorkspaceBoardsPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -20,17 +23,29 @@ export default async function WorkspaceDetailPage({
     redirect("/sign-in");
   }
 
-  return (
-    <>
-      <Header>
-        <AddBoardBtn workspaceId={id} />
-      </Header>
+  const [workspace, boards] = await Promise.all([
+    getWorkspaceById(id),
+    getWorkspaceBoards(id),
+  ]);
 
-      <div className="flex flex-1 flex-col p-6">
-        <div className="@container/main flex flex-1 flex-col">
-          <BoardList workspaceId={id} />
-        </div>
-      </div>
-    </>
+  if (!workspace.success || !workspace.data) {
+    redirect("/dashboard");
+  }
+
+  return (
+    <DashboardContentWrapper
+      title={`${workspace.data.name} - Boards`}
+      description="Manage and organize your workspace boards"
+      ActionButton={<CreateBoardDialog workspaceId={id} />}
+    >
+      {/* Active Boards */}
+      <BoardGrid
+        boards={boards.data?.filter((b) => !b.isArchived) || []}
+        _workspace={workspace.data}
+      />
+
+      {/* Archived Boards (collapsible) */}
+      <BoardArchive boards={boards.data?.filter((b) => b.isArchived) || []} />
+    </DashboardContentWrapper>
   );
 }

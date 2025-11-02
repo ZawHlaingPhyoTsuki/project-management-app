@@ -45,5 +45,5 @@ export default async function WorkspaceLayout({
     notFound();
   }
 
-  return <div className="flex flex-1 flex-col">{children}</div>;
+  return <>{children}</>;
 }

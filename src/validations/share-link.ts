@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { ResourceType, Role } from "../../../prisma/generated/enums";
+import { ResourceType, Role } from "@/types";
 
 export const GetShareLinksSchema = z.object({
   resourceType: z.enum(ResourceType).optional(),

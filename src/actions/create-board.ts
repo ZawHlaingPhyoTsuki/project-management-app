@@ -1,20 +1,12 @@
 "use server";
 
 import { headers } from "next/headers";
-import z from "zod";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
 import type { Role } from "../../prisma/generated/enums";
-
-const CreateBoardSchema = z.object({
-  workspaceId: z.string(),
-  name: z.string(),
-  description: z.string().optional().nullable(),
-});
-
-type CreateBoardType = z.infer<typeof CreateBoardSchema>;
+import { CreateBoardType } from "@/validations/board";
 
 export async function createBoard({
   workspaceId,

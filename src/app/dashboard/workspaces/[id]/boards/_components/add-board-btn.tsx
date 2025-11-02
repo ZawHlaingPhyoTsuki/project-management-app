@@ -64,7 +64,7 @@ export default function AddBoardBtn({ workspaceId }: AddBoardBtnProps) {
         <DialogHeader>
           <DialogTitle>Create Board</DialogTitle>
           <DialogDescription>
-            Create a new board. Click save when you're done.
+            Create a new board. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>

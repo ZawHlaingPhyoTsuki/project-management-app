@@ -2,20 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import z from "zod";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
 import type { Prisma } from "../../../prisma/generated/client";
-
-const UpdateWorkspaceSchema = z.object({
-  id: z.string(),
-  name: z.string().optional(),
-  description: z.string().optional().nullable(),
-});
-
-type UpdateWorkspaceType = z.infer<typeof UpdateWorkspaceSchema>;
+import { UpdateWorkspaceType } from "@/validations/workspace";
 
 export const updateWorkspace = async ({
   id,

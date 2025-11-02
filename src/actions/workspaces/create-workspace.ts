@@ -1,16 +1,9 @@
 "use server";
 
 import { headers } from "next/headers";
-import z from "zod";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
-
-const CreateWorkspaceSchema = z.object({
-  name: z.string(),
-  description: z.string().optional().nullable(),
-});
-
-type CreateWorkspaceType = z.infer<typeof CreateWorkspaceSchema>;
+import { CreateWorkspaceType } from "@/validations/workspace";
 
 export const createWorkspace = async ({
   name,

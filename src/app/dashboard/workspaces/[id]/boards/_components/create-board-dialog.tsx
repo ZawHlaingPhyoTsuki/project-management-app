@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +28,7 @@ import { CreateBoardSchema, type CreateBoardType } from "@/validations/board";
 // import { can } from "@/lib/permissions";
 // import { Action, Resource } from "@/types/permission";
 import { useSession } from "@/lib/auth-client";
+import { useBoardStore } from "@/store/use-board-store";
 // import { can, Resource, Action } from "@/lib/permissions";
 
 interface CreateBoardDialogProps {
@@ -36,15 +36,16 @@ interface CreateBoardDialogProps {
 }
 
 export function CreateBoardDialog({ workspaceId }: CreateBoardDialogProps) {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
+  const { isBoardModalOpen, setIsBoardModalOpen } = useBoardStore();
   const { mutateAsync: createBoard, isPending } = useCreateBoard();
-//   const { user } = useCurrentUser();
+  //   const { user } = useCurrentUser();
   const session = useSession();
-  const _user = session.data?.user
+  const _user = session.data?.user;
 
-//   const canCreateBoard = user?.role
-//     ? can(user.role, Resource.BOARD, Action.CREATE)
-//     : false;
+  //   const canCreateBoard = user?.role
+  //     ? can(user.role, Resource.BOARD, Action.CREATE)
+  //     : false;
 
   const form = useForm<CreateBoardType>({
     resolver: zodResolver(CreateBoardSchema),
@@ -61,7 +62,7 @@ export function CreateBoardDialog({ workspaceId }: CreateBoardDialogProps) {
 
       if (result.success) {
         toast.success("Board created successfully");
-        setOpen(false);
+        setIsBoardModalOpen(false);
         form.reset();
       } else {
         toast.error(result.error || "Failed to create board");
@@ -72,12 +73,12 @@ export function CreateBoardDialog({ workspaceId }: CreateBoardDialogProps) {
     }
   };
 
-//   if (!canCreateBoard) {
-//     return null;
-//   }
+  //   if (!canCreateBoard) {
+  //     return null;
+  //   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isBoardModalOpen} onOpenChange={setIsBoardModalOpen}>
       <DialogTrigger asChild>
         <Button>
           <Plus className="h-4 w-4" />
@@ -130,7 +131,7 @@ export function CreateBoardDialog({ workspaceId }: CreateBoardDialogProps) {
             <Button
               type="button"
               variant="outline"
-              onClick={() => setOpen(false)}
+              onClick={() => setIsBoardModalOpen(false)}
               disabled={isPending}
             >
               Cancel

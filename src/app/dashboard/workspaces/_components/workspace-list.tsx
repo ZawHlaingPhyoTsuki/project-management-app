@@ -2,10 +2,13 @@
 
 import { useWorkspaces } from "@/hooks/use-workspace";
 import WorkspaceCard from "./workspace-card";
-import WorkspaceEmpty from "./workspace-empty";
+import EmptySection from "@/components/empty-section";
+import { Layout } from "lucide-react";
+import { useWorkspaceStore } from "@/store/use-workspace-store";
 
 export default function WorkspaceList() {
   const { data, isLoading } = useWorkspaces();
+  const { setIsWorkspaceModalOpen } = useWorkspaceStore();
 
   const workspaces = data?.data;
 
@@ -16,7 +19,16 @@ export default function WorkspaceList() {
   }
 
   if (!workspaces || workspaces.length === 0) {
-    return <WorkspaceEmpty />;
+    return (
+      <EmptySection
+        title="No workspaces yet"
+        description="Create your first workspace to get startted"
+        icon={<Layout />}
+        showButton
+        buttonText="Create Workspace"
+        onClick={() => setIsWorkspaceModalOpen(true)}
+      />
+    );
   }
 
   return (

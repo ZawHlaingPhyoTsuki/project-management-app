@@ -23,6 +23,8 @@ import { can } from "@/lib/permissions";
 // import { toast } from "sonner";
 import { Action, Resource } from "@/types/permission";
 import { useSession } from "@/lib/auth-client";
+import EmptySection from "@/components/empty-section";
+import { useBoardStore } from "@/store/use-board-store";
 
 interface Board {
   id: string;
@@ -53,7 +55,8 @@ interface BoardGridProps {
 export function BoardGrid({ boards, _workspace }: BoardGridProps) {
   const { mutateAsync: archiveBoard, isPending: isArchiving } =
     useArchiveBoard();
-//   const { user } = useCurrentUser();
+  const { setIsBoardModalOpen } = useBoardStore();
+  //   const { user } = useCurrentUser();
   const session = useSession();
   const user = session.data?.user;
 
@@ -93,16 +96,13 @@ export function BoardGrid({ boards, _workspace }: BoardGridProps) {
 
   if (boards.length === 0) {
     return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <div className="text-center">
-            <h3 className="text-lg font-medium">No boards yet</h3>
-            <p className="text-muted-foreground mt-2">
-              Create your first board to start organizing tasks
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      <EmptySection
+        title="No boards yet"
+        description="Create your firstt board to start organizing tasks"
+        showButton={true}
+        buttonText="Create board"
+        onClick={() => setIsBoardModalOpen(true)}
+      />
     );
   }
 

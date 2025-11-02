@@ -103,8 +103,8 @@ export default function DangerZone({ workspace }: DangerZoneProps) {
         onConfirm={() => handleDeleteWorkspace(workspace.id)}
         title="Are you absolutely sure?"
         description={`This action cannot be undone. This will permanently delete the workspace "${workspace.name}" and remove all data including boards, tasks, and member associations.`}
+        confirmText="Delete Workspace"
         requireConfirmation={true}
-        confirmationText={`Type "${workspace.name}" to confirm deletion`}
         expectedText={workspace.name}
         isPending={isDeletePending}
       />

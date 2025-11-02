@@ -9,7 +9,7 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 import type { User } from "better-auth";
-import { BarChart3, Calendar, Users } from "lucide-react";
+import { BarChart3, Calendar, Layout } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type * as React from "react";
@@ -59,7 +59,7 @@ export function AppSidebar({ user, ...props }: AppSideBarProps) {
       {
         title: "Workspaces",
         url: "/dashboard/workspaces",
-        icon: Users,
+        icon: Layout,
       },
     ],
     navSecondary: [

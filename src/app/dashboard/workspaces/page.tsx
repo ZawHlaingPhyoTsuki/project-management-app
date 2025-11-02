@@ -1,8 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import Header from "@/components/add-header";
 import { auth } from "@/lib/auth";
-import AddWorkspaceBtn from "./_components/create-workspace-dialog";
+import CreateWorkspaceDialog from "./_components/create-workspace-dialog";
 import WorkspaceList from "./_components/workspace-list";
 import DashboardContentWrapper from "@/components/dashboard-content-wrapper";
 
@@ -19,7 +18,7 @@ export default async function WorkspacesPage() {
     <DashboardContentWrapper
       title="Workspaces"
       description="Manage your workspaces and collaborate with your team"
-      ActionButton={<AddWorkspaceBtn />}
+      ActionButton={<CreateWorkspaceDialog />}
     >
       <WorkspaceList />
     </DashboardContentWrapper>

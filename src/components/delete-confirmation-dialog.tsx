@@ -14,19 +14,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Check, Copy } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface DeleteConfirmationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
   title: string;
-  description: string;
+  description: string | React.ReactNode;
   confirmText?: string;
   cancelText?: string;
   isPending?: boolean;
   // For type-to-confirm functionality
   requireConfirmation?: boolean;
-  confirmationText?: string;
   expectedText?: string;
 }
 
@@ -40,10 +41,10 @@ export function DeleteConfirmationDialog({
   cancelText = "Cancel",
   isPending = false,
   requireConfirmation = false,
-  confirmationText = "",
   expectedText = "",
 }: DeleteConfirmationDialogProps) {
   const [inputValue, setInputValue] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const isConfirmDisabled = requireConfirmation
     ? inputValue !== expectedText || isPending
@@ -53,6 +54,16 @@ export function DeleteConfirmationDialog({
     onConfirm();
     if (requireConfirmation) {
       setInputValue(""); // Reset input after confirmation
+    }
+  };
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(expectedText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
     }
   };
 
@@ -66,7 +77,36 @@ export function DeleteConfirmationDialog({
 
         {requireConfirmation && (
           <div className="space-y-2">
-            <Label htmlFor="confirm-delete-input">{confirmationText}</Label>
+            <div className="flex items-center justify-between">
+              <Label
+                htmlFor="confirm-delete-input"
+                className="cursor-text select-text"
+              >
+                Type
+                <Badge variant="secondary" className="text-md">
+                  {expectedText}
+                  <span
+                    className="ml-1 cursor-pointer hover:opacity-70 transition-opacity"
+                    onClick={copyToClipboard}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        copyToClipboard();
+                      }
+                    }}
+                  >
+                    {copied ? (
+                      <Check className="h-4 w-4 text-green-600" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
+                  </span>
+                </Badge>
+                to confirm.
+              </Label>
+            </div>
             <Input
               id="confirm-delete-input"
               value={inputValue}

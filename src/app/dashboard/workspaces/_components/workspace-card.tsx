@@ -181,8 +181,8 @@ export default function WorkspaceCard({ workspace }: WorkspaceCardProps) {
         onConfirm={() => handleDeleteWorkspace(workspace.id)}
         title="Are you sure?"
         description={`This action cannot be undone. This will permanently delete the workspace "${workspace.name}" and all of its boards and data.`}
+        confirmText="Delete Workspace"
         requireConfirmation={true}
-        confirmationText={`Type "${workspace.name}" to confirm deletion`}
         expectedText={workspace.name}
         isPending={isPending}
       />

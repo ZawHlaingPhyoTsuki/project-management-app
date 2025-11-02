@@ -1,7 +1,6 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -31,7 +30,6 @@ import {
 } from "@/validations/workspace";
 
 export default function CreateWorkspaceDialog() {
-  // const [open, setOpen] = useState(false);
   const { mutateAsync: createWorkspace, isPending } = useCreateWorkspace();
   const { isWorkspaceModalOpen, setIsWorkspaceModalOpen } =
     useWorkspaceStore();
@@ -45,7 +43,6 @@ export default function CreateWorkspaceDialog() {
   });
 
   const handleOpenChange = (isOpen: boolean) => {
-    // setOpen(isOpen);
     setIsWorkspaceModalOpen(isOpen);
     if (!isOpen) {
       form.reset();

@@ -59,7 +59,7 @@ export default function AddWorkspaceBtn() {
           <DialogTitle>Create Workspace</DialogTitle>
           <DialogDescription>
             Create a new workspace to organize your boards. Click save when
-            you're done.
+            you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>

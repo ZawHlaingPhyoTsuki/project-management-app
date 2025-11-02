@@ -7,7 +7,7 @@ import prisma from "@/lib/db";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
 
-export const deleteWorkspace = async ({
+export const restoreWorkspace = async ({
   workspaceId,
 }: {
   workspaceId: string;
@@ -21,7 +21,6 @@ export const deleteWorkspace = async ({
       return { success: false, error: "Unauthorized" };
     }
 
-    // Find Workspace belonging to logged in user
     const workspaceMember = await prisma.workspaceMember.findFirst({
       where: {
         workspaceId,
@@ -29,29 +28,33 @@ export const deleteWorkspace = async ({
       },
     });
 
-    // Check Permissions
     if (
       !workspaceMember ||
-      !can(workspaceMember.role, Resource.WORKSPACE, Action.DELETE)
+      !can(workspaceMember.role, Resource.WORKSPACE, Action.UPDATE)
     ) {
       return { success: false, error: "Insufficient permissions" };
     }
 
-    // Delete Workspace
-    await prisma.workspace.delete({
+    const workspace = await prisma.workspace.update({
       where: { id: workspaceId },
+      data: {
+        isArchived: false,
+        archivedAt: null,
+      },
     });
 
-    // Revalidate and redirect after deletion
+    // Revalidate relevant paths
+    revalidatePath(`/dashboard/workspaces/${workspaceId}`);
     revalidatePath("/dashboard");
+    // revalidatePath("/dashboard/archived");
 
     return {
       success: true,
-      message: "Workspace deleted successfully",
-      data: null,
+      message: "Workspace restored successfully",
+      data: workspace,
     };
   } catch (error) {
-    console.error("Error fetching workspace:", error);
-    return { success: false, data: null, error: "Failed to fetch workspace" };
+    console.error("Error restoring workspace:", error);
+    return { success: false, data: null, error: "Failed to restore workspace" };
   }
 };

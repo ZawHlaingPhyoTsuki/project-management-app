@@ -2,7 +2,6 @@
 
 import {
   IconDashboard,
-  IconFileWord,
   IconHelp,
   IconInnerShadowTop,
   IconListDetails,
@@ -64,11 +63,6 @@ export function AppSidebar({ user, ...props }: AppSideBarProps) {
       },
     ],
     navSecondary: [
-      {
-        title: "Templates",
-        url: "/dashboard/templates",
-        icon: IconFileWord,
-      },
       {
         title: "Reports",
         url: "/dashboard/reports",

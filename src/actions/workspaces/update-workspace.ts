@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import z from "zod";
 import { auth } from "@/lib/auth";
@@ -50,19 +51,17 @@ export const updateWorkspace = async ({
     }
 
     const updateData: Prisma.WorkspaceUpdateInput = {};
-
-    if (name) {
-      updateData.name = name;
-    }
-
-    if (description !== undefined) {
-      updateData.description = description;
-    }
+    if (name) updateData.name = name;
+    if (description !== undefined) updateData.description = description;
 
     const workspace = await prisma.workspace.update({
       where: { id },
       data: updateData,
     });
+
+    // Revalidate the settings page & dashboard
+    revalidatePath(`/dashboard/workspaces/${id}/settings`);
+    revalidatePath("/dashboard");
 
     return { success: true, data: workspace };
   } catch (error) {

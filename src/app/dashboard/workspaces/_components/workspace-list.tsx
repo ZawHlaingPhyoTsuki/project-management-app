@@ -1,11 +1,13 @@
 "use client";
 
-import { useWorkspace } from "@/hooks/use-workspace";
+import { useWorkspaces } from "@/hooks/use-workspace";
 import WorkspaceCard from "./workspace-card";
 import WorkspaceEmpty from "./workspace-empty";
 
 export default function WorkspaceList() {
-  const { workspaces, isLoading } = useWorkspace();
+  const { data, isLoading } = useWorkspaces();
+
+  const workspaces = data?.data;
 
   if (isLoading) {
     return (

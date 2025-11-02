@@ -24,11 +24,11 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { useWorkspace } from "@/hooks/use-workspace";
+import { useWorkspaces } from "@/hooks/use-workspace";
 
 export function NavWorkspace({ title }: { title: string }) {
-  const { workspaces, isLoading } = useWorkspace();
-  const reversedWorkspaces = workspaces ? [...workspaces].reverse() : [];
+  const { data, isLoading } = useWorkspaces();
+  const reversedWorkspaces = data?.data ? [...data.data].reverse() : [];
 
   // Define the sub-items for each workspace
   const getWorkspaceSubItems = (workspace: (typeof reversedWorkspaces)[0]) => [
@@ -50,8 +50,6 @@ export function NavWorkspace({ title }: { title: string }) {
       icon: Settings,
     },
   ];
-
-  console.log(reversedWorkspaces);
 
   if (isLoading) {
     return (

@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import type { Workspace } from "@/types/workspace";
 
-export async function getAllWorkspacesAction() {
+export const getAllWorkspaces = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -22,6 +22,7 @@ export async function getAllWorkspacesAction() {
             userId: session?.user.id,
           },
         },
+        isArchived: false,
       },
       include: {
         members: {
@@ -46,16 +47,14 @@ export async function getAllWorkspacesAction() {
     console.error("Error fetching workspaces:", error);
     return { success: false, error: "Failed to fetch workspaces" };
   }
-}
+};
 
-export const getWorkspaceByIdAction = async (
-  workspaceId: string,
-): Promise<{
-  success: boolean;
-  data: Workspace | null;
-  error?: string;
-}> => {
+export const getWorkspaceById = async (workspaceId: string | undefined) => {
   try {
+    if (!workspaceId) {
+      return { success: false, data: null, error: "Workspace ID is required" };
+    }
+
     const session = await auth.api.getSession({
       headers: await headers(),
     });

@@ -7,7 +7,7 @@ import prisma from "@/lib/db";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
 
-export const deleteWorkspace = async ({
+export const archiveWorkspace = async ({
   workspaceId,
 }: {
   workspaceId: string;
@@ -32,26 +32,32 @@ export const deleteWorkspace = async ({
     // Check Permissions
     if (
       !workspaceMember ||
-      !can(workspaceMember.role, Resource.WORKSPACE, Action.DELETE)
+      !can(workspaceMember.role, Resource.WORKSPACE, Action.UPDATE)
     ) {
       return { success: false, error: "Insufficient permissions" };
     }
 
-    // Delete Workspace
-    await prisma.workspace.delete({
+    // Archive Workspace (soft delete)
+    const workspace = await prisma.workspace.update({
       where: { id: workspaceId },
+      data: {
+        isArchived: true,
+        archivedAt: new Date(),
+      },
     });
 
-    // Revalidate and redirect after deletion
+    // Revalidate relevant paths
+    revalidatePath(`/dashboard/workspaces/${workspaceId}/settings`);
     revalidatePath("/dashboard");
+    // revalidatePath("/dashboard/archived"); // If you have an archived workspaces page
 
     return {
       success: true,
-      message: "Workspace deleted successfully",
-      data: null,
+      message: "Workspace archived successfully",
+      data: workspace,
     };
   } catch (error) {
-    console.error("Error fetching workspace:", error);
-    return { success: false, data: null, error: "Failed to fetch workspace" };
+    console.error("Error archiving workspace:", error);
+    return { success: false, data: null, error: "Failed to archive workspace" };
   }
 };

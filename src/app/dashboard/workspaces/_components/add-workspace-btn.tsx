@@ -15,14 +15,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useWorkspace } from "@/hooks/use-workspace";
+import { useCreateWorkspace } from "@/hooks/use-workspace";
 import { useWorkspaceStore } from "@/store/use-workspace-store";
 
 export default function AddWorkspaceBtn() {
   const [workspaceName, setWorkspaceName] = useState("");
   const [workspaceDescription, setWorkspaceDescription] = useState("");
   const { isWorkspaceModalOpen, setIsWorkspaceModalOpen } = useWorkspaceStore();
-  const { createWorkspace, isCreating } = useWorkspace();
+  const { mutateAsync: createWorkspace, isPending } = useCreateWorkspace();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,7 +72,7 @@ export default function AddWorkspaceBtn() {
                 value={workspaceName}
                 onChange={(e) => setWorkspaceName(e.target.value)}
                 placeholder="Enter workspace name..."
-                disabled={isCreating}
+                disabled={isPending}
                 autoFocus
               />
             </div>
@@ -83,22 +83,19 @@ export default function AddWorkspaceBtn() {
                 value={workspaceDescription}
                 onChange={(e) => setWorkspaceDescription(e.target.value)}
                 placeholder="Enter board description..."
-                disabled={isCreating}
+                disabled={isPending}
                 rows={3}
               />
             </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="button" variant="outline" disabled={isCreating}>
+              <Button type="button" variant="outline" disabled={isPending}>
                 Cancel
               </Button>
             </DialogClose>
-            <Button
-              type="submit"
-              disabled={!workspaceName.trim() || isCreating}
-            >
-              {isCreating ? "Creating..." : "Create Workspace"}
+            <Button type="submit" disabled={!workspaceName.trim() || isPending}>
+              {isPending ? "Creating..." : "Create Workspace"}
             </Button>
           </DialogFooter>
         </form>

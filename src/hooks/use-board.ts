@@ -5,7 +5,6 @@ import { getAllBoards } from "@/actions/boards/get-board";
 import { createBoard2 } from "@/actions/boards/create-board";
 import { archiveBoard } from "@/actions/boards/archive-board";
 import { restoreBoard } from "@/actions/boards/restore-board";
-import { toast } from "sonner";
 
 export const useBoardsByWorkspaceId = (workspaceId: string) => {
   return useQuery({
@@ -33,18 +32,23 @@ export function useArchiveBoard() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: archiveBoard,
-    onSuccess: (result, _variables) => {
+    mutationFn: ({
+      boardId,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      workspaceId,
+    }: {
+      boardId: string;
+      workspaceId: string;
+    }) => archiveBoard(boardId),
+    onSuccess: (result, variables) => {
       if (result.success) {
-        queryClient.invalidateQueries({ queryKey: ["boards"] });
-        queryClient.invalidateQueries({ queryKey: ["workspace"] });
-        toast.success("Board archived successfully");
-      } else {
-        toast.error(result.error || "Failed to archive board");
+        queryClient.invalidateQueries({
+          queryKey: ["boards", variables.workspaceId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["workspace", variables.workspaceId],
+        });
       }
-    },
-    onError: (_error) => {
-      toast.error("Failed to archive board");
     },
   });
 }
@@ -54,17 +58,9 @@ export function useRestoreBoard() {
 
   return useMutation({
     mutationFn: restoreBoard,
-    onSuccess: (result, _variables) => {
-      if (result.success) {
+    onSuccess: (_result, _variables) => {
         queryClient.invalidateQueries({ queryKey: ["boards"] });
         queryClient.invalidateQueries({ queryKey: ["workspace"] });
-        toast.success("Board restored successfully");
-      } else {
-        toast.error(result.error || "Failed to restore board");
-      }
-    },
-    onError: (_error) => {
-      toast.error("Failed to restore board");
     },
   });
 }

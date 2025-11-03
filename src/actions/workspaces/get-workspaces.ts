@@ -3,7 +3,6 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
-import type { Workspace } from "@/types/workspace";
 
 export const getAllWorkspaces = async () => {
   const session = await auth.api.getSession({
@@ -34,7 +33,11 @@ export const getAllWorkspaces = async () => {
         },
         _count: {
           select: {
-            boards: true,
+            boards: {
+              where: {
+                isArchived: false,
+              },
+            },
             members: true,
           },
         },
@@ -96,7 +99,7 @@ export const getWorkspaceById = async (workspaceId: string | undefined) => {
       return { success: false, data: null, error: "Workspace not found" };
     }
 
-    return { success: true, data: workspace as Workspace };
+    return { success: true, data: workspace };
   } catch (error) {
     console.error("Error fetching workspace:", error);
     return { success: false, data: null, error: "Failed to fetch workspace" };

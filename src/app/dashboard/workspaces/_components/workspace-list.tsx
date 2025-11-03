@@ -6,7 +6,7 @@ import EmptySection from "@/components/empty-section";
 import { Layout } from "lucide-react";
 import { useWorkspaceStore } from "@/store/use-workspace-store";
 
-export default function WorkspaceList() {
+export default function   WorkspaceList() {
   const { data, isLoading } = useWorkspaces();
   const { setIsWorkspaceModalOpen } = useWorkspaceStore();
 

@@ -41,7 +41,7 @@ export default async function WorkspaceBoardsPage({
       {/* Active Boards */}
       <BoardGrid
         boards={boards.data?.filter((b) => !b.isArchived) || []}
-        _workspace={workspace.data}
+        workspace={workspace.data}
       />
 
       {/* Archived Boards (collapsible) */}

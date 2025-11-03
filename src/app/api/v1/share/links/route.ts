@@ -7,7 +7,7 @@ import { generateToken } from "@/lib/utils";
 import {
   CreateShareLinkSchema,
   GetShareLinksSchema,
-} from "@/lib/validations/share-link";
+} from "@/validations/share-link";
 import { Action, Resource } from "@/types/permission";
 import type { Prisma } from "../../../../../../prisma/generated/client";
 

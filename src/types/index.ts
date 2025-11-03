@@ -13,6 +13,11 @@ export type {
   User,
 } from "../../prisma/generated/client";
 
+export {
+  ResourceType,
+  Role,
+} from '../../prisma/generated/enums'
+
 export interface TaskCardWithAssigneeAndTags extends TaskCard {
   assignees: User[];
   tags: Tag[];
@@ -26,7 +31,4 @@ export interface TaskListWithCards extends TaskList {
 export interface ApiResponse<T> {
   data: T[];
   success: boolean;
-  //   total?: number;
-  //   page?: number;
-  //   limit?: number;
 }

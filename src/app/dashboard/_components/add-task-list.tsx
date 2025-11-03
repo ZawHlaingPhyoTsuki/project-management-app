@@ -60,8 +60,8 @@ export default function AddTaskList() {
           <DialogHeader>
             <DialogTitle>Add List</DialogTitle>
             <DialogDescription>
-              Create a new list to organize your tasks. Click save when you're
-              done.
+              Create a new list to organize your tasks. Click save when
+              you&apos;re done.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">

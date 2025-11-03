@@ -1,21 +1,11 @@
+// components/workspace-card.tsx (updated)
 "use client";
 
 import { Calendar, Layout, MoreHorizontal, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useWorkspace } from "@/hooks/use-workspace";
+import { useDeleteWorkspaceConfirmation } from "@/hooks/use-delete-workspace-confirmation";
 
 interface WorkspaceCardProps {
   workspace: {
@@ -49,8 +39,19 @@ interface WorkspaceCardProps {
 
 export default function WorkspaceCard({ workspace }: WorkspaceCardProps) {
   const router = useRouter();
-  const { deleteWorkspace, isDeleting } = useWorkspace();
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+  const {
+    showDeleteDialog,
+    setShowDeleteDialog,
+    handleDeleteWorkspace,
+    isPending,
+  } = useDeleteWorkspaceConfirmation({
+    workspaceName: workspace.name,
+    onSuccess: () => {
+      // Optional: Refresh the page or update the list
+      router.refresh();
+    },
+  });
 
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString("en-US", {
@@ -58,25 +59,6 @@ export default function WorkspaceCard({ workspace }: WorkspaceCardProps) {
       month: "short",
       day: "numeric",
     });
-  };
-
-  const handleDeleteWorkspace = async () => {
-    try {
-      const result = await deleteWorkspace({ workspaceId: workspace.id });
-
-      if (result.success) {
-        toast("Workspace deleted", {
-          description: `${workspace.name} has been successfully deleted.`,
-        });
-        setShowDeleteDialog(false);
-      } else {
-        toast("Error", {
-          description: result.error || "Failed to delete workspace",
-        });
-      }
-    } catch (_error) {
-      toast.error("An unexpected error occurred");
-    }
   };
 
   return (
@@ -87,7 +69,7 @@ export default function WorkspaceCard({ workspace }: WorkspaceCardProps) {
           <div className="flex-1">
             <h3 className="font-semibold text-lg mb-2 line-clamp-2">
               <Link
-                href={`/dashboard/workspaces/${workspace.id}`}
+                href={`/dashboard/workspaces/${workspace.id}/boards`}
                 className="hover:text-primary transition-colors"
               >
                 {workspace.name}
@@ -193,30 +175,17 @@ export default function WorkspaceCard({ workspace }: WorkspaceCardProps) {
       </div>
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              workspace "<strong>{workspace.name}</strong>" and all of its
-              boards and data.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteWorkspace}
-              disabled={isDeleting}
-              asChild
-            >
-              <Button variant="destructive" className="text-white">
-                {isDeleting ? "Deleting..." : "Delete Workspace"}
-              </Button>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteConfirmationDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onConfirm={() => handleDeleteWorkspace(workspace.id)}
+        title="Are you sure?"
+        description={`This action cannot be undone. This will permanently delete the workspace "${workspace.name}" and all of its boards and data.`}
+        confirmText="Delete Workspace"
+        requireConfirmation={true}
+        expectedText={workspace.name}
+        isPending={isPending}
+      />
     </>
   );
 }

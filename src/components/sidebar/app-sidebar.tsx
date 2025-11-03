@@ -2,7 +2,6 @@
 
 import {
   IconDashboard,
-  IconFileWord,
   IconHelp,
   IconInnerShadowTop,
   IconListDetails,
@@ -10,7 +9,7 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 import type { User } from "better-auth";
-import { BarChart3, Calendar, FolderKanban, Users } from "lucide-react";
+import { BarChart3, Calendar, Layout } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type * as React from "react";
@@ -60,15 +59,10 @@ export function AppSidebar({ user, ...props }: AppSideBarProps) {
       {
         title: "Workspaces",
         url: "/dashboard/workspaces",
-        icon: Users,
+        icon: Layout,
       },
     ],
     navSecondary: [
-      {
-        title: "Templates",
-        url: "/dashboard/templates",
-        icon: IconFileWord,
-      },
       {
         title: "Reports",
         url: "/dashboard/reports",
@@ -83,43 +77,6 @@ export function AppSidebar({ user, ...props }: AppSideBarProps) {
         title: "Help & Support",
         url: "/dashboard/help",
         icon: IconHelp,
-      },
-    ],
-    workspace: [
-      {
-        title: "Workspaces",
-        url: "/dashboard/workspaces",
-        icon: FolderKanban,
-        isActive: true,
-        items: [
-          {
-            title: "Boards",
-            url: "/dashboard/boards/cmhd8gfwr0005jxw6bv6a26h3",
-          },
-          {
-            title: "Marketing",
-            url: "/dashboard/workspaces/2",
-          },
-        ],
-      },
-      {
-        title: "Boards",
-        url: "/dashboard/boards",
-        icon: FolderKanban,
-        items: [
-          {
-            title: "Sprint Board",
-            url: "/dashboard/boards/1",
-          },
-          {
-            title: "Backlog",
-            url: "/dashboard/boards/2",
-          },
-          {
-            title: "Bug Tracking",
-            url: "/dashboard/boards/3",
-          },
-        ],
       },
     ],
   };
@@ -143,11 +100,7 @@ export function AppSidebar({ user, ...props }: AppSideBarProps) {
       </SidebarHeader>
       <SidebarContent className="no-scrollbar">
         <NavMain items={data.navMain} pathname={pathname} />
-        <NavWorkspace
-          items={data.workspace}
-          title="Workspaces & Boards"
-          emptyMessage="No workspaces yet. Create your first workspace!"
-        />
+        <NavWorkspace title="Workspaces & Boards" />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

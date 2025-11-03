@@ -1,15 +1,16 @@
 "use client";
 
-import * as React from "react";
-import { cn } from "@/lib/utils";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { motion, type Transition } from "motion/react";
+import * as React from "react";
 import { Children } from "react";
 import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import { cn } from "@/lib/utils";
+
 // Define types based on components
 type TooltipContentProps = React.ComponentProps<typeof TooltipContent>;
 // Avatar Container for motion-based interactions

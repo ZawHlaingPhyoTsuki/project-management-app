@@ -13,6 +13,11 @@ export type {
   User,
 } from "../../prisma/generated/client";
 
+export {
+  ResourceType,
+  Role,
+} from '../../prisma/generated/enums'
+
 export interface TaskCardWithAssigneeAndTags extends TaskCard {
   assignees: User[];
   tags: Tag[];

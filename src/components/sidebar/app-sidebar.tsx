@@ -37,9 +37,9 @@ export function AppSidebar({ user, ...props }: AppSideBarProps) {
   const data = {
     navMain: [
       {
-        title: "Dashboard",
-        url: "/dashboard?view=board",
-        icon: IconDashboard,
+        title: "Workspaces",
+        url: "/dashboard",
+        icon: Layout,
       },
       {
         title: "My Tasks",
@@ -55,11 +55,6 @@ export function AppSidebar({ user, ...props }: AppSideBarProps) {
         title: "Analytics",
         url: "/dashboard/analytics",
         icon: BarChart3,
-      },
-      {
-        title: "Workspaces",
-        url: "/dashboard/workspaces",
-        icon: Layout,
       },
     ],
     navSecondary: [

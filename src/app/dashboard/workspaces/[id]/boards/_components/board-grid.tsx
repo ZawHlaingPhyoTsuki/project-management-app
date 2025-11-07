@@ -27,7 +27,7 @@ interface Board {
 }
 
 interface BoardGridProps {
-  initialBoardData: Board[];
+  initialBoardData?: Board[];
   initialWorkspaceData: {
     id: string;
     name: string;
@@ -39,12 +39,16 @@ export function BoardGrid({
   initialWorkspaceData,
 }: BoardGridProps) {
   const { setIsBoardModalOpen } = useBoardStore();
-  const { data: boards = [] } = useBoardsByWorkspaceId(
+  const { data: boards = [], isLoading } = useBoardsByWorkspaceId(
     initialWorkspaceData.id,
     initialBoardData
   );
   const session = useSession();
   const user = session.data?.user;
+
+  if (isLoading || !boards) {
+    return <div>Loading...</div>;
+  }
 
   if (boards.length === 0) {
     return (

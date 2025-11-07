@@ -1,10 +1,11 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getWorkspaceBoards } from "@/actions/boards/get-board";
+import { getWorkspaceArchivedBoards, getWorkspaceBoards } from "@/actions/boards/get-board";
 import { createBoard2 } from "@/actions/boards/create-board";
 import { archiveBoard } from "@/actions/boards/archive-board";
 import { restoreBoard } from "@/actions/boards/restore-board";
+import { deleteBoard } from "@/actions/boards/delete-board";
 
 export const useBoardsByWorkspaceId = (
   workspaceId: string,
@@ -20,6 +21,16 @@ export const useBoardsByWorkspaceId = (
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };
+
+export const useWorkspaceArchivedBoards = (workspaceId: string) => {
+  return useQuery({
+    queryKey: ["archived-boards", workspaceId],
+    queryFn: () => getWorkspaceArchivedBoards(workspaceId),
+    enabled: !!workspaceId,
+    select: (data) => data?.data ?? [],
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+}
 
 export const useCreateBoard = () => {
   const queryClient = useQueryClient();
@@ -58,6 +69,9 @@ export function useArchiveBoard() {
         queryClient.invalidateQueries({
           queryKey: ["workspaces", variables.workspaceId],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["archived-boards", variables.workspaceId],
+        });
       }
     },
   });
@@ -71,6 +85,20 @@ export function useRestoreBoard() {
     onSuccess: (_result, _variables) => {
       queryClient.invalidateQueries({ queryKey: ["boards"] });
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+      queryClient.invalidateQueries({ queryKey: ["archived-boards"] });
     },
   });
+}
+
+export function useDeleteBoard() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteBoard,
+    onSuccess: (_result, _variables) => {
+      queryClient.invalidateQueries({ queryKey: ["boards"] });
+      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+      queryClient.invalidateQueries({ queryKey: ["archived-boards"] });
+    },
+  })
 }

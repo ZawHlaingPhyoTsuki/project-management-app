@@ -47,10 +47,6 @@ export default function WorkspaceCard({ workspace }: WorkspaceCardProps) {
     isPending,
   } = useDeleteWorkspaceConfirmation({
     workspaceName: workspace.name,
-    onSuccess: () => {
-      // Optional: Refresh the page or update the list
-      router.refresh();
-    },
   });
 
   const formatDate = (date: Date) => {

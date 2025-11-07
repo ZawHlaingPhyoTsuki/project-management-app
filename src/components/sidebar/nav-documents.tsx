@@ -25,9 +25,11 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { useWorkspaces } from "@/hooks/use-workspace";
+import { usePathname } from "next/navigation";
 
 export function NavWorkspace({ title }: { title: string }) {
   const { data, isLoading } = useWorkspaces();
+  const pathname = usePathname();
   const reversedWorkspaces = data?.data ? [...data.data].reverse() : [];
 
   // Define the sub-items for each workspace
@@ -70,48 +72,78 @@ export function NavWorkspace({ title }: { title: string }) {
     <SidebarGroup>
       <SidebarGroupLabel>{title}</SidebarGroupLabel>
       <SidebarMenu>
-        {reversedWorkspaces.map((workspace) => (
-          <Collapsible key={workspace.id} asChild className="group/collapsible">
-            <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={workspace.name}>
-                  <Layout />
-                  <span>{workspace.name}</span>
-                  <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <SidebarMenuSub>
-                  {getWorkspaceSubItems(workspace).map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
-                        <Link
-                          href={subItem.url}
-                          className="flex items-center justify-between w-full"
-                        >
-                          <div className="flex items-center gap-2">
-                            {subItem.icon && (
-                              <subItem.icon className="h-4 w-4" />
+        {reversedWorkspaces.map((workspace) => {
+          const workspacePath = `/dashboard/workspaces/${workspace.id}`;
+          const isActive = pathname.startsWith(workspacePath);
+
+          return (
+            <Collapsible
+              key={workspace.id}
+              asChild
+              className="group/collapsible"
+            >
+              <SidebarMenuItem>
+                <div className="flex">
+                  {/* Link that only shows when not active */}
+                  {!isActive && (
+                    <Link href={workspacePath} className="flex-1">
+                      <SidebarMenuButton tooltip={workspace.name}>
+                        <Layout />
+                        <span>{workspace.name}</span>
+                      </SidebarMenuButton>
+                    </Link>
+                  )}
+
+                  {/* Collapsible trigger that takes full width when active */}
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      tooltip={workspace.name}
+                      className={isActive ? "w-full" : "w-auto"}
+                    >
+                      {isActive && (
+                        <>
+                          <Layout />
+                          <span>{workspace.name}</span>
+                        </>
+                      )}
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                </div>
+
+                <CollapsibleContent>
+                  <SidebarMenuSub>
+                    {getWorkspaceSubItems(workspace).map((subItem) => (
+                      <SidebarMenuSubItem key={subItem.title}>
+                        <SidebarMenuSubButton asChild>
+                          <Link
+                            href={subItem.url}
+                            className="flex items-center justify-between w-full"
+                          >
+                            <div className="flex items-center gap-2">
+                              {subItem.icon && (
+                                <subItem.icon className="h-4 w-4" />
+                              )}
+                              <span>{subItem.title}</span>
+                            </div>
+                            {subItem.count !== undefined && (
+                              <Badge
+                                variant="secondary"
+                                className="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums"
+                              >
+                                {subItem.count}
+                              </Badge>
                             )}
-                            <span>{subItem.title}</span>
-                          </div>
-                          {subItem.count !== undefined && (
-                            <Badge
-                              variant="secondary"
-                              className="h-5 min-w-5 rounded-full px-1 font-mono tabular-nums"
-                            >
-                              {subItem.count}
-                            </Badge>
-                          )}
-                        </Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
-            </SidebarMenuItem>
-          </Collapsible>
-        ))}
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                </CollapsibleContent>
+              </SidebarMenuItem>
+            </Collapsible>
+          );
+        })}
       </SidebarMenu>
     </SidebarGroup>
   );

@@ -95,7 +95,10 @@ export function BoardCard({ board, workspace, user }: BoardCardProps) {
         <div className="flex items-start justify-between">
           <div className="space-y-1 flex-1 min-w-0">
             <CardTitle className="text-base truncate">
-              <Link href={`/boards/${board.id}`} className="hover:underline">
+              <Link
+                href={`/dashboard/workspaces/${workspace.id}/boards/${board.id}`}
+                className="hover:underline"
+              >
                 {board.name}
               </Link>
             </CardTitle>

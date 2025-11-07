@@ -31,7 +31,7 @@ export default async function DashboardLayout({
       <AppSidebar variant="inset" user={session.user} />
       <SidebarInset>
         <SiteHeader />
-        {children}{" "}
+        {children}
       </SidebarInset>
     </SidebarProvider>
   );

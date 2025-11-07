@@ -1,6 +1,7 @@
 export enum Resource {
   WORKSPACE = "WORKSPACE",
   BOARD = "BOARD",
+  TASKLIST = "TASKLIST",
   TASK = "TASK",
 }
 

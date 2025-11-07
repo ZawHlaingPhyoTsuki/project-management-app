@@ -1,0 +1,46 @@
+"use client";
+
+import { useTaskListsByBoardIdAndWorkspaceId } from "@/hooks/use-task-list";
+import TaskList from "./task-list";
+import TaskCard from "./task-card";
+import AddTaskList from "./add-task-list";
+import type { TaskListWithCards } from "@/types";
+
+interface BoardViewProps {
+  boardId: string;
+  workspaceId: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  initialData?: any[];
+}
+
+export default function BoardView({
+  boardId,
+  workspaceId,
+  initialData,
+}: BoardViewProps) {
+  const { data: taskLists = [] } = useTaskListsByBoardIdAndWorkspaceId(
+    boardId,
+    workspaceId,
+    initialData
+  );
+
+  return (
+    <div className="flex min-w-max gap-4 lg:gap-6">
+      {taskLists.map((taskList) => (
+        <TaskList
+          key={taskList.id}
+          title={taskList.name}
+          taskListId={taskList.id}
+          boardId={boardId}
+          workspaceId={workspaceId}
+        >
+          {taskList.taskCards.map((task) => (
+            <TaskCard key={task.id} task={task} />
+          ))}
+        </TaskList>
+      ))}
+
+      <AddTaskList boardId={boardId} workspaceId={workspaceId} />
+    </div>
+  );
+}

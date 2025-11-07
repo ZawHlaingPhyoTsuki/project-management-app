@@ -1,28 +1,37 @@
-import { Ellipsis, Plus } from "lucide-react";
+import { Ellipsis } from "lucide-react";
 import type * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import CreateTaskCardDialog from "./create-task-card-dialog";
 
 interface TaskListProps extends React.PropsWithChildren {
   className?: string;
   title?: string;
+  taskListId: string;
+  boardId: string;
+  workspaceId: string;
 }
 
 export default function TaskList({
   className,
   title = "Untitled",
   children,
+  taskListId,
+  boardId,
+  workspaceId,
 }: TaskListProps) {
   return (
-    <Card className="w-90 flex-shrink-0 gap-0 pt-4 pb-0">
+    <Card className="w-90 gap-0 pt-2 pb-0">
       <CardHeader className="">
         <CardTitle className="flex items-center justify-between font-semibold text-base tracking-widest">
           {title}
           <div className="flex gap-1">
-            <Button size="icon-sm" variant="ghost">
-              <Plus />
-            </Button>
+            <CreateTaskCardDialog
+              taskListId={taskListId}
+              boardId={boardId}
+              workspaceId={workspaceId}
+            />
             <Button size="icon-sm" variant="ghost">
               <Ellipsis />
             </Button>
@@ -32,7 +41,7 @@ export default function TaskList({
       <CardContent
         className={cn(
           className,
-          "custom-scrollbar-vertical max-h-[70vh] space-y-4 overflow-y-auto px-4",
+          "space-y-4 px-4 pb-4 overflow-y-auto max-h-[80vh] custom-scrollbar-vertical"
         )}
       >
         {children}

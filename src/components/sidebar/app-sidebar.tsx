@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  IconDashboard,
   IconHelp,
   IconInnerShadowTop,
   IconListDetails,

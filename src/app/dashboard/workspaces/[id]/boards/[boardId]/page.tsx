@@ -3,7 +3,7 @@ import BoardView from "./_components/board-view";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTasklistByBoardIdAndWorkspaceId } from "@/actions/tasklist/get-tasklist";
-import SecondHeader from "./_components/second-header";
+import ShareLinkHeader from "./_components/share-link-header";
 
 interface Props {
   params: Promise<{
@@ -32,7 +32,7 @@ export default async function BoardPage({ params }: Props) {
 
   return (
     <>
-      <SecondHeader />
+      <ShareLinkHeader />
       <div className="flex flex-1 flex-col">
         <div className="@container/main flex flex-1 flex-col">
           {/* Kanban Board Container */}

@@ -3,8 +3,11 @@
 import { useTaskListsByBoardIdAndWorkspaceId } from "@/hooks/use-task-list";
 import TaskList from "./task-list";
 import TaskCard from "./task-card";
-import AddTaskList from "./add-task-list";
-import type { TaskListWithCards } from "@/types";
+import AddTaskList from "./create-tasklist-dialog";
+import EmptySection from "@/components/empty-section";
+import { ListChecks } from "lucide-react";
+import { useTaskListStore } from "@/store/use-tasklist-store";
+import { cn } from "@/lib/utils";
 
 interface BoardViewProps {
   boardId: string;
@@ -23,24 +26,41 @@ export default function BoardView({
     workspaceId,
     initialData
   );
+  const { setIsTaskListModalOpen } = useTaskListStore();
 
   return (
-    <div className="flex min-w-max gap-4 lg:gap-6">
-      {taskLists.map((taskList) => (
-        <TaskList
-          key={taskList.id}
-          title={taskList.name}
-          taskListId={taskList.id}
-          boardId={boardId}
-          workspaceId={workspaceId}
-        >
-          {taskList.taskCards.map((task) => (
-            <TaskCard key={task.id} task={task} />
-          ))}
-        </TaskList>
-      ))}
-
-      <AddTaskList boardId={boardId} workspaceId={workspaceId} />
-    </div>
+    <>
+      <div className="flex min-w-max gap-4 lg:gap-6">
+        {taskLists.length > 0 ? (
+          <>
+            {taskLists.map((taskList) => (
+              <TaskList
+                key={taskList.id}
+                title={taskList.name}
+                taskListId={taskList.id}
+                boardId={boardId}
+                workspaceId={workspaceId}
+              >
+                {taskList.taskCards.map((task) => (
+                  <TaskCard key={task.id} task={task} />
+                ))}
+              </TaskList>
+            ))}
+          </>
+        ) : (
+          <EmptySection
+            title="No tasks yet"
+            description="Create a task list to get started"
+            icon={<ListChecks />}
+            showButton
+            buttonText="Create task list"
+            onClick={() => setIsTaskListModalOpen(true)}
+          />
+        )}
+        <div className={cn(taskLists.length > 0 ? "block" : "hidden")}>
+          <AddTaskList boardId={boardId} workspaceId={workspaceId} />
+        </div>
+      </div>
+    </>
   );
 }

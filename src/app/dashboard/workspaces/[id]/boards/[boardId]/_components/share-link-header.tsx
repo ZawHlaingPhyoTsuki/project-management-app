@@ -1,9 +1,7 @@
 import {
-  AlignStartHorizontal,
-  AudioLines,
-  Calendar,
+
   Link,
-  Rows3,
+
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarGroup, AvatarGroupTooltip } from "@/components/ui/avatar-group";
@@ -38,7 +36,7 @@ const AVATARS = [
   },
 ];
 
-export default function SecondHeader() {
+export default function ShareLinkHeader() {
   return (
     <header className="flex h-(--header-height) shrink-0 items-center justify-between gap-2 border-b px-1.5 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) lg:px-3.5">
       <div/>

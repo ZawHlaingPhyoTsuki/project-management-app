@@ -14,7 +14,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { getTagColorClasses } from "@/lib/utils/tagColors";
-import type { TaskCardWithAssigneeAndTags } from "@/types";
+// import type { TaskCardWithAssigneeAndTags } from "@/types";
 
 interface TaskCardProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

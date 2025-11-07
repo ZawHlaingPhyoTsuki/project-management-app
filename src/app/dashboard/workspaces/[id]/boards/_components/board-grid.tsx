@@ -6,6 +6,7 @@ import { useSession } from "@/lib/auth-client";
 import EmptySection from "@/components/empty-section";
 import { useBoardStore } from "@/store/use-board-store";
 import { BoardCard } from "./board-card";
+import { useBoardsByWorkspaceId } from "@/hooks/use-board";
 
 interface Board {
   id: string;
@@ -26,16 +27,22 @@ interface Board {
 }
 
 interface BoardGridProps {
-  boards: Board[];
-  workspace: {
+  initialBoardData: Board[];
+  initialWorkspaceData: {
     id: string;
     name: string;
   };
 }
 
-export function BoardGrid({ boards, workspace }: BoardGridProps) {
+export function BoardGrid({
+  initialBoardData,
+  initialWorkspaceData,
+}: BoardGridProps) {
   const { setIsBoardModalOpen } = useBoardStore();
-  //   const { user } = useCurrentUser();
+  const { data: boards = [] } = useBoardsByWorkspaceId(
+    initialWorkspaceData.id,
+    initialBoardData
+  );
   const session = useSession();
   const user = session.data?.user;
 
@@ -43,7 +50,7 @@ export function BoardGrid({ boards, workspace }: BoardGridProps) {
     return (
       <EmptySection
         title="No boards yet"
-        description="Create your firstt board to start organizing tasks"
+        description="Create your first board to start organizing tasks"
         showButton={true}
         buttonText="Create board"
         onClick={() => setIsBoardModalOpen(true)}
@@ -60,10 +67,14 @@ export function BoardGrid({ boards, workspace }: BoardGridProps) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {boards.map((board) => (
-          <BoardCard key={board.id} board={board} user={user} workspace={workspace} />
+          <BoardCard
+            key={board.id}
+            board={board}
+            user={user}
+            workspace={initialWorkspaceData}
+          />
         ))}
       </div>
     </div>
   );
 }
-

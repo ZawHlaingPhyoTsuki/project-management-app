@@ -37,7 +37,7 @@ export const useWorkspaces = () => {
 
 export const useWorkspaceById = (workspaceId?: string) => {
   return useQuery({
-    queryKey: ["workspace", workspaceId],
+    queryKey: ["workspaces", workspaceId],
     queryFn: () => getWorkspaceById(workspaceId),
     enabled: !!workspaceId,
   });
@@ -61,7 +61,7 @@ export const useUpdateWorkspace = () => {
     mutationFn: updateWorkspace,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
-      queryClient.invalidateQueries({ queryKey: ["workspace", variables.id] });
+      queryClient.invalidateQueries({ queryKey: ["workspaces", variables.id] });
     },
   });
 };

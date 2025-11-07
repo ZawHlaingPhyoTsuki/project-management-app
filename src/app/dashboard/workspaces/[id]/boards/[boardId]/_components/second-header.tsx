@@ -38,49 +38,10 @@ const AVATARS = [
   },
 ];
 
-type ViewMode = "list" | "board" | "calendar" | "analytics";
-
-interface SecondHeaderProps {
-  currentView: ViewMode;
-  setView: (view: ViewMode) => void;
-}
-
-export default function SecondHeader({
-  currentView,
-  setView,
-}: SecondHeaderProps) {
+export default function SecondHeader() {
   return (
     <header className="flex h-(--header-height) shrink-0 items-center justify-between gap-2 border-b px-1.5 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) lg:px-3.5">
-      <div className="flex items-center gap-1 lg:gap-2">
-        <Button
-          variant={currentView === "board" ? "secondary" : "ghost"}
-          onClick={() => setView("board")}
-        >
-          <AlignStartHorizontal />
-          Board
-        </Button>
-        <Button
-          variant={currentView === "list" ? "secondary" : "ghost"}
-          onClick={() => setView("list")}
-        >
-          <Rows3 />
-          List
-        </Button>
-        <Button
-          variant={currentView === "calendar" ? "secondary" : "ghost"}
-          onClick={() => setView("calendar")}
-        >
-          <Calendar />
-          Calendar
-        </Button>
-        <Button
-          variant={currentView === "analytics" ? "secondary" : "ghost"}
-          onClick={() => setView("analytics")}
-        >
-          <AudioLines />
-          Analytics
-        </Button>
-      </div>
+      <div/>
       <div className="flex items-center gap-2">
         <Label className="hidden lg:block">Last updated 3 days ago</Label>
         <AvatarGroup variant="motion" className="-space-x-3 h-12">

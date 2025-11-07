@@ -99,7 +99,7 @@ export function BoardCard({ board, workspace, user }: BoardCardProps) {
                 href={`/dashboard/workspaces/${workspace.id}/boards/${board.id}`}
                 className="hover:underline"
               >
-                {board.name}
+                {board.name} - {board.isArchived ? "Archived" : "Active"}
               </Link>
             </CardTitle>
             {board.description && (

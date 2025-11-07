@@ -3,7 +3,10 @@ import { getWorkspaceById } from "@/actions/workspaces";
 import { CreateBoardDialog } from "./_components/create-board-dialog";
 import { BoardGrid } from "./_components/board-grid";
 import { BoardArchive } from "./_components/board-archive";
-import { getWorkspaceBoards } from "@/actions/boards/get-board";
+import {
+  getWorkspaceArchivedBoards,
+  getWorkspaceBoards,
+} from "@/actions/boards/get-board";
 import DashboardContentWrapper from "@/components/dashboard-content-wrapper";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
@@ -23,9 +26,10 @@ export default async function WorkspaceBoardsPage({
     redirect("/sign-in");
   }
 
-  const [workspace, boards] = await Promise.all([
+  const [workspace, boards, archivedBoards] = await Promise.all([
     getWorkspaceById(id),
     getWorkspaceBoards(id),
+    getWorkspaceArchivedBoards(id),
   ]);
 
   if (!workspace.success || !workspace.data) {
@@ -40,12 +44,12 @@ export default async function WorkspaceBoardsPage({
     >
       {/* Active Boards */}
       <BoardGrid
-        boards={boards.data?.filter((b) => !b.isArchived) || []}
-        workspace={workspace.data}
+        initialBoardData={boards.data || []}
+        initialWorkspaceData={workspace.data}
       />
 
       {/* Archived Boards (collapsible) */}
-      <BoardArchive boards={boards.data?.filter((b) => b.isArchived) || []} />
+      <BoardArchive boards={archivedBoards.data || []} />
     </DashboardContentWrapper>
   );
 }

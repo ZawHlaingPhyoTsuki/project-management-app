@@ -1,8 +1,6 @@
 "use client";
 
-import { MoreHorizontal, Settings, Users, Archive } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,18 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { can } from "@/lib/permissions";
-// import { toast } from "sonner";
 import { Action, Resource } from "@/types/permission";
 import { useArchiveBoardConfirmation } from "@/hooks/use-archive-board-confirmation";
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
+import BoardEllipsisDropdown from "./board-ellipsis-dropdown";
 
 interface Board {
   id: string;
@@ -84,13 +75,10 @@ export function BoardCard({ board, workspace, user }: BoardCardProps) {
     );
   };
 
-  const handleManageMembers = (boardId: string) => {
-    // TODO: Navigate to board members management
-    console.log("Manage members for board:", boardId);
-  };
+  const canManageBoard = canUserManageBoard(board);
 
   return (
-    <Card key={board.id} className="group hover:shadow-md transition-shadow">
+    <Card key={board.id} className="hover:shadow-md transition-shadow">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="space-y-1 flex-1 min-w-0">
@@ -99,7 +87,7 @@ export function BoardCard({ board, workspace, user }: BoardCardProps) {
                 href={`/dashboard/workspaces/${workspace.id}/boards/${board.id}`}
                 className="hover:underline"
               >
-                {board.name} - {board.isArchived ? "Archived" : "Active"}
+                {board.name}
               </Link>
             </CardTitle>
             {board.description && (
@@ -108,39 +96,12 @@ export function BoardCard({ board, workspace, user }: BoardCardProps) {
               </CardDescription>
             )}
           </div>
-          {canUserManageBoard(board) && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link href={`/boards/${board.id}/settings`}>
-                    <Settings className="h-4 w-4 mr-2" />
-                    Settings
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleManageMembers(board.id)}>
-                  <Users className="h-4 w-4 mr-2" />
-                  Members
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => setShowArchiveDialog(true)}
-                  className="text-destructive"
-                  disabled={isArchivePending}
-                >
-                  <Archive className="h-4 w-4 mr-2" />
-                  {isArchivePending ? "Archiving..." : "Archive"}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          {canManageBoard && (
+            <BoardEllipsisDropdown
+              boardId={board.id}
+              onArchive={() => setShowArchiveDialog(true)}
+              isArchivePending={isArchivePending}
+            />
           )}
         </div>
       </CardHeader>

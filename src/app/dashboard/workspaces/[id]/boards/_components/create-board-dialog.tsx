@@ -24,10 +24,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateBoard } from "@/hooks/use-board";
 import { CreateBoardSchema, type CreateBoardType } from "@/validations/board";
-// import { useCurrentUser } from "@/hooks/use-current-user";
 // import { can } from "@/lib/permissions";
 // import { Action, Resource } from "@/types/permission";
-import { useSession } from "@/lib/auth-client";
 import { useBoardStore } from "@/store/use-board-store";
 // import { can, Resource, Action } from "@/lib/permissions";
 
@@ -36,12 +34,9 @@ interface CreateBoardDialogProps {
 }
 
 export function CreateBoardDialog({ workspaceId }: CreateBoardDialogProps) {
-  // const [open, setOpen] = useState(false);
   const { isBoardModalOpen, setIsBoardModalOpen } = useBoardStore();
   const { mutateAsync: createBoard, isPending } = useCreateBoard();
   //   const { user } = useCurrentUser();
-  const session = useSession();
-  const _user = session.data?.user;
 
   //   const canCreateBoard = user?.role
   //     ? can(user.role, Resource.BOARD, Action.CREATE)
@@ -56,13 +51,20 @@ export function CreateBoardDialog({ workspaceId }: CreateBoardDialogProps) {
     },
   });
 
+  const handleOpenChange = (isOpen: boolean) => {
+    setIsBoardModalOpen(isOpen);
+    if (!isOpen) {
+      form.reset();
+    }
+  };
+
   const onSubmit = async (data: CreateBoardType) => {
     try {
       const result = await createBoard(data);
 
       if (result.success) {
         toast.success("Board created successfully");
-        setIsBoardModalOpen(false);
+        handleOpenChange(false);
         form.reset();
       } else {
         toast.error(result.error || "Failed to create board");
@@ -78,7 +80,7 @@ export function CreateBoardDialog({ workspaceId }: CreateBoardDialogProps) {
   //   }
 
   return (
-    <Dialog open={isBoardModalOpen} onOpenChange={setIsBoardModalOpen}>
+    <Dialog open={isBoardModalOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button>
           <Plus className="h-4 w-4" />
@@ -131,12 +133,15 @@ export function CreateBoardDialog({ workspaceId }: CreateBoardDialogProps) {
             <Button
               type="button"
               variant="outline"
-              onClick={() => setIsBoardModalOpen(false)}
+              onClick={() => handleOpenChange(false)}
               disabled={isPending}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending}>
+            <Button
+              type="submit"
+              disabled={isPending || !form.formState.isDirty}
+            >
               {isPending ? "Creating..." : "Create Board"}
             </Button>
           </DialogFooter>

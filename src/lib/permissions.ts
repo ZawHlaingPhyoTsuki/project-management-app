@@ -24,6 +24,17 @@ export const permissions: Record<Resource, Partial<Record<Action, Role[]>>> = {
     [Action.ARCHIVE]: [Role.ADMIN, Role.OWNER], // 📦 Soft delete to trash
     [Action.RESTORE]: [Role.OWNER, Role.ADMIN], // 🔄 Recover from trash
   },
+  
+  [Resource.TASKLIST]: {
+    [Action.CREATE]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
+    [Action.VIEW]: [Role.ADMIN, Role.OWNER, Role.MEMBER, Role.VIEWER],
+    [Action.UPDATE]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
+    [Action.DELETE]: [Role.ADMIN, Role.OWNER],
+
+    [Action.ARCHIVE]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
+    [Action.RESTORE]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
+  },
+
   [Resource.TASK]: {
     [Action.CREATE]: [Role.ADMIN, Role.OWNER, Role.MEMBER],
     [Action.VIEW]: [Role.ADMIN, Role.OWNER, Role.MEMBER, Role.VIEWER],

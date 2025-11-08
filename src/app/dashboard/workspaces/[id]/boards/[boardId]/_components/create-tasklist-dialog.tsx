@@ -72,7 +72,7 @@ export default function CreateTaskListDialog({
   return (
     <Dialog open={isTaskListModalOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="w-80">
+        <Button className="w-80 text-lg">
           <Plus className="h-4 w-4" />
           Add another list
         </Button>

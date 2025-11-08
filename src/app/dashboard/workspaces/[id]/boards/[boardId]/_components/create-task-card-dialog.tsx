@@ -60,8 +60,9 @@ export default function CreateTaskCardDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="icon-sm" variant="ghost">
-          <Plus />
+        <Button variant="ghost" className="w-full justify-normal">
+          <Plus/>
+          Add a card
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">

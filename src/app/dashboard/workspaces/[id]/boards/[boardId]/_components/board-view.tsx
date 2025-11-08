@@ -8,6 +8,7 @@ import { ListChecks } from "lucide-react";
 import { useTaskListStore } from "@/store/use-tasklist-store";
 import { cn } from "@/lib/utils";
 import TaskCard from "./task-card";
+import CreateTaskCardDialog from "./create-task-card-dialog";
 
 interface BoardViewProps {
   boardId: string;
@@ -30,7 +31,7 @@ export default function BoardView({
 
   return (
     <>
-      <div className="flex min-w-max gap-4 lg:gap-6">
+      <div className="flex min-w-max gap-4 lg:gap-6 items-start">
         {taskLists.length > 0 ? (
           <>
             {taskLists.map((taskList) => (

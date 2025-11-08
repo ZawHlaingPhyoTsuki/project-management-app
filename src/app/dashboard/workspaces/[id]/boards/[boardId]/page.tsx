@@ -22,9 +22,11 @@ export default async function BoardPage({ params }: Props) {
   if (!session) {
     redirect("/sign-in");
   }
-
-  const data = await getTasklistByBoardIdAndWorkspaceId(boardId, id);
-  console.log({ data });
+  
+  // Fetch data in parallel with session check
+  const [data] = await Promise.all([
+    getTasklistByBoardIdAndWorkspaceId(boardId, id),
+  ]);
 
   if (!data.success) {
     return <div>Error loading tasklists</div>;

@@ -2,12 +2,12 @@
 
 import { useTaskListsByBoardIdAndWorkspaceId } from "@/hooks/use-task-list";
 import TaskList from "./task-list";
-import TaskCard from "./task-card";
 import AddTaskList from "./create-tasklist-dialog";
 import EmptySection from "@/components/empty-section";
 import { ListChecks } from "lucide-react";
 import { useTaskListStore } from "@/store/use-tasklist-store";
 import { cn } from "@/lib/utils";
+import TaskCard from "./task-card";
 
 interface BoardViewProps {
   boardId: string;

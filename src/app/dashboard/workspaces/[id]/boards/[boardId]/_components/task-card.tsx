@@ -1,19 +1,20 @@
 "use client";
 
-import { Calendar, MessageSquare, Plus, SquarePen } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
-import { getTagColorClasses } from "@/lib/utils/tagColors";
+  SquarePen,
+  Circle,
+  TextAlignStart,
+  Eye,
+  Clock,
+  Archive,
+} from "lucide-react";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 // import type { TaskCardWithAssigneeAndTags } from "@/types";
 
 interface TaskCardProps {
@@ -23,168 +24,116 @@ interface TaskCardProps {
 
 export default function TaskCard({ task }: TaskCardProps) {
   return (
-    <Card className="cursor-grab bg-muted py-4 transition-shadow duration-200 hover:shadow-md">
-      <CardHeader className="px-4 pb-3">
+    <Card className="group hover:cursor-pointer bg-muted py-2 transition-shadow duration-200 hover:shadow-md gap-0 dark:hover:border-foreground">
+      <CardContent className="px-4">
         <CardTitle className="flex justify-between items-start gap-2 text-base">
-          <span className="flex-1 line-clamp-2 break-words min-w-0">
-            {task.title}
-          </span>
-          <SquarePen
-            size={16}
-            className="cursor-pointer text-muted-foreground hover:text-foreground flex-shrink-0"
-          />
+          <div className="flex items-center gap-2 flex-1 min-w-0 relative">
+            <Circle
+              size={16}
+              className="cursor-pointer text-muted-foreground hover:text-foreground flex-shrink-0 absolute left-0 opacity-0 group-hover:opacity-100 transition-all duration-200"
+            />
+            <span className="flex-1 line-clamp-2 break-words min-w-0 transition-all duration-200 group-hover:translate-x-6 group-hover:pr-6">
+              {task.title}
+            </span>
+          </div>
+          <div className="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <ArchiveTag />
+            <EditTag />
+          </div>
         </CardTitle>
-        <CardDescription className="text-sm">
-          {task.description}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="px-0">
-        {/* Dynamic Colored Tags */}
-        <div className="flex flex-wrap gap-2 px-4 cursor-default">
-          {task.tags?.slice(0, 3).map((tag) => {
-            const colorClasses = getTagColorClasses(tag.color);
-            return (
-              <Badge
-                key={tag.id}
-                variant="secondary"
-                className={cn(
-                  "text-xs font-medium border",
-                  colorClasses.bg,
-                  colorClasses.text,
-                )}
-              >
-                {tag.name}
-              </Badge>
-            );
-          })}
-          {task.tags?.length > 3 && (
-            <Badge variant="secondary" className="text-xs">
-              +{task.tags.length - 3}
-            </Badge>
-          )}
-        </div>
-        <Separator className="my-4 border border-dashed bg-muted-foreground/40" />
-        <div className="flex items-center justify-between">
-          {/* Info Badge */}
-          <InfoBadges task={task} />
-
-          {/* Avatars for multiple assignees */}
-          <AssigneeAvatars task={task} />
+        <div className="flex justify-between items-center">
+          <div className="flex gap-2 items-center mt-2">
+            {/* Eye Icon */}
+            <EyeTag />
+            {/* Calender Icon */}
+            <CalenderTag />
+            {/* Description Icon */}
+            <DescriptionTag />
+          </div>
+          <div className="flex gap-1">
+            <AssigneeAvatar />
+            <AssigneeAvatar />
+          </div>
         </div>
       </CardContent>
     </Card>
   );
 }
 
-function InfoBadges({ task }: TaskCardProps) {
-  const formatDueDate = (date: Date | string | null): string => {
-    if (!date) return "No date";
-
-    if (date instanceof Date) {
-      return date.getDate().toString();
-    }
-
-    if (typeof date === "string") {
-      const dateObj = new Date(date);
-      return !Number.isNaN(dateObj.getTime())
-        ? dateObj.getDate().toString()
-        : "Invalid date";
-    }
-
-    return "No date";
-  };
+function EditTag() {
   return (
-    <div className="flex gap-2 px-4">
-      {task.dueDate ? (
-        <Button variant="outline" size="sm" className="h-6 text-xs">
-          <Calendar className="mr-1 h-3 w-3" />
-          {formatDueDate(task.dueDate)}
-        </Button>
-      ) : null}
-      <Button variant="outline" size="sm" className="h-6 text-xs">
-        <MessageSquare className="mr-1 h-3 w-3" />
-        dd
-      </Button>
-      {/* <Button variant="outline" size="sm" className="h-6 text-xs">
-        <LoaderCircle className="mr-1 h-3 w-3" />
-        progress
-      </Button> */}
-    </div>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <SquarePen
+          size={16}
+          className="cursor-pointer text-muted-foreground hover:text-foreground flex-shrink-0 transition-colors duration-200 z-10"
+        />
+      </TooltipTrigger>
+      <TooltipContent>Edit card</TooltipContent>
+    </Tooltip>
   );
 }
 
-function AssigneeAvatars({ task }: TaskCardProps) {
-  // Safe assignees handling
-  const safeAssignees = Array.isArray(task.assignees) ? task.assignees : [];
-
-  // Filter out any potentially undefined assignees
-  const validAssignees = safeAssignees.filter(
-    (assignee) => assignee && typeof assignee === "object" && "id" in assignee,
-  );
-
+function ArchiveTag() {
   return (
-    <div className="flex gap-1 pr-3 cursor-default">
-      {validAssignees.slice(0, 2).map((assignee, index) => {
-        // Show +count avatar when there are more than 2 assignees
-        if (validAssignees.length > 2 && index === 1) {
-          return (
-            <Avatar key="more-count" className="size-7">
-              <AvatarFallback className="bg-accent text-xs">
-                +{validAssignees.length - 1}
-              </AvatarFallback>
-            </Avatar>
-          );
-        }
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Archive
+          size={16}
+          className="cursor-pointer text-muted-foreground hover:text-foreground flex-shrink-0 transition-colors duration-200 z-10"
+        />
+      </TooltipTrigger>
+      <TooltipContent>Archive card</TooltipContent>
+    </Tooltip>
+  );
+}
 
-        const userInitials =
-          assignee.name
-            ?.split(" ")
-            .map((n) => n[0])
-            .join("")
-            .toUpperCase() || "U";
+function EyeTag() {
+  return (
+    <Tooltip>
+      <TooltipTrigger>
+        <Eye className="w-4 h-4" />
+      </TooltipTrigger>
+      <TooltipContent>You are watching this card</TooltipContent>
+    </Tooltip>
+  );
+}
 
-        return (
-          <Avatar key={assignee.id} className="size-7">
-            <AvatarImage
-              src={assignee.image || undefined}
-              alt={assignee.name || "User"}
-            />
-            <AvatarFallback className="bg-accent text-xs">
-              {userInitials}
-            </AvatarFallback>
-          </Avatar>
-        );
-      })}
+function CalenderTag() {
+  return (
+    <Tooltip>
+      <TooltipTrigger>
+        <div className="flex items-center gap-1 bg-lime-600 rounded-md px-2 py-1 text-foreground">
+          <Clock className="w-4 h-4" />
+          <span className="text-xs ">30 Oct</span>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>This card is complete</TooltipContent>
+    </Tooltip>
+  );
+}
 
-      {/* Show single avatar when there's only one assignee */}
-      {validAssignees.length === 1 &&
-        validAssignees.map((assignee) => {
-          const userInitials =
-            assignee.name
-              ?.split(" ")
-              .map((n) => n[0])
-              .join("")
-              .toUpperCase() || "U";
+function DescriptionTag() {
+  return (
+    <Tooltip>
+      <TooltipTrigger>
+        <TextAlignStart className="w-4 h-4" />
+      </TooltipTrigger>
+      <TooltipContent>This card has a description</TooltipContent>
+    </Tooltip>
+  );
+}
 
-          return (
-            <Avatar key={assignee.id} className="size-7">
-              <AvatarImage
-                src={assignee.image || undefined}
-                alt={assignee.name || "User"}
-              />
-              <AvatarFallback className="bg-accent text-xs">
-                {userInitials}
-              </AvatarFallback>
-            </Avatar>
-          );
-        })}
-
-      {/* Show empty state when no assignees */}
-      {validAssignees.length === 0 && (
-        <Button variant="outline" size="icon-sm" className="rounded-full">
-          <Plus className="h-3 w-3" />
-        </Button>
-      )}
-    </div>
+function AssigneeAvatar () {
+  return (
+    <Tooltip>
+      <TooltipTrigger>
+        <Avatar className="size-7">
+          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      </TooltipTrigger>
+      <TooltipContent>Shadcn</TooltipContent>
+    </Tooltip>
   );
 }

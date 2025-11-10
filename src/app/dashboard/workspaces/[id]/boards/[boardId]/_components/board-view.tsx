@@ -1,6 +1,6 @@
 "use client";
 
-import { useTaskListsByBoardIdAndWorkspaceId } from "@/hooks/use-task-list";
+import { useTaskListsByBoardId } from "@/hooks/use-task-list";
 import TaskList from "./task-list";
 import CreateTaskListDialog from "./dialog/create-tasklist-dialog";
 import EmptySection from "@/components/empty-section";
@@ -16,8 +16,8 @@ interface BoardViewProps {
 }
 
 export default function BoardView({ boardId, workspaceId }: BoardViewProps) {
-  const { data: taskLists = [], isLoading } =
-    useTaskListsByBoardIdAndWorkspaceId(boardId, workspaceId);
+  const { data, isLoading } = useTaskListsByBoardId(boardId);
+  const taskLists = data?.data || [];
   const { setIsTaskListModalOpen } = useTaskListStore();
 
   if (isLoading) {

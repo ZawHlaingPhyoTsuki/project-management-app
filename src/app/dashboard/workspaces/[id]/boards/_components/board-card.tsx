@@ -99,7 +99,7 @@ export function BoardCard({ board, workspace, user }: BoardCardProps) {
           {canManageBoard && (
             <BoardEllipsisDropdown
               boardId={board.id}
-              onArchive={() => setShowArchiveDialog(true)}
+              setShowArchiveDialog={() => setShowArchiveDialog(true)}
               isArchivePending={isArchivePending}
             />
           )}

@@ -6,10 +6,7 @@ import prisma from "@/lib/db";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
 
-export const getTasklistByBoardIdAndWorkspaceId = async (
-  boardId: string,
-  workspaceId: string
-) => {
+export const getTasklistByBoardId = async (boardId: string) => {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -43,11 +40,14 @@ export const getTasklistByBoardIdAndWorkspaceId = async (
       where: {
         board: {
           id: boardId,
-          workspaceId,
         },
+        isArchived: false,
       },
       include: {
         taskCards: {
+          where: {
+            isArchived: false,
+          },
           include: {
             assignees: true,
             tags: true,
@@ -63,6 +63,11 @@ export const getTasklistByBoardIdAndWorkspaceId = async (
       orderBy: { position: "asc" },
     });
 
+    const taskcard = taskLists.map((tasklist) =>
+      tasklist.taskCards.map((taskcard) => taskcard.isArchived)
+    );
+
+    console.log({ taskcard });
 
     return { success: true, data: taskLists };
   } catch (error) {

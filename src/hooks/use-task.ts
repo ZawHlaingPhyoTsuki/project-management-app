@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createTask } from "@/actions/task/create-task";
 import { toast } from "sonner";
 import { updateTask } from "@/actions/task/update-tast";
+import { archiveTask } from "@/actions/task/archive-task";
 
 export const useCreateTask = () => {
   const queryClient = useQueryClient();
@@ -13,7 +14,7 @@ export const useCreateTask = () => {
       //     queryKey: ["tasks", variables.boardId, variables.workspaceId],
       //   });
       await queryClient.invalidateQueries({
-        queryKey: ["task-lists", variables.boardId, variables.workspaceId],
+        queryKey: ["task-lists", variables.boardId],
       });
 
       toast.success("Task created successfully!");
@@ -32,15 +33,32 @@ export const useUpdateTask = () => {
     onSuccess: (_data, variables) => {
       // Invalidate both tasks and task-lists queries
       queryClient.invalidateQueries({
-        queryKey: ["tasks", variables.boardId, variables.workspaceId],
+        queryKey: ["tasks", variables.boardId],
       });
       queryClient.invalidateQueries({
-        queryKey: ["task-lists", variables.boardId, variables.workspaceId],
+        queryKey: ["task-lists", variables.boardId],
       });
       toast.success("Task updated successfully!");
     },
     onError: () => {
       toast.error("Failed to update task");
+    },
+  });
+};
+
+export const useArchiveTask = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: archiveTask,
+    onSuccess: (_data, variables) => {
+      // Invalidate both tasks and task-lists queries
+      queryClient.invalidateQueries({
+        queryKey: ["tasks", variables.boardId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["task-lists", variables.boardId],
+      });
     },
   });
 };

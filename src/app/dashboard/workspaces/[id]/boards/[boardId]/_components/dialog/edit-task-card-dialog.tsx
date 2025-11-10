@@ -1,21 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { Pen } from "lucide-react";
-import { toast } from "sonner";
 import { UpdateTaskType } from "@/validations/task";
 import { EditTaskForm } from "../form/edit-task-form";
 import { useUpdateTask } from "@/hooks/use-task";
+import { toast } from "sonner";
 
 interface EditTaskCardDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   task: {
     id: string;
     title: string;
@@ -23,25 +21,26 @@ interface EditTaskCardDialogProps {
   };
   boardId: string;
   workspaceId: string;
-  trigger?: React.ReactNode;
 }
 
 export default function EditTaskCardDialog({
+  open,
+  onOpenChange,
   task,
   boardId,
   workspaceId,
-  trigger,
 }: EditTaskCardDialogProps) {
-  const [open, setOpen] = useState(false);
   const { mutate: updateTask, isPending } = useUpdateTask();
 
   const handleSubmit = (data: UpdateTaskType) => {
     const updateData: UpdateTaskType = {};
 
-    if (data.title && data.title.trim() !== task.title) {
+    // Check if title has changed (allow empty strings)
+    if (data.title !== undefined && data.title.trim() !== task.title) {
       updateData.title = data.title.trim();
     }
 
+    // Check if description has changed
     if (
       data.description !== undefined &&
       data.description !== task.description
@@ -52,7 +51,7 @@ export default function EditTaskCardDialog({
     // Check if there are any changes
     if (Object.keys(updateData).length === 0) {
       toast.info("No changes made");
-      setOpen(false);
+      onOpenChange(false);
       return;
     }
 
@@ -65,27 +64,22 @@ export default function EditTaskCardDialog({
       },
       {
         onSuccess: () => {
-          setOpen(false);
+          onOpenChange(false);
           toast.success("Task updated successfully");
+        },
+        onError: () => {
+          toast.error("Failed to update task");
         },
       }
     );
   };
 
   const handleCancel = () => {
-    setOpen(false);
+    onOpenChange(false);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button variant="ghost" size="sm">
-            <Pen className="h-4 w-4" />
-            Edit
-          </Button>
-        )}
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Edit Task</DialogTitle>

@@ -1,9 +1,14 @@
-import { Ellipsis } from "lucide-react";
 import * as React from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import CreateTaskCardDialog from "./create-task-card-dialog";
+import TaskListEllipsisDropdown from "./task-list-ellipsis-dropdown";
+import CreateTaskCardDialog from "./dialog/create-task-card-dialog";
 
 interface TaskListProps extends React.PropsWithChildren {
   className?: string;
@@ -13,7 +18,7 @@ interface TaskListProps extends React.PropsWithChildren {
   workspaceId: string;
 }
 
-export default function TaskList({
+export default React.memo(function TaskList({
   className,
   title = "Untitled",
   children,
@@ -28,9 +33,7 @@ export default function TaskList({
       <CardHeader className="px-5">
         <CardTitle className="flex items-center justify-between text-lg">
           {title}
-          <Button size="icon-sm" variant="ghost">
-            <Ellipsis />
-          </Button>
+          <TaskListEllipsisDropdown />
         </CardTitle>
       </CardHeader>
       {hasChildren && (
@@ -52,4 +55,4 @@ export default function TaskList({
       </CardFooter>
     </Card>
   );
-}
+});

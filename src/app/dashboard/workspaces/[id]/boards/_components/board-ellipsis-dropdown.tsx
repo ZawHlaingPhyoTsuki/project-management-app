@@ -13,13 +13,13 @@ import Link from "next/link";
 
 interface BoardEllipsisDropdownProps {
   boardId: string;
-  onArchive: () => void;
+  setShowArchiveDialog: () => void;
   isArchivePending: boolean;
 }
 
 export default function BoardEllipsisDropdown({
   boardId,
-  onArchive,
+  setShowArchiveDialog,
   isArchivePending,
 }: BoardEllipsisDropdownProps) {
   const handleManageMembers = () => {
@@ -66,8 +66,9 @@ export default function BoardEllipsisDropdown({
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={onArchive}
-          className="flex items-center text-destructive cursor-pointer"
+          variant="destructive"
+          onClick={setShowArchiveDialog}
+          className="flex items-center cursor-pointer"
           disabled={isArchivePending}
         >
           <Archive className="h-4 w-4 mr-2" />

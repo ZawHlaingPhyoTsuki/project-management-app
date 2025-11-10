@@ -2,7 +2,6 @@ import { auth } from "@/lib/auth";
 import BoardView from "./_components/board-view";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { getTasklistByBoardIdAndWorkspaceId } from "@/actions/tasklist/get-tasklist";
 import ShareLinkHeader from "./_components/share-link-header";
 
 interface Props {
@@ -23,15 +22,6 @@ export default async function BoardPage({ params }: Props) {
     redirect("/sign-in");
   }
   
-  // Fetch data in parallel with session check
-  const [data] = await Promise.all([
-    getTasklistByBoardIdAndWorkspaceId(boardId, id),
-  ]);
-
-  if (!data.success) {
-    return <div>Error loading tasklists</div>;
-  }
-
   return (
     <>
       <ShareLinkHeader />
@@ -42,7 +32,7 @@ export default async function BoardPage({ params }: Props) {
             <BoardView
               boardId={boardId}
               workspaceId={id}
-              initialData={data.data}
+              // initialData={data.data}
             />
           </div>
         </div>

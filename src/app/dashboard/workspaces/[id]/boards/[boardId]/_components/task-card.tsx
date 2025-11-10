@@ -15,14 +15,24 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import EditTaskCardDialog from "./dialog/edit-task-card-dialog";
+import { useArchiveTaskConfirmation } from "@/hooks/use-archive-task-confirmation";
+import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
+import { useState } from "react";
 // import type { TaskCardWithAssigneeAndTags } from "@/types";
 
 interface TaskCardProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   task: any;
+  boardId: string;
+  workspaceId: string;
 }
 
-export default function TaskCard({ task }: TaskCardProps) {
+export default function TaskCard({
+  task,
+  boardId,
+  workspaceId,
+}: TaskCardProps) {
   return (
     <Card className="group hover:cursor-pointer bg-muted py-2 transition-shadow duration-200 hover:shadow-md gap-0 dark:hover:border-foreground">
       <CardContent className="px-4">
@@ -37,8 +47,8 @@ export default function TaskCard({ task }: TaskCardProps) {
             </span>
           </div>
           <div className="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <ArchiveTag />
-            <EditTag />
+            <ArchiveTag task={task} boardId={boardId} />
+            <EditTag task={task} boardId={boardId} workspaceId={workspaceId} />
           </div>
         </CardTitle>
         <div className="flex justify-between items-center">
@@ -60,31 +70,76 @@ export default function TaskCard({ task }: TaskCardProps) {
   );
 }
 
-function EditTag() {
+interface EditTaskProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  task: any;
+  boardId: string;
+  workspaceId: string;
+}
+
+function EditTag({ task, boardId, workspaceId }: EditTaskProps) {
+  const [showEditDialog, setShowEditDialog] = useState(false);
+
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <SquarePen
-          size={16}
-          className="cursor-pointer text-muted-foreground hover:text-foreground flex-shrink-0 transition-colors duration-200 z-10"
-        />
-      </TooltipTrigger>
-      <TooltipContent>Edit card</TooltipContent>
-    </Tooltip>
+    <>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            onClick={() => setShowEditDialog(true)}
+          >
+            <SquarePen size={16} />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>Edit card</TooltipContent>
+      </Tooltip>
+      <EditTaskCardDialog
+        open={showEditDialog}
+        onOpenChange={setShowEditDialog}
+        task={task}
+        boardId={boardId}
+        workspaceId={workspaceId}
+      />
+    </>
   );
 }
 
-function ArchiveTag() {
+interface ArchiveTaskProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  task: any;
+  boardId: string;
+}
+
+function ArchiveTag({ task, boardId }: ArchiveTaskProps) {
+  const {
+    showArchiveDialog,
+    setShowArchiveDialog,
+    handleArchiveTask,
+    isPending: isArchivePending,
+  } = useArchiveTaskConfirmation({ taskName: task.title });
+
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Archive
-          size={16}
-          className="cursor-pointer text-muted-foreground hover:text-foreground flex-shrink-0 transition-colors duration-200 z-10"
-        />
-      </TooltipTrigger>
-      <TooltipContent>Archive card</TooltipContent>
-    </Tooltip>
+    <>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Archive
+            onClick={() => setShowArchiveDialog(true)}
+            size={16}
+            className="cursor-pointer text-muted-foreground hover:text-foreground flex-shrink-0 transition-colors duration-200 z-10"
+          />
+        </TooltipTrigger>
+        <TooltipContent>Archive card</TooltipContent>
+      </Tooltip>
+      <DeleteConfirmationDialog
+        open={showArchiveDialog}
+        onOpenChange={setShowArchiveDialog}
+        onConfirm={() => handleArchiveTask(task.id, boardId)}
+        title="Archive Task"
+        description={`This action will archive "${task.name}". All data will be preserved but moved to trash. You can restore it later if needed.`}
+        confirmText="Archive Task"
+        isPending={isArchivePending}
+      />
+    </>
   );
 }
 
@@ -124,9 +179,9 @@ function DescriptionTag() {
   );
 }
 
-function AssigneeAvatar () {
+function AssigneeAvatar() {
   return (
-    <Tooltip>
+    <Tooltip delayDuration={1000}>
       <TooltipTrigger>
         <Avatar className="size-7">
           <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />

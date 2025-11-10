@@ -147,7 +147,7 @@ function DescriptionTag() {
 
 function AssigneeAvatar() {
   return (
-    <Tooltip>
+    <Tooltip delayDuration={1000}>
       <TooltipTrigger>
         <Avatar className="size-7">
           <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />

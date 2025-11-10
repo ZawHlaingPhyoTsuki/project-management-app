@@ -1,12 +1,9 @@
-import {
-
-  Link,
-
-} from "lucide-react";
+import { Link } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AvatarGroup, AvatarGroupTooltip } from "@/components/ui/avatar-group";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import MenuDropdown from "./menu-dropdown";
 
 const AVATARS = [
   {
@@ -36,10 +33,10 @@ const AVATARS = [
   },
 ];
 
-export default function ShareLinkHeader() {
+export default function ShareLinkHeader({ boardId }: { boardId: string }) {
   return (
     <header className="flex h-(--header-height) shrink-0 items-center justify-between gap-2 border-b px-1.5 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) lg:px-3.5">
-      <div/>
+      <div />
       <div className="flex items-center gap-2">
         <Label className="hidden lg:block">Last updated 3 days ago</Label>
         <AvatarGroup variant="motion" className="-space-x-3 h-12">
@@ -60,6 +57,7 @@ export default function ShareLinkHeader() {
           <Link />
           Share
         </Button>
+        <MenuDropdown boardId={boardId} />
       </div>
     </header>
   );

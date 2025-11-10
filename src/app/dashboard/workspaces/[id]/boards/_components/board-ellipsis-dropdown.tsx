@@ -66,8 +66,9 @@ export default function BoardEllipsisDropdown({
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
+          variant="destructive"
           onClick={onArchive}
-          className="flex items-center text-destructive cursor-pointer"
+          className="flex items-center cursor-pointer"
           disabled={isArchivePending}
         >
           <Archive className="h-4 w-4 mr-2" />

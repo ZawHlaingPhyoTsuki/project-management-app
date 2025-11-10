@@ -1,3 +1,4 @@
+// actions/task/update-task.ts
 "use server";
 
 import { headers } from "next/headers";
@@ -6,21 +7,20 @@ import prisma from "@/lib/db";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
 import { revalidatePath } from "next/cache";
+import { Prisma } from "../../../prisma/generated/client";
 
-export async function createTask({
+export async function updateTask({
+  id,
   title,
   description,
-  taskListId,
   boardId,
   workspaceId,
-  dueDate,
 }: {
-  title: string;
+  id: string;
+  title?: string;
   description?: string;
-  taskListId: string;
   boardId: string;
   workspaceId: string;
-  dueDate?: Date | string;
 }) {
   try {
     // Authenticate user
@@ -47,43 +47,49 @@ export async function createTask({
       return { success: false, error: "Access denied or board not found" };
     }
 
-    if (!can(boardMember.role, Resource.TASK, Action.CREATE)) {
+    if (!can(boardMember.role, Resource.TASK, Action.UPDATE)) {
       return { success: false, error: "Insufficient permissions" };
     }
 
-    // Determine position
-    const lastCard = await prisma.taskCard.findFirst({
-      where: { taskListId },
-      orderBy: { position: "desc" },
-      select: { position: true },
-    });
-
-    const position = lastCard ? lastCard.position + 1 : 0;
-
-    // Create task card
-    const newTaskCard = await prisma.taskCard.create({
-      data: {
-        title,
-        description,
-        dueDate: dueDate ? new Date(dueDate) : null,
-        position,
-        taskListId,
-      },
-      include: {
-        tags: true,
-        assignees: {
-          include: {
-            user: true,
-          },
+    // Get existing task to verify it exists and belongs to the right board
+    const existingTask = await prisma.taskCard.findFirst({
+      where: {
+        id,
+        taskList: {
+          boardId: boardId,
         },
       },
+      include: {
+        taskList: true,
+      },
+    });
+
+    if (!existingTask) {
+      return { success: false, error: "Task not found" };
+    }
+
+    // Prepare update data
+    const updateData: Prisma.TaskCardUpdateInput = {};
+
+    if (title !== undefined) {
+      updateData.title = title.trim();
+    }
+
+    if (description !== undefined) {
+      updateData.description = description.trim() || null; // Convert empty string to null
+    }
+
+    // Update task card
+    const updatedTask = await prisma.taskCard.update({
+      where: { id },
+      data: updateData,
     });
 
     revalidatePath(`/workspaces/${workspaceId}/boards/${boardId}`);
 
-    return { success: true, data: newTaskCard };
+    return { success: true, data: updatedTask };
   } catch (error) {
-    console.error("❌ Error creating task card:", error);
-    return { success: false, error: "Failed to create task" };
+    console.error("❌ Error updating task card:", error);
+    return { success: false, error: "Failed to update task" };
   }
 }

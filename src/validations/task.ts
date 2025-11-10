@@ -7,4 +7,36 @@ export const CreateTaskListSchema = z.object({
     .max(50, "List name must be under 50 characters"),
 });
 
+export const CreateTaskSchema = z.object({
+  title: z
+    .string()
+    .min(1, "Task title is required")
+    .max(100, "Task title must be at most 100 characters"),
+  description: z
+    .string()
+    .max(100, "Description must be at most 100 characters")
+    .optional(),
+});
+
+export const UpdateTaskSchema = z
+  .object({
+    title: z
+      .string()
+      .min(1, "Task title is required")
+      .max(100, "Task title must be at most 100 characters")
+      .optional(),
+    description: z
+      .string()
+      .max(100, "Description must be at most 100 characters")
+      .optional(),
+  })
+  .refine(
+    (data) => data.title !== undefined || data.description !== undefined,
+    {
+      message: "At least one field (title or description) must be provided",
+    }
+  );
+
 export type CreateTaskListType = z.infer<typeof CreateTaskListSchema>;
+export type CreateTaskType = z.infer<typeof CreateTaskSchema>;
+export type UpdateTaskType = z.infer<typeof UpdateTaskSchema>;

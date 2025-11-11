@@ -1,8 +1,8 @@
 import { auth } from "@/lib/auth";
-import BoardView from "./_components/board-view";
+import BoardView from "../../../../../../components/features/board/board-view";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import ShareLinkHeader from "./_components/share-link-header";
+import ShareLinkHeader from "../../../../../../components/layout/share-link-header";
 
 interface Props {
   params: Promise<{
@@ -21,7 +21,7 @@ export default async function BoardPage({ params }: Props) {
   if (!session) {
     redirect("/sign-in");
   }
-  
+
   return (
     <>
       <ShareLinkHeader boardId={boardId} />

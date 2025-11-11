@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
+import { DeleteConfirmationDialog } from "@/components/shared/delete-confirmation-dialog";
 import { useRestoreTaskList } from "@/data/task-lists/mutations";
 import { useTaskListActions } from "@/hooks/task-lists/use-task-list-actions";
 

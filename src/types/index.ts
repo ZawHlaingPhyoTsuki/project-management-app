@@ -9,5 +9,6 @@ export type {
 export {
   ResourceType,
   Role,
+  TagColor
 } from '../../prisma/generated/enums'
 

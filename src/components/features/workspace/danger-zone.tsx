@@ -1,7 +1,7 @@
 "use client";
 
 import { Archive, Trash2 } from "lucide-react";
-import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
+import { DeleteConfirmationDialog } from "@/components/shared/delete-confirmation-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,

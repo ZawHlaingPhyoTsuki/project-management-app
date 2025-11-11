@@ -4,7 +4,7 @@ import { Calendar, Layout, MoreHorizontal, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
+import { DeleteConfirmationDialog } from "@/components/shared/delete-confirmation-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {

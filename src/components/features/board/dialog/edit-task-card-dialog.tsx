@@ -7,9 +7,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { UpdateTaskType } from "@/lib/validations/task";
-import { EditTaskForm } from "../form/edit-task-form";
 import { toast } from "sonner";
 import { useUpdateTask } from "@/data/tasks/mutations";
+import { EditTaskForm } from "@/components/forms/edit-task-form";
 
 interface EditTaskCardDialogProps {
   open: boolean;

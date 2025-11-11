@@ -1,6 +1,6 @@
 "use client";
 
-import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
+import { DeleteConfirmationDialog } from "@/components/shared/delete-confirmation-dialog";
 import { Button } from "@/components/ui/button";
 import { useRestoreBoard } from "@/data/boards/mutations";
 import { useBoardActions } from "@/hooks/boards/use-board-actions";

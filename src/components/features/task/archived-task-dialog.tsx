@@ -12,10 +12,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Archive, List, FileText } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { ArchivedTaskItem } from "./archived-task-item";
-import { ArchivedTaskListItem } from "./archived-task-list-item";
-import { TagColor } from "../../../../../../../../prisma/generated/enums";
 import { useArchivedTasksByBoardId } from "@/data/tasks/queries";
 import { useArchivedTaskListsByBoardId } from "@/data/task-lists/queries";
+import { ArchivedTaskListItem } from "./archived-task-list-item";
+import { TagColor } from "@/types";
 
 interface ArchivedTaskDialogProps {
   open: boolean;
@@ -120,7 +120,11 @@ export default function ArchivedTaskDialog({
                 </div>
               ) : (
                 archivedTasks.map((task) => (
-                  <ArchivedTaskItem key={task.id} task={task} boardId={boardId} />
+                  <ArchivedTaskItem
+                    key={task.id}
+                    task={task}
+                    boardId={boardId}
+                  />
                 ))
               )}
             </TabsContent>

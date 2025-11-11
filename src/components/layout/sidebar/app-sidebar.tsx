@@ -12,9 +12,9 @@ import { BarChart3, Calendar, Layout } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type * as React from "react";
-import { NavMain } from "@/components/sidebar/nav-main";
-import { NavSecondary } from "@/components/sidebar/nav-secondary";
-import { NavUser } from "@/components/sidebar/nav-user";
+import { NavMain } from "@/components/layout/sidebar/nav-main";
+import { NavSecondary } from "@/components/layout/sidebar/nav-secondary";
+import { NavUser } from "@/components/layout/sidebar/nav-user";
 import {
   Sidebar,
   SidebarContent,

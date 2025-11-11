@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
-import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
+import { DeleteConfirmationDialog } from "@/components/shared/delete-confirmation-dialog";
 import BoardEllipsisDropdown from "./board-ellipsis-dropdown";
 import { useBoardActions } from "@/hooks/boards/use-board-actions";
 

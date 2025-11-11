@@ -1,14 +1,14 @@
 "use client";
 
-import TaskList from "./task-list";
-import CreateTaskListDialog from "./dialog/create-tasklist-dialog";
-import EmptySection from "@/components/empty-section";
+import TaskList from "../task/task-list";
+import EmptySection from "@/components/shared/empty-section";
 import { ListChecks } from "lucide-react";
 import { useTaskListStore } from "@/stores/tasklist";
 import { cn } from "@/lib/utils";
-import TaskCard from "./task-card";
+import TaskCard from "../task/task-card";
 import { Spinner } from "@/components/ui/spinner";
 import { useTaskListsByBoardId } from "@/data/task-lists/queries";
+import CreateTaskListDialog from "./dialog/create-tasklist-dialog";
 
 interface BoardViewProps {
   boardId: string;

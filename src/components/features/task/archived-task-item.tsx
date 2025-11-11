@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { TagColor } from "@/lib/utils/tagColors";
-import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
+import { DeleteConfirmationDialog } from "@/components/shared/delete-confirmation-dialog";
 import { useRestoreTask } from "@/data/tasks/mutations";
 import { useTaskActions } from "@/hooks/tasks/use-task-actions";
 

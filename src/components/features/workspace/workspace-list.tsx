@@ -1,7 +1,7 @@
 "use client";
 
 import WorkspaceCard from "./workspace-card";
-import EmptySection from "@/components/empty-section";
+import EmptySection from "@/components/shared/empty-section";
 import { Layout } from "lucide-react";
 import { useWorkspaceStore } from "@/stores/workspace";
 import { useWorkspaces } from "@/data/workspaces/queries";

@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import TaskListEllipsisDropdown from "./task-list-ellipsis-dropdown";
-import CreateTaskCardDialog from "./dialog/create-task-card-dialog";
-import { InlineEditableTitle } from "@/components/inline-editable-title";
+import { InlineEditableTitle } from "@/components/shared/inline-editable-title";
 import { toast } from "sonner";
 import { useUpdateTaskList } from "@/data/task-lists/mutations";
+import CreateTaskCardDialog from "../board/dialog/create-task-card-dialog";
 
 interface TaskListProps extends React.PropsWithChildren {
   className?: string;

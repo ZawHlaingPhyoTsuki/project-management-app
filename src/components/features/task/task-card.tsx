@@ -15,10 +15,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import EditTaskCardDialog from "./dialog/edit-task-card-dialog";
-import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
+
+import { DeleteConfirmationDialog } from "@/components/shared/delete-confirmation-dialog";
 import { useState } from "react";
 import { useTaskActions } from "@/hooks/tasks/use-task-actions";
+import EditTaskCardDialog from "../board/dialog/edit-task-card-dialog";
 // import type { TaskCardWithAssigneeAndTags } from "@/types";
 
 interface TaskCardProps {

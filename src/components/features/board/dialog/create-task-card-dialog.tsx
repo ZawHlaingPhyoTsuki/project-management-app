@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import { CreateTaskType } from "@/lib/validations/task";
-import { CreateTaskForm } from "../form/create-task-form";
 import { useCreateTask } from "@/data/tasks/mutations";
+import { CreateTaskForm } from "@/components/forms/create-task-form";
 
 interface CreateTaskCardDialogProps {
   taskListId: string;

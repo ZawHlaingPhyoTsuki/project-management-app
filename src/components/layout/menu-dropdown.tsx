@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Archive, Ellipsis } from "lucide-react";
-import ArchivedTaskDialog from "./archived-task-dialog";
+import ArchivedTaskDialog from "../features/task/archived-task-dialog";
 
 interface MenuDropdownProps {
   boardId: string;

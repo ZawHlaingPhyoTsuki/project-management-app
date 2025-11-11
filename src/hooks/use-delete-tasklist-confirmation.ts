@@ -1,7 +1,7 @@
+import { useDeleteTaskList } from "@/data/task-lists/mutations";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useDeleteTaskList } from "./use-task-list";
 
 interface UseDeleteTaskListConfirmationProps {
   taskListName: string;

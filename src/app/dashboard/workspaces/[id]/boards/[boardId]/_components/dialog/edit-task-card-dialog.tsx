@@ -6,10 +6,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { UpdateTaskType } from "@/validations/task";
+import { UpdateTaskType } from "@/lib/validations/task";
 import { EditTaskForm } from "../form/edit-task-form";
-import { useUpdateTask } from "@/hooks/use-task";
 import { toast } from "sonner";
+import { useUpdateTask } from "@/data/tasks/mutations";
 
 interface EditTaskCardDialogProps {
   open: boolean;

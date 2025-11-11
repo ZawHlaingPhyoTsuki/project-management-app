@@ -1,7 +1,7 @@
+import { useDeleteWorkspace } from "@/data/workspaces/mutations";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useDeleteWorkspace } from "./use-workspace";
 
 interface UseDeleteWorkspaceConfirmationProps {
   workspaceName: string;

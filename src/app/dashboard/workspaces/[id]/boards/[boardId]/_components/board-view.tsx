@@ -1,6 +1,5 @@
 "use client";
 
-import { useTaskListsByBoardId } from "@/hooks/use-task-list";
 import TaskList from "./task-list";
 import CreateTaskListDialog from "./dialog/create-tasklist-dialog";
 import EmptySection from "@/components/empty-section";
@@ -9,6 +8,7 @@ import { useTaskListStore } from "@/store/use-tasklist-store";
 import { cn } from "@/lib/utils";
 import TaskCard from "./task-card";
 import { Spinner } from "@/components/ui/spinner";
+import { useTaskListsByBoardId } from "@/data/task-lists/queries";
 
 interface BoardViewProps {
   boardId: string;

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
 import { useDeleteTaskListConfirmation } from "@/hooks/use-delete-tasklist-confirmation";
-import { useRestoreTaskList } from "@/hooks/use-task-list";
+import { useRestoreTaskList } from "@/data/task-lists/mutations";
 
 interface ArchivedTaskListItemProps {
   boardId: string;

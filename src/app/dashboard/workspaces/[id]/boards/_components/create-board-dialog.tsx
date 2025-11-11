@@ -22,11 +22,14 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateBoard } from "@/hooks/use-board";
-import { CreateBoardSchema, type CreateBoardType } from "@/validations/board";
+import {
+  CreateBoardSchema,
+  type CreateBoardType,
+} from "@/lib/validations/board";
 // import { can } from "@/lib/permissions";
 // import { Action, Resource } from "@/types/permission";
 import { useBoardStore } from "@/store/use-board-store";
+import { useCreateBoard } from "@/data/boards/mutations";
 // import { can, Resource, Action } from "@/lib/permissions";
 
 interface CreateBoardDialogProps {

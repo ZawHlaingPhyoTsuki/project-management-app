@@ -2,7 +2,7 @@
 
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
 import { Button } from "@/components/ui/button";
-import { useRestoreBoard } from "@/hooks/use-board";
+import { useRestoreBoard } from "@/data/boards/mutations";
 import { useDeleteBoardConfirmation } from "@/hooks/use-delete-board-confirmation";
 import { useSession } from "@/lib/auth-client";
 import { can } from "@/lib/permissions";

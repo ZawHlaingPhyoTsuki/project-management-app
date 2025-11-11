@@ -1,7 +1,7 @@
+import { useDeleteTask } from "@/data/tasks/mutations";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useDeleteTask } from "./use-task";
 
 interface UseDeleteTaskConfirmationProps {
   taskName: string;

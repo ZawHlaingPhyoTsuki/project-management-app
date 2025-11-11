@@ -22,17 +22,16 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateWorkspace } from "@/hooks/use-workspace";
 import { useWorkspaceStore } from "@/store/use-workspace-store";
 import {
   CreateWorkspaceSchema,
   type CreateWorkspaceType,
-} from "@/validations/workspace";
+} from "@/lib/validations/workspace";
+import { useCreateWorkspace } from "@/data/workspaces/mutations";
 
 export default function CreateWorkspaceDialog() {
   const { mutateAsync: createWorkspace, isPending } = useCreateWorkspace();
-  const { isWorkspaceModalOpen, setIsWorkspaceModalOpen } =
-    useWorkspaceStore();
+  const { isWorkspaceModalOpen, setIsWorkspaceModalOpen } = useWorkspaceStore();
 
   const form = useForm<CreateWorkspaceType>({
     resolver: zodResolver(CreateWorkspaceSchema),

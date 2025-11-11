@@ -1,7 +1,7 @@
+import { useArchiveTask } from "@/data/tasks/mutations";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useArchiveTask } from "./use-task";
 
 interface useArchiveTaskConfirmationProps {
   taskName: string;

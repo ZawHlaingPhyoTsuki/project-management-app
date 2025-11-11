@@ -6,7 +6,7 @@ import { useSession } from "@/lib/auth-client";
 import EmptySection from "@/components/empty-section";
 import { useBoardStore } from "@/store/use-board-store";
 import { BoardCard } from "./board-card";
-import { useBoardsByWorkspaceId } from "@/hooks/use-board";
+import { useBoardsByWorkspaceId } from "@/data/boards/queries";
 
 interface Board {
   id: string;

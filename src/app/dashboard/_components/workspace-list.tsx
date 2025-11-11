@@ -1,10 +1,10 @@
 "use client";
 
-import { useWorkspaces } from "@/hooks/use-workspace";
 import WorkspaceCard from "./workspace-card";
 import EmptySection from "@/components/empty-section";
 import { Layout } from "lucide-react";
 import { useWorkspaceStore } from "@/store/use-workspace-store";
+import { useWorkspaces } from "@/data/workspaces/queries";
 
 export default function WorkspaceList() {
   const { data, isLoading } = useWorkspaces();

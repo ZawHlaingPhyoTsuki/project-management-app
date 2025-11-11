@@ -24,8 +24,8 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { useWorkspaces } from "@/hooks/use-workspace";
 import { usePathname } from "next/navigation";
+import { useWorkspaces } from "@/data/workspaces/queries";
 
 export function NavWorkspace({ title }: { title: string }) {
   const { data, isLoading } = useWorkspaces();

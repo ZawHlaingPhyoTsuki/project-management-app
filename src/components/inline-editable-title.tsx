@@ -6,7 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
-import { UpdateTaskListSchema, UpdateTaskListType } from "@/validations/task";
+import {
+  UpdateTaskListSchema,
+  UpdateTaskListType,
+} from "@/lib/validations/task";
 import { toast } from "sonner";
 
 interface InlineEditableTitleProps {
@@ -55,7 +58,7 @@ export function InlineEditableTitle({
           boardId,
         });
         setIsEditing(false);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         toast.error(error?.error || "Failed to update task list");
       }

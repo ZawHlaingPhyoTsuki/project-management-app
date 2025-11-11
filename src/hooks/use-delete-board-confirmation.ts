@@ -1,7 +1,7 @@
+import { useDeleteBoard } from "@/data/boards/mutations";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useDeleteBoard } from "./use-board";
 
 interface UseDeleteBoardConfirmationProps {
   boardName: string;

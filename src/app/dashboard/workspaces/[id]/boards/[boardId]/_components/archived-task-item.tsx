@@ -11,7 +11,7 @@ import { format } from "date-fns";
 import { TagColor } from "@/lib/utils/tagColors";
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
 import { useDeleteTaskConfirmation } from "@/hooks/use-delete-task-confirmation";
-import { useRestoreTask } from "@/hooks/use-task";
+import { useRestoreTask } from "@/data/tasks/mutations";
 
 interface ArchivedTaskItemProps {
   boardId: string;

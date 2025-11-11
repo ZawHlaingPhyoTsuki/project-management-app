@@ -1,7 +1,7 @@
+import { useArchiveWorkspace } from "@/data/workspaces/mutations";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useArchiveWorkspace } from "./use-workspace";
 
 interface UseArchiveWorkspaceConfirmationProps {
   workspaceName: string;

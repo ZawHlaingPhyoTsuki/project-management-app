@@ -1,7 +1,7 @@
+import { useArchiveBoard } from "@/data/boards/mutations";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useArchiveBoard } from "./use-board";
 
 interface UseArchiveBoardConfirmationProps {
   boardName: string;

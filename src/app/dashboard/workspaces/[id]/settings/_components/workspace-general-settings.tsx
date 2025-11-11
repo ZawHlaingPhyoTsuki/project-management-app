@@ -21,11 +21,11 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useUpdateWorkspace } from "@/hooks/use-workspace";
 import {
   UpdateWorkspaceSchema,
   type UpdateWorkspaceType,
-} from "@/validations/workspace";
+} from "@/lib/validations/workspace";
+import { useUpdateWorkspace } from "@/data/workspaces/mutations";
 
 interface WorkspaceGeneralSettingsProps {
   workspace: {

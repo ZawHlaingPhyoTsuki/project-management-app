@@ -9,8 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useWorkspaceArchivedBoards } from "@/hooks/use-board";
 import { BoardArchiveCard } from "./board-archive-card";
+import { useWorkspaceArchivedBoards } from "@/data/boards/queries";
 
 export function BoardArchive({ workspaceId }: { workspaceId: string }) {
   const [isExpanded, setIsExpanded] = useState(false);

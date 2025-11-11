@@ -21,9 +21,12 @@ import {
   FieldError,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useCreateTaskList } from "@/hooks/use-task-list";
 import { useTaskListStore } from "@/store/use-tasklist-store";
-import { CreateTaskListSchema, CreateTaskListType } from "@/validations/task";
+import {
+  CreateTaskListSchema,
+  CreateTaskListType,
+} from "@/lib/validations/task";
+import { useCreateTaskList } from "@/data/task-lists/mutations";
 
 interface CreateTaskListDialogProps {
   boardId: string;
@@ -35,8 +38,7 @@ export default function CreateTaskListDialog({
   workspaceId,
 }: CreateTaskListDialogProps) {
   const { mutateAsync: createTaskList, isPending } = useCreateTaskList();
-  const { isTaskListModalOpen, setIsTaskListModalOpen } =
-    useTaskListStore();
+  const { isTaskListModalOpen, setIsTaskListModalOpen } = useTaskListStore();
 
   const form = useForm<CreateTaskListType>({
     resolver: zodResolver(CreateTaskListSchema),

@@ -1,10 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   archiveTask,
   createTask,
   deleteTask,
-  getArchivedTasksByBoardId,
   restoreTask,
   updateTask,
 } from "@/actions/task";
@@ -68,15 +67,6 @@ export const useArchiveTask = () => {
         queryKey: ["archived-tasks", variables.boardId],
       });
     },
-  });
-};
-
-export const useArchivedTasksByBoardId = (boardId: string) => {
-  return useQuery({
-    queryKey: ["archived-tasks", boardId],
-    queryFn: () => getArchivedTasksByBoardId(boardId),
-    enabled: !!boardId,
-    staleTime: 1000 * 60 * 5,
   });
 };
 

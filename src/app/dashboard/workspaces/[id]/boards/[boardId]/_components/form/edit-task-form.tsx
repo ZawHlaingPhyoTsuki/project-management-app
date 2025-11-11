@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { UpdateTaskSchema, UpdateTaskType } from "@/validations/task";
+import { UpdateTaskSchema, UpdateTaskType } from "@/lib/validations/task";
 import {
   InputGroup,
   InputGroupAddon,

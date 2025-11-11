@@ -6,7 +6,7 @@ import prisma from "@/lib/db";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
 import type { Role } from "../../../prisma/generated/enums";
-import { CreateBoardType } from "@/validations/board";
+import { CreateBoardType } from "@/lib/validations/board";
 import { revalidatePath } from "next/cache";
 
 export async function createBoard({

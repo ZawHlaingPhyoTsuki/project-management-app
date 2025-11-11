@@ -3,7 +3,7 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
-import { CreateWorkspaceType } from "@/validations/workspace";
+import { CreateWorkspaceType } from "@/lib/validations/workspace";
 
 export const createWorkspace = async ({
   name,

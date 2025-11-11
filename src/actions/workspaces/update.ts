@@ -7,7 +7,7 @@ import prisma from "@/lib/db";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
 import type { Prisma } from "../../../prisma/generated/client";
-import { UpdateWorkspaceType } from "@/validations/workspace";
+import { UpdateWorkspaceType } from "@/lib/validations/workspace";
 
 export const updateWorkspace = async ({
   id,

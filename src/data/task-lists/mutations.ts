@@ -1,22 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createTaskList } from "@/actions/tasklist/create";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  getTasklistByBoardId,
-  getArchivedTaskListsByBoardId,
+  createTaskList,
   updateTaskList,
   archiveTasklist,
   deleteTaskList,
   restoreTaskList,
 } from "@/actions/tasklist";
-
-export const useTaskListsByBoardId = (boardId: string) => {
-  return useQuery({
-    queryKey: ["task-lists", boardId],
-    queryFn: () => getTasklistByBoardId(boardId),
-    enabled: !!boardId,
-    staleTime: 1000 * 60 * 5,
-  });
-};
 
 export const useCreateTaskList = () => {
   const queryClient = useQueryClient();
@@ -85,15 +74,6 @@ export const useUpdateTaskList = () => {
       // Sync with server
       queryClient.invalidateQueries({ queryKey: ["task-lists"] });
     },
-  });
-};
-
-export const useArchivedTaskListsByBoardId = (boardId: string) => {
-  return useQuery({
-    queryKey: ["archived-task-lists", boardId],
-    queryFn: () => getArchivedTaskListsByBoardId(boardId),
-    enabled: !!boardId,
-    staleTime: 1000 * 60 * 5,
   });
 };
 

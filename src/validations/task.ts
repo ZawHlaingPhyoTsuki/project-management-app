@@ -37,6 +37,14 @@ export const UpdateTaskSchema = z
     }
   );
 
+export const UpdateTaskListSchema = z.object({
+  title: z
+    .string()
+    .min(1, "Task list name is required")
+    .max(50, "Task list name must be under 50 characters"),
+});
+
 export type CreateTaskListType = z.infer<typeof CreateTaskListSchema>;
 export type CreateTaskType = z.infer<typeof CreateTaskSchema>;
 export type UpdateTaskType = z.infer<typeof UpdateTaskSchema>;
+export type UpdateTaskListType = z.infer<typeof UpdateTaskListSchema>;

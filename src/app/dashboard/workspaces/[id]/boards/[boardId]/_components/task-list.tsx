@@ -9,6 +9,9 @@ import {
 import { cn } from "@/lib/utils";
 import TaskListEllipsisDropdown from "./task-list-ellipsis-dropdown";
 import CreateTaskCardDialog from "./dialog/create-task-card-dialog";
+import { InlineEditableTitle } from "@/components/inline-editable-title";
+import { useUpdateTaskList } from "@/hooks/use-task-list";
+import { toast } from "sonner";
 
 interface TaskListProps extends React.PropsWithChildren {
   className?: string;
@@ -28,12 +31,40 @@ export default React.memo(function TaskList({
 }: TaskListProps) {
   const hasChildren = React.Children.toArray(children).length > 0;
 
+  const { mutateAsync: updateTaskList, isPending: isSaving } =
+    useUpdateTaskList();
+
+  const handleSaveTitle = async (data: {
+    title: string;
+    taskListId: string;
+    boardId: string;
+  }) => {
+    await updateTaskList({
+      id: data.taskListId,
+      name: data.title,
+      boardId: data.boardId,
+    });
+    toast.success("Task list updated");
+  };
+
   return (
     <Card className="w-80 gap-0 pt-2 pb-0">
       <CardHeader className="px-5">
-        <CardTitle className="flex items-center justify-between text-lg">
-          {title}
-          <TaskListEllipsisDropdown />
+        <CardTitle className="flex items-center justify-between text-lg overflow-hidden">
+          {/* {title} */}
+          <InlineEditableTitle
+            title={title}
+            taskListId={taskListId}
+            boardId={boardId}
+            onSave={handleSaveTitle}
+            isSaving={isSaving}
+            className="flex-1 min-w-0"
+          />
+          <TaskListEllipsisDropdown
+            tasklistId={taskListId}
+            taskListName={title}
+            boardId={boardId}
+          />
         </CardTitle>
       </CardHeader>
       {hasChildren && (

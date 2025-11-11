@@ -84,12 +84,11 @@ function EditTag({ task, boardId, workspaceId }: EditTaskProps) {
     <>
       <Tooltip>
         <TooltipTrigger asChild>
-          <button
-            type="button"
+          <SquarePen
             onClick={() => setShowEditDialog(true)}
-          >
-            <SquarePen size={16} />
-          </button>
+            size={16}
+            className="cursor-pointer text-muted-foreground hover:text-foreground flex-shrink-0 transition-colors duration-200 z-10"
+          />
         </TooltipTrigger>
         <TooltipContent>Edit card</TooltipContent>
       </Tooltip>

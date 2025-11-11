@@ -7,7 +7,7 @@ import { generateToken } from "@/lib/utils";
 import {
   CreateShareLinkSchema,
   GetShareLinksSchema,
-} from "@/validations/share-link";
+} from "@/lib/validations/share-link";
 import { Action, Resource } from "@/types/permission";
 import type { Prisma } from "../../../../../../prisma/generated/client";
 
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
     if (!validationResult.success) {
       return Response.json(
         { error: "Invalid parameters", details: validationResult.error.issues },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
           error: "Invalid request data",
           details: validationResult.error.issues,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
       if (!can(workspaceMember.role, resource, permissionAction)) {
         return Response.json(
           { error: "Insufficient permissions" },
-          { status: 403 },
+          { status: 403 }
         );
       }
     } else if (resourceType === "BOARD") {
@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
       if (!can(boardMember.role, resource, permissionAction)) {
         return Response.json(
           { error: "Insufficient permissions" },
-          { status: 403 },
+          { status: 403 }
         );
       }
     } else {

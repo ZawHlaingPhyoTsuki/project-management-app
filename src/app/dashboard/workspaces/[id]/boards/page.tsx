@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
-import { getWorkspaceById } from "@/actions/workspaces";
-import { CreateBoardDialog } from "./_components/create-board-dialog";
-import { BoardGrid } from "./_components/board-grid";
-import { BoardArchive } from "./_components/board-archive";
-import DashboardContentWrapper from "@/components/dashboard-content-wrapper";
+import { getActiveWorkspaceById } from "@/actions/workspaces";
+import { CreateBoardDialog } from "../../../../../components/features/board/create-board-dialog";
+import { BoardGrid } from "../../../../../components/features/board/board-grid";
+import { BoardArchive } from "../../../../../components/features/board/board-archive";
+import DashboardContentWrapper from "@/components/shared/dashboard-content-wrapper";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
@@ -22,7 +22,7 @@ export default async function WorkspaceBoardsPage({
     redirect("/sign-in");
   }
 
-  const [workspace] = await Promise.all([getWorkspaceById(id)]);
+  const [workspace] = await Promise.all([getActiveWorkspaceById(id)]);
 
   if (!workspace.success || !workspace.data) {
     redirect("/dashboard");

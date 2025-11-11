@@ -1,9 +1,9 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import CreateWorkspaceDialog from "./_components/create-workspace-dialog";
-import WorkspaceList from "./_components/workspace-list";
-import DashboardContentWrapper from "@/components/dashboard-content-wrapper";
+import CreateWorkspaceDialog from "../../components/features/workspace/create-workspace-dialog";
+import WorkspaceList from "../../components/features/workspace/workspace-list";
+import DashboardContentWrapper from "@/components/shared/dashboard-content-wrapper";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({

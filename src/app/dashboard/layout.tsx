@@ -1,8 +1,8 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import type React from "react";
-import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import { SiteHeader } from "@/components/sidebar/site-header";
+import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
+import { SiteHeader } from "@/components/layout/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
 

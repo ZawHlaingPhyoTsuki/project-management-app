@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 // import { toast } from "sonner";
 import { useSession } from "@/lib/auth-client";
 import EmptySection from "@/components/empty-section";
-import { useBoardStore } from "@/store/use-board-store";
+import { useBoardStore } from "@/stores/board";
 import { BoardCard } from "./board-card";
 import { useBoardsByWorkspaceId } from "@/data/boards/queries";
 

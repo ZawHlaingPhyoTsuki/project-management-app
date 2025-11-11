@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useWorkspaceStore } from "@/store/use-workspace-store";
+import { useWorkspaceStore } from "@/stores/workspace";
 import {
   CreateWorkspaceSchema,
   type CreateWorkspaceType,

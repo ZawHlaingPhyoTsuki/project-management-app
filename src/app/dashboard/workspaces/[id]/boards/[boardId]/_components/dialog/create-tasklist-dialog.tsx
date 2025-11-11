@@ -21,7 +21,7 @@ import {
   FieldError,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useTaskListStore } from "@/store/use-tasklist-store";
+import { useTaskListStore } from "@/stores/tasklist";
 import {
   CreateTaskListSchema,
   CreateTaskListType,

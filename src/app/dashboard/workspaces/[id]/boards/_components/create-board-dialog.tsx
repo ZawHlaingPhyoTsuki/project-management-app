@@ -28,7 +28,7 @@ import {
 } from "@/lib/validations/board";
 // import { can } from "@/lib/permissions";
 // import { Action, Resource } from "@/types/permission";
-import { useBoardStore } from "@/store/use-board-store";
+import { useBoardStore } from "@/stores/board";
 import { useCreateBoard } from "@/data/boards/mutations";
 // import { can, Resource, Action } from "@/lib/permissions";
 

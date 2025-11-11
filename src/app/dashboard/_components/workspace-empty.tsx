@@ -3,7 +3,7 @@
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useWorkspaceStore } from "@/store/use-workspace-store";
+import { useWorkspaceStore } from "@/stores/workspace";
 
 export default function BoardEmpty() {
   const { setIsWorkspaceModalOpen } = useWorkspaceStore();

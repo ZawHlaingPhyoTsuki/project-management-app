@@ -3,7 +3,7 @@
 import WorkspaceCard from "./workspace-card";
 import EmptySection from "@/components/empty-section";
 import { Layout } from "lucide-react";
-import { useWorkspaceStore } from "@/store/use-workspace-store";
+import { useWorkspaceStore } from "@/stores/workspace";
 import { useWorkspaces } from "@/data/workspaces/queries";
 
 export default function WorkspaceList() {

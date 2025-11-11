@@ -4,6 +4,7 @@ import { getTasklistByBoardId } from "@/actions/tasklist/get-tasklist";
 import { getArchivedTaskListsByBoardId } from "@/actions/tasklist/get-archived-tasklist";
 import { updateTaskList } from "@/actions/tasklist/update-tasklist";
 import { archiveTasklist } from "@/actions/tasklist/archive-tasklist";
+import { deleteTaskList } from "@/actions/tasklist/delete-tasklist";
 
 export const useTaskListsByBoardId = (boardId: string) => {
   return useQuery({
@@ -98,6 +99,22 @@ export const useArchiveTaskList = () => {
 
   return useMutation({
     mutationFn: archiveTasklist,
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["task-lists", variables.boardId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["archived-task-lists", variables.boardId],
+      });
+    },
+  });
+}
+
+export const useDeleteTaskList = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteTaskList,
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["task-lists", variables.boardId],

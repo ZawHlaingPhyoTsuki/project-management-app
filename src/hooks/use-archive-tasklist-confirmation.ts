@@ -4,12 +4,12 @@ import { toast } from "sonner";
 import { useArchiveTaskList } from "./use-task-list";
 
 interface useArchiveTasklistConfirmationProps {
-  tasklistName: string;
+  taskListName: string;
   onSuccess?: () => void;
 }
 
 export function useArchiveTasklistConfirmation({
-  tasklistName,
+  taskListName,
   onSuccess,
 }: useArchiveTasklistConfirmationProps) {
   const [showArchiveDialog, setShowArchiveDialog] = useState(false);
@@ -22,7 +22,7 @@ export function useArchiveTasklistConfirmation({
 
       if (result.success) {
         toast.success("Task list archived", {
-          description: `${tasklistName} has been successfully archived. You can restore it from the archived section.`,
+          description: `${taskListName} has been successfully archived. You can restore it from the archived section.`,
         });
         setShowArchiveDialog(false);
 

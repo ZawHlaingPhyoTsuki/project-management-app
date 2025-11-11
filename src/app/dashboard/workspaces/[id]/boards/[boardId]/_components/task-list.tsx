@@ -62,7 +62,7 @@ export default React.memo(function TaskList({
           />
           <TaskListEllipsisDropdown
             tasklistId={taskListId}
-            tasklistName={title}
+            taskListName={title}
             boardId={boardId}
           />
         </CardTitle>

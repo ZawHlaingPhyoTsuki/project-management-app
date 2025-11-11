@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getWorkspaceById } from "@/actions/workspaces";
+import { getActiveWorkspaceById } from "@/actions/workspaces";
 import { CreateBoardDialog } from "./_components/create-board-dialog";
 import { BoardGrid } from "./_components/board-grid";
 import { BoardArchive } from "./_components/board-archive";
@@ -22,7 +22,7 @@ export default async function WorkspaceBoardsPage({
     redirect("/sign-in");
   }
 
-  const [workspace] = await Promise.all([getWorkspaceById(id)]);
+  const [workspace] = await Promise.all([getActiveWorkspaceById(id)]);
 
   if (!workspace.success || !workspace.data) {
     redirect("/dashboard");

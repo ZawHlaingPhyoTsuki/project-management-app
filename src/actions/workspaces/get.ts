@@ -52,7 +52,9 @@ export const getAllWorkspaces = async () => {
   }
 };
 
-export const getWorkspaceById = async (workspaceId: string | undefined) => {
+export const getActiveWorkspaceById = async (
+  workspaceId: string | undefined
+) => {
   try {
     if (!workspaceId) {
       return { success: false, data: null, error: "Workspace ID is required" };
@@ -74,6 +76,7 @@ export const getWorkspaceById = async (workspaceId: string | undefined) => {
             userId: session.user.id,
           },
         },
+        isArchived: false,
       },
       include: {
         members: {

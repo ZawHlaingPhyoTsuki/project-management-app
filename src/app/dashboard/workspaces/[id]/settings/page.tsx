@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getWorkspaceById } from "@/actions/workspaces";
+import { getActiveWorkspaceById } from "@/actions/workspaces";
 import DangerZone from "./_components/danger-zone";
 import WorkspaceGeneralSettings from "./_components/workspace-general-settings";
 import WorkspaceInvitations from "./_components/workspace-invitations";
@@ -16,7 +16,7 @@ export default async function WorkspaceSettingsPage({
     redirect("/dashboard");
   }
 
-  const workspace = await getWorkspaceById(id);
+  const workspace = await getActiveWorkspaceById(id);
 
   if (!workspace.success || !workspace.data) {
     redirect("/dashboard");

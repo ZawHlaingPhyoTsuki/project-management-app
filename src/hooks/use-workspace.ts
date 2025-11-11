@@ -5,28 +5,9 @@ import {
   getAllWorkspaces,
   getWorkspaceById,
   updateWorkspace,
+  archiveWorkspace,
+  restoreWorkspace,
 } from "@/actions/workspaces";
-import { archiveWorkspace } from "@/actions/workspaces/archive-workspace";
-import { restoreWorkspace } from "@/actions/workspaces/restore-workspace";
-
-// export interface WorkspaceType {
-//   id: string;
-//   name: string;
-//   description?: string | null;
-//   createdAt: Date;
-//   _count: {
-//     members: number;
-//     boards: number;
-//   };
-//   members: Array<{
-//     user: {
-//       id: string;
-//       name: string | null;
-//       email: string;
-//       image: string | null;
-//     };
-//   }>;
-// }
 
 export const useWorkspaces = () => {
   return useQuery({

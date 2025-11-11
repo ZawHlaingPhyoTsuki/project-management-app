@@ -1,11 +1,16 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getWorkspaceArchivedBoards, getWorkspaceBoards } from "@/actions/boards/get-board";
-import { createBoard2 } from "@/actions/boards/create-board";
-import { archiveBoard } from "@/actions/boards/archive-board";
-import { restoreBoard } from "@/actions/boards/restore-board";
-import { deleteBoard } from "@/actions/boards/delete-board";
+import {
+  getWorkspaceArchivedBoards,
+  getWorkspaceBoards,
+} from "@/actions/boards/get";
+import {
+  createBoard2,
+  archiveBoard,
+  restoreBoard,
+  deleteBoard,
+} from "@/actions/boards";
 
 export const useBoardsByWorkspaceId = (
   workspaceId: string,
@@ -30,7 +35,7 @@ export const useWorkspaceArchivedBoards = (workspaceId: string) => {
     select: (data) => data?.data ?? [],
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
-}
+};
 
 export const useCreateBoard = () => {
   const queryClient = useQueryClient();
@@ -100,5 +105,5 @@ export function useDeleteBoard() {
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
       queryClient.invalidateQueries({ queryKey: ["archived-boards"] });
     },
-  })
+  });
 }

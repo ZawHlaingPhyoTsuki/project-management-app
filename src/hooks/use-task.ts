@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createTask } from "@/actions/task/create-task";
 import { toast } from "sonner";
-import { updateTask } from "@/actions/task/update-tast";
-import { archiveTask } from "@/actions/task/archive-task";
-import { getArchivedTasksByBoardId } from "@/actions/task/get-archived-task";
-import { deleteTask } from "@/actions/task/delete-task";
-import { restoreTask } from "@/actions/task/restore-task";
+import {
+  archiveTask,
+  createTask,
+  deleteTask,
+  getArchivedTasksByBoardId,
+  restoreTask,
+  updateTask,
+} from "@/actions/task";
 
 export const useCreateTask = () => {
   const queryClient = useQueryClient();
@@ -64,7 +66,7 @@ export const useArchiveTask = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["archived-tasks", variables.boardId],
-      })
+      });
     },
   });
 };
@@ -77,7 +79,6 @@ export const useArchivedTasksByBoardId = (boardId: string) => {
     staleTime: 1000 * 60 * 5,
   });
 };
-
 
 export const useDeleteTask = () => {
   const queryClient = useQueryClient();
@@ -94,10 +95,10 @@ export const useDeleteTask = () => {
       // });
       queryClient.invalidateQueries({
         queryKey: ["archived-tasks", variables.boardId],
-      })
+      });
     },
-  })
-}
+  });
+};
 
 export const useRestoreTask = () => {
   const queryClient = useQueryClient();
@@ -114,7 +115,7 @@ export const useRestoreTask = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["archived-tasks", variables.boardId],
-      })
+      });
     },
-  })
-}
+  });
+};

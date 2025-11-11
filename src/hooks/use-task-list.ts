@@ -1,11 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createTaskList } from "@/actions/tasklist/create-tasklist";
-import { getTasklistByBoardId } from "@/actions/tasklist/get-tasklist";
-import { getArchivedTaskListsByBoardId } from "@/actions/tasklist/get-archived-tasklist";
-import { updateTaskList } from "@/actions/tasklist/update-tasklist";
-import { archiveTasklist } from "@/actions/tasklist/archive-tasklist";
-import { deleteTaskList } from "@/actions/tasklist/delete-tasklist";
-import { restoreTaskList } from "@/actions/tasklist/restore-tasklist";
+import { createTaskList } from "@/actions/tasklist/create";
+import {
+  getTasklistByBoardId,
+  getArchivedTaskListsByBoardId,
+  updateTaskList,
+  archiveTasklist,
+  deleteTaskList,
+  restoreTaskList,
+} from "@/actions/tasklist";
 
 export const useTaskListsByBoardId = (boardId: string) => {
   return useQuery({
@@ -109,7 +111,7 @@ export const useArchiveTaskList = () => {
       });
     },
   });
-}
+};
 
 export const useDeleteTaskList = () => {
   const queryClient = useQueryClient();
@@ -125,7 +127,7 @@ export const useDeleteTaskList = () => {
       });
     },
   });
-}
+};
 
 export const useRestoreTaskList = () => {
   const queryClient = useQueryClient();
@@ -141,7 +143,7 @@ export const useRestoreTaskList = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["archived-task-lists", variables.boardId],
-      })
+      });
     },
-  })
-}
+  });
+};

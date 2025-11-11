@@ -7,11 +7,11 @@ import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
 // import { revalidatePath } from "next/cache";
 
-export async function deleteTaskList({
-  taskListId,
+export async function deleteTask({
+  taskId,
   boardId,
 }: {
-  taskListId: string;
+  taskId: string;
   boardId: string;
 }) {
   try {
@@ -35,26 +35,26 @@ export async function deleteTaskList({
       return { success: false, error: "Access denied" };
     }
 
-    // Check if user has permission to delete the task list
-    if (!can(boardMember.role, Resource.TASKLIST, Action.DELETE)) {
+    // Check if user has permission to delete the task
+    if (!can(boardMember.role, Resource.TASK, Action.DELETE)) {
       return {
         success: false,
-        error: "You don't have permission to delete this task list",
+        error: "You don't have permission to delete this task",
       };
     }
 
-    const taskList = await prisma.taskList.delete({
+    const task = await prisma.taskCard.delete({
       where: {
-        id: taskListId,
+        id: taskId,
       },
     });
 
     // revalidatePath(`/workspaces/${boardMember.board.workspaceId}/boards`);
     // revalidatePath(`/workspaces/${boardMember.board.workspaceId}`);
 
-    return { success: true, data: taskList };
+    return { success: true, data: task };
   } catch (error) {
-    console.error("Error deleting task list:", error);
-    return { success: false, error: "Failed to delete task list" };
+    console.error("Error deleting task:", error);
+    return { success: false, error: "Failed to delete task" };
   }
 }

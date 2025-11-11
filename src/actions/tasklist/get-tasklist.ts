@@ -63,12 +63,6 @@ export const getTasklistByBoardId = async (boardId: string) => {
       orderBy: { position: "asc" },
     });
 
-    const taskcard = taskLists.map((tasklist) =>
-      tasklist.taskCards.map((taskcard) => taskcard.isArchived)
-    );
-
-    console.log({ taskcard });
-
     return { success: true, data: taskLists };
   } catch (error) {
     console.error("Error fetching tasklists:", error);

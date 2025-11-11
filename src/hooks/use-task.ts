@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { updateTask } from "@/actions/task/update-tast";
 import { archiveTask } from "@/actions/task/archive-task";
 import { getArchivedTasksByBoardId } from "@/actions/task/get-archived-task";
+import { deleteTask } from "@/actions/task/delete-task";
 
 export const useCreateTask = () => {
   const queryClient = useQueryClient();
@@ -75,3 +76,24 @@ export const useArchivedTasksByBoardId = (boardId: string) => {
     staleTime: 1000 * 60 * 5,
   });
 };
+
+
+export const useDeleteTask = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteTask,
+    onSuccess: (_data, variables) => {
+      // // Invalidate both tasks and task-lists queries
+      // queryClient.invalidateQueries({
+      //   queryKey: ["tasks", variables.boardId],
+      // });
+      // queryClient.invalidateQueries({
+      //   queryKey: ["task-lists", variables.boardId],
+      // });
+      queryClient.invalidateQueries({
+        queryKey: ["archived-tasks", variables.boardId],
+      })
+    },
+  })
+}

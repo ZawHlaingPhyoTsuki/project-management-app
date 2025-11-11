@@ -120,7 +120,7 @@ export default function ArchivedTaskDialog({
                 </div>
               ) : (
                 archivedTasks.map((task) => (
-                  <ArchivedTaskItem key={task.id} task={task} />
+                  <ArchivedTaskItem key={task.id} task={task} boardId={boardId} />
                 ))
               )}
             </TabsContent>

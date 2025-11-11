@@ -69,6 +69,7 @@ export function ArchivedTaskListItem({
         </CardContent>
       </Card>
 
+      {/* Delete Task List Dialog */}
       <DeleteConfirmationDialog
         open={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}

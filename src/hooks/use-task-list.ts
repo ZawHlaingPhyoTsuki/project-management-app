@@ -3,6 +3,7 @@ import { createTaskList } from "@/actions/tasklist/create-tasklist";
 import { getTasklistByBoardId } from "@/actions/tasklist/get-tasklist";
 import { getArchivedTaskListsByBoardId } from "@/actions/tasklist/get-archived-tasklist";
 import { updateTaskList } from "@/actions/tasklist/update-tasklist";
+import { archiveTasklist } from "@/actions/tasklist/archive-tasklist";
 
 export const useTaskListsByBoardId = (boardId: string) => {
   return useQuery({
@@ -91,3 +92,19 @@ export const useArchivedTaskListsByBoardId = (boardId: string) => {
     staleTime: 1000 * 60 * 5,
   });
 };
+
+export const useArchiveTaskList = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: archiveTasklist,
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["task-lists", variables.boardId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["archived-task-lists", variables.boardId],
+      });
+    },
+  });
+}

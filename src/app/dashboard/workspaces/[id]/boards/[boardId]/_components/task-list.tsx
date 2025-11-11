@@ -60,7 +60,11 @@ export default React.memo(function TaskList({
             isSaving={isSaving}
             className="flex-1 min-w-0"
           />
-          <TaskListEllipsisDropdown />
+          <TaskListEllipsisDropdown
+            tasklistId={taskListId}
+            tasklistName={title}
+            boardId={boardId}
+          />
         </CardTitle>
       </CardHeader>
       {hasChildren && (

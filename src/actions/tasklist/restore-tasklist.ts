@@ -7,11 +7,11 @@ import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
 // import { revalidatePath } from "next/cache";
 
-export async function archiveTask({
-  taskId,
+export async function restoreTaskList({
+  taskListId,
   boardId,
 }: {
-  taskId: string;
+  taskListId: string;
   boardId: string;
 }) {
   try {
@@ -35,30 +35,30 @@ export async function archiveTask({
       return { success: false, error: "Access denied" };
     }
 
-    // Check if user has permission to archive the task
-    if (!can(boardMember.role, Resource.TASK, Action.ARCHIVE)) {
+    // Check if user has permission to restore the task list
+    if (!can(boardMember.role, Resource.TASKLIST, Action.RESTORE)) {
       return {
         success: false,
-        error: "You don't have permission to archive this task",
+        error: "You don't have permission to restore this task list",
       };
     }
 
-    const task = await prisma.taskCard.update({
+    const taskList = await prisma.taskList.update({
       where: {
-        id: taskId,
+        id: taskListId,
       },
       data: {
-        isArchived: true,
-        archivedAt: new Date(),
+        isArchived: false,
+        archivedAt: null,
       },
     });
 
     // revalidatePath(`/workspaces/${boardMember.board.workspaceId}/boards`);
     // revalidatePath(`/workspaces/${boardMember.board.workspaceId}`);
 
-    return { success: true, data: task };
+    return { success: true, data: taskList };
   } catch (error) {
-    console.error("Error archiving task:", error);
-    return { success: false, error: "Failed to archive task" };
+    console.error("Error restoring task list:", error);
+    return { success: false, error: "Failed to restore task list" };
   }
 }

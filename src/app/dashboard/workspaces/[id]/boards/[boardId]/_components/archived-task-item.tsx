@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import { TagColor } from "@/lib/utils/tagColors";
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
 import { useDeleteTaskConfirmation } from "@/hooks/use-delete-task-confirmation";
+import { useRestoreTask } from "@/hooks/use-task";
 
 interface ArchivedTaskItemProps {
   boardId: string;
@@ -51,6 +52,9 @@ export function ArchivedTaskItem({ boardId, task }: ArchivedTaskItemProps) {
     handleDeleteTask,
     isPending: isDeletePending,
   } = useDeleteTaskConfirmation({ taskName: task.title });
+
+  const { mutateAsync: restoreTask, isPending: isRestorePending } =
+    useRestoreTask();
 
   return (
     <>
@@ -107,11 +111,17 @@ export function ArchivedTaskItem({ boardId, task }: ArchivedTaskItemProps) {
               )}
             </div>
             <div className="flex gap-2 flex-shrink-0">
-              <Button variant="outline" size="sm">
+              <Button
+                onClick={() => restoreTask({ taskId: task.id, boardId })}
+                disabled={isRestorePending || isDeletePending}
+                variant="outline"
+                size="sm"
+              >
                 Restore
               </Button>
               <Button
                 onClick={() => setShowDeleteDialog(true)}
+                disabled={isDeletePending || isRestorePending}
                 variant="destructive"
                 size="sm"
               >

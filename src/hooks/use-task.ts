@@ -5,6 +5,7 @@ import { updateTask } from "@/actions/task/update-tast";
 import { archiveTask } from "@/actions/task/archive-task";
 import { getArchivedTasksByBoardId } from "@/actions/task/get-archived-task";
 import { deleteTask } from "@/actions/task/delete-task";
+import { restoreTask } from "@/actions/task/restore-task";
 
 export const useCreateTask = () => {
   const queryClient = useQueryClient();
@@ -91,6 +92,26 @@ export const useDeleteTask = () => {
       // queryClient.invalidateQueries({
       //   queryKey: ["task-lists", variables.boardId],
       // });
+      queryClient.invalidateQueries({
+        queryKey: ["archived-tasks", variables.boardId],
+      })
+    },
+  })
+}
+
+export const useRestoreTask = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: restoreTask,
+    onSuccess: (_data, variables) => {
+      // // Invalidate both tasks and task-lists queries
+      queryClient.invalidateQueries({
+        queryKey: ["tasks", variables.boardId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["task-lists", variables.boardId],
+      });
       queryClient.invalidateQueries({
         queryKey: ["archived-tasks", variables.boardId],
       })

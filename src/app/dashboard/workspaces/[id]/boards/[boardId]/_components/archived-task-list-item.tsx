@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
 import { useDeleteTaskListConfirmation } from "@/hooks/use-delete-tasklist-confirmation";
+import { useRestoreTaskList } from "@/hooks/use-task-list";
 
 interface ArchivedTaskListItemProps {
   boardId: string;
@@ -27,6 +28,9 @@ export function ArchivedTaskListItem({
     handleDeleteTaskList,
     isPending: isDeletePending,
   } = useDeleteTaskListConfirmation({ taskListName: list.name });
+
+  const { mutateAsync: restoreTaskList, isPending: isRestorePending } =
+    useRestoreTaskList();
 
   return (
     <>
@@ -54,11 +58,19 @@ export function ArchivedTaskListItem({
               )}
             </div>
             <div className="flex gap-2 flex-shrink-0">
-              <Button variant="outline" size="sm">
-                Restore
+              <Button
+                onClick={() =>
+                  restoreTaskList({ taskListId: list.id, boardId })
+                }
+                disabled={isRestorePending || isDeletePending}
+                variant="outline"
+                size="sm"
+              >
+                {isRestorePending ? "Restoring..." : "Restore"}
               </Button>
               <Button
                 onClick={() => setShowDeleteDialog(true)}
+                disabled={isRestorePending || isDeletePending}
                 variant="destructive"
                 size="sm"
               >

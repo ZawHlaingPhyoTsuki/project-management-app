@@ -29,6 +29,7 @@ interface DeleteConfirmationDialogProps {
   // For type-to-confirm functionality
   requireConfirmation?: boolean;
   expectedText?: string;
+  loadingText?: string;
 }
 
 export function DeleteConfirmationDialog({
@@ -42,6 +43,7 @@ export function DeleteConfirmationDialog({
   isPending = false,
   requireConfirmation = false,
   expectedText = "",
+  loadingText = "Deleting...",
 }: DeleteConfirmationDialogProps) {
   const [inputValue, setInputValue] = useState("");
   const [copied, setCopied] = useState(false);
@@ -128,7 +130,7 @@ export function DeleteConfirmationDialog({
               disabled={isConfirmDisabled}
               className="text-white"
             >
-              {isPending ? "Deleting..." : confirmText}
+              {isPending ? loadingText : confirmText}
             </Button>
           </AlertDialogAction>
         </AlertDialogFooter>

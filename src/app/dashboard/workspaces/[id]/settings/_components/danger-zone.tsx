@@ -94,6 +94,7 @@ export default function DangerZone({ workspace }: DangerZoneProps) {
         description={`This action will archive "${workspace.name}". All boards and data will be preserved but moved to trash. You can restore it later if needed.`}
         confirmText="Archive Workspace"
         isPending={isArchivePending}
+        loadingText="Archiving..."
       />
 
       {/* Delete Confirmation Dialog */}

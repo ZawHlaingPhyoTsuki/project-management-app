@@ -43,7 +43,7 @@ export async function archiveTasklist({
       };
     }
 
-    const board = await prisma.taskList.update({
+    const taskList = await prisma.taskList.update({
       where: {
         id: taskListId,
       },
@@ -56,7 +56,7 @@ export async function archiveTasklist({
     // revalidatePath(`/workspaces/${boardMember.board.workspaceId}/boards`);
     // revalidatePath(`/workspaces/${boardMember.board.workspaceId}`);
 
-    return { success: true, data: board };
+    return { success: true, data: taskList };
   } catch (error) {
     console.error("Error archiving task list:", error);
     return { success: false, error: "Failed to archive task list" };

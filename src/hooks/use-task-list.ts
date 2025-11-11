@@ -5,6 +5,7 @@ import { getArchivedTaskListsByBoardId } from "@/actions/tasklist/get-archived-t
 import { updateTaskList } from "@/actions/tasklist/update-tasklist";
 import { archiveTasklist } from "@/actions/tasklist/archive-tasklist";
 import { deleteTaskList } from "@/actions/tasklist/delete-tasklist";
+import { restoreTaskList } from "@/actions/tasklist/restore-tasklist";
 
 export const useTaskListsByBoardId = (boardId: string) => {
   return useQuery({
@@ -124,4 +125,23 @@ export const useDeleteTaskList = () => {
       });
     },
   });
+}
+
+export const useRestoreTaskList = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: restoreTaskList,
+    onSuccess: (_data, variables) => {
+      // queryClient.invalidateQueries({
+      //   queryKey: ["tasks", variables.boardId],
+      // });
+      queryClient.invalidateQueries({
+        queryKey: ["task-lists", variables.boardId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["archived-task-lists", variables.boardId],
+      })
+    },
+  })
 }

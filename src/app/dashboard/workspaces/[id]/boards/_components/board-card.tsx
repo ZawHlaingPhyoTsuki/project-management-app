@@ -129,6 +129,7 @@ export function BoardCard({ board, workspace, user }: BoardCardProps) {
         description={`This action will archive "${board.name}". All data will be preserved but moved to trash. You can restore it later if needed.`}
         confirmText="Archive Board"
         isPending={isArchivePending}
+        loadingText="Archiving..."
       />
     </Card>
   );

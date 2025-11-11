@@ -86,6 +86,7 @@ export default function TaskListEllipsisDropdown({
         description={`This action will archive "${taskListName}". All data will be preserved but moved to trash. You can restore it later if needed.`}
         confirmText="Archive List"
         isPending={isArchivePending}
+        loadingText="Archiving..."
       />
 
       {/* Delete confirmation dialog */}

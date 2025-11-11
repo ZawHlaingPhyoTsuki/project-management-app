@@ -1,10 +1,20 @@
-// dummyData.ts
-import type {
-  Tag,
-  TaskCardWithAssigneeAndTags,
-  TaskListWithCards,
-  User,
-} from "@/types";
+import { Tag, TaskCard, TaskList, User } from "@/types";
+
+export interface TaskCardWithAssigneeAndTags extends TaskCard {
+  assignees: User[];
+  tags: Tag[];
+}
+
+export interface TaskListWithCards extends TaskList {
+  taskCards: TaskCardWithAssigneeAndTags[];
+  _count?: { taskCards: number };
+}
+
+export interface ApiResponse<T> {
+  data: T[];
+  success: boolean;
+}
+
 
 // Dummy Users
 export const dummyUsers: User[] = [

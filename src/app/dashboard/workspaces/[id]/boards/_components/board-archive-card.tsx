@@ -3,7 +3,7 @@
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
 import { Button } from "@/components/ui/button";
 import { useRestoreBoard } from "@/data/boards/mutations";
-import { useDeleteBoardConfirmation } from "@/hooks/use-delete-board-confirmation";
+import { useBoardActions } from "@/hooks/boards/use-board-actions";
 import { useSession } from "@/lib/auth-client";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
@@ -27,14 +27,7 @@ export function BoardArchiveCard({ board }: { board: Board }) {
   const user = session.data?.user;
   const { mutateAsync: restoreBoard, isPending: isRestoring } =
     useRestoreBoard();
-  const {
-    showDeleteDialog,
-    setShowDeleteDialog,
-    handleDeleteBoard,
-    isPending: isDeleting,
-  } = useDeleteBoardConfirmation({
-    boardName: board.id,
-  });
+  const { delete: deleteAction } = useBoardActions();
 
   const handleRestoreBoard = async (boardId: string) => {
     // if (!user?.role || !can(user.role, Resource.BOARD, Action.RESTORE)) {
@@ -90,24 +83,25 @@ export function BoardArchiveCard({ board }: { board: Board }) {
         <Button
           variant="destructive"
           size="sm"
-          onClick={() => setShowDeleteDialog(true)}
+          onClick={() => deleteAction.setIsOpen(true)}
+          disabled={deleteAction.isPending}
         >
           <Trash2 className="h-4 w-4" />
-          {isDeleting ? "Deleting..." : "Delete"}
+          {deleteAction.isPending ? "Deleting..." : "Delete"}
         </Button>
       </div>
 
       {/* Delete Confirmation Dialog */}
       <DeleteConfirmationDialog
-        open={showDeleteDialog}
-        onOpenChange={setShowDeleteDialog}
-        onConfirm={() => handleDeleteBoard(board.id)}
+        open={deleteAction.isOpen}
+        onOpenChange={deleteAction.setIsOpen}
+        onConfirm={() => deleteAction.execute({ boardId: board.id })}
         title="Are you sure?"
         description={`This action cannot be undone. This will permanently delete the workspace "${board.name}" and all of its boards and data.`}
         confirmText="Delete Workspace"
         requireConfirmation={true}
         expectedText={board.name}
-        isPending={isDeleting}
+        isPending={deleteAction.isPending}
       />
     </div>
   );

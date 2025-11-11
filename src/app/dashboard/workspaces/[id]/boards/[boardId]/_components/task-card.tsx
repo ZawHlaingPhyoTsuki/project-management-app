@@ -16,9 +16,9 @@ import {
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import EditTaskCardDialog from "./dialog/edit-task-card-dialog";
-import { useArchiveTaskConfirmation } from "@/hooks/use-archive-task-confirmation";
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
 import { useState } from "react";
+import { useTaskActions } from "@/hooks/tasks/use-task-actions";
 // import type { TaskCardWithAssigneeAndTags } from "@/types";
 
 interface TaskCardProps {
@@ -110,33 +110,30 @@ interface ArchiveTaskProps {
 }
 
 function ArchiveTag({ task, boardId }: ArchiveTaskProps) {
-  const {
-    showArchiveDialog,
-    setShowArchiveDialog,
-    handleArchiveTask,
-    isPending: isArchivePending,
-  } = useArchiveTaskConfirmation({ taskName: task.title });
+  const { archive: archiveAction } = useTaskActions();
 
   return (
     <>
       <Tooltip>
         <TooltipTrigger asChild>
           <Archive
-            onClick={() => setShowArchiveDialog(true)}
+            onClick={() => archiveAction.setIsOpen(true)}
             size={16}
             className="cursor-pointer text-muted-foreground hover:text-foreground flex-shrink-0 transition-colors duration-200 z-10"
           />
         </TooltipTrigger>
         <TooltipContent>Archive card</TooltipContent>
       </Tooltip>
+
+      {/* Archive confirmation dialog */}
       <DeleteConfirmationDialog
-        open={showArchiveDialog}
-        onOpenChange={setShowArchiveDialog}
-        onConfirm={() => handleArchiveTask(task.id, boardId)}
+        open={archiveAction.isOpen}
+        onOpenChange={archiveAction.setIsOpen}
+        onConfirm={() => archiveAction.execute({ taskId: task.id, boardId })}
         title="Archive Task"
-        description={`This action will archive "${task.name}". All data will be preserved but moved to trash. You can restore it later if needed.`}
+        description={`This action will archive "${task.title}". All data will be preserved but moved to trash. You can restore it later if needed.`}
         confirmText="Archive Task"
-        isPending={isArchivePending}
+        isPending={archiveAction.isPending}
         loadingText="Archiving..."
       />
     </>

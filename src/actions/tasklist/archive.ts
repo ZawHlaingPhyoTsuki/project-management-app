@@ -7,7 +7,7 @@ import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
 // import { revalidatePath } from "next/cache";
 
-export async function archiveTasklist({
+export async function archiveTaskList({
   taskListId,
   boardId,
 }: {

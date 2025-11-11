@@ -10,8 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useArchiveWorkspaceConfirmation } from "@/hooks/use-archive-workspace-confirmation";
-import { useDeleteWorkspaceConfirmation } from "@/hooks/use-delete-workspace-confirmation";
+import { useWorkspaceActions } from "@/hooks/workspaces/use-workspace-actions";
 
 interface DangerZoneProps {
   workspace: {
@@ -21,23 +20,8 @@ interface DangerZoneProps {
 }
 
 export default function DangerZone({ workspace }: DangerZoneProps) {
-  const {
-    showArchiveDialog,
-    setShowArchiveDialog,
-    handleArchiveWorkspace,
-    isPending: isArchivePending,
-  } = useArchiveWorkspaceConfirmation({
-    workspaceName: workspace.name,
-  });
-
-  const {
-    showDeleteDialog,
-    setShowDeleteDialog,
-    handleDeleteWorkspace,
-    isPending: isDeletePending,
-  } = useDeleteWorkspaceConfirmation({
-    workspaceName: workspace.name,
-  });
+  const { archive: archiveAction, delete: deleteAction } =
+    useWorkspaceActions();
 
   return (
     <Card className="border-destructive/50">
@@ -57,11 +41,11 @@ export default function DangerZone({ workspace }: DangerZoneProps) {
           </div>
           <Button
             variant="outline"
-            onClick={() => setShowArchiveDialog(true)}
-            disabled={isArchivePending}
+            onClick={() => archiveAction.setIsOpen(true)}
+            disabled={archiveAction.isPending}
           >
             <Archive className="h-4 w-4 mr-2" />
-            {isArchivePending ? "Archiving..." : "Archive"}
+            {archiveAction.isPending ? "Archiving..." : "Archive"}
           </Button>
         </div>
 
@@ -76,38 +60,38 @@ export default function DangerZone({ workspace }: DangerZoneProps) {
           </div>
           <Button
             variant="destructive"
-            onClick={() => setShowDeleteDialog(true)}
-            disabled={isDeletePending}
+            onClick={() => deleteAction.setIsOpen(true)}
+            disabled={deleteAction.isPending}
           >
             <Trash2 className="h-4 w-4 mr-2" />
-            {isDeletePending ? "Deleting..." : "Delete"}
+            {deleteAction.isPending ? "Deleting..." : "Delete"}
           </Button>
         </div>
       </CardContent>
 
       {/* Archive Confirmation Dialog */}
       <DeleteConfirmationDialog
-        open={showArchiveDialog}
-        onOpenChange={setShowArchiveDialog}
-        onConfirm={() => handleArchiveWorkspace(workspace.id)}
+        open={archiveAction.isOpen}
+        onOpenChange={archiveAction.setIsOpen}
+        onConfirm={() => archiveAction.execute({ workspaceId: workspace.id })}
         title="Archive Workspace"
         description={`This action will archive "${workspace.name}". All boards and data will be preserved but moved to trash. You can restore it later if needed.`}
         confirmText="Archive Workspace"
-        isPending={isArchivePending}
+        isPending={archiveAction.isPending}
         loadingText="Archiving..."
       />
 
       {/* Delete Confirmation Dialog */}
       <DeleteConfirmationDialog
-        open={showDeleteDialog}
-        onOpenChange={setShowDeleteDialog}
-        onConfirm={() => handleDeleteWorkspace(workspace.id)}
+        open={deleteAction.isOpen}
+        onOpenChange={deleteAction.setIsOpen}
+        onConfirm={() => deleteAction.execute({ workspaceId: workspace.id })}
         title="Are you absolutely sure?"
         description={`This action cannot be undone. This will permanently delete the workspace "${workspace.name}" and remove all data including boards, tasks, and member associations.`}
         confirmText="Delete Workspace"
         requireConfirmation={true}
         expectedText={workspace.name}
-        isPending={isDeletePending}
+        isPending={deleteAction.isPending}
       />
     </Card>
   );

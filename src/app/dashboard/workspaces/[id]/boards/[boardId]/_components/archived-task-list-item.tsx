@@ -3,8 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
-import { useDeleteTaskListConfirmation } from "@/hooks/use-delete-tasklist-confirmation";
 import { useRestoreTaskList } from "@/data/task-lists/mutations";
+import { useTaskListActions } from "@/hooks/task-lists/use-task-list-actions";
 
 interface ArchivedTaskListItemProps {
   boardId: string;
@@ -22,12 +22,7 @@ export function ArchivedTaskListItem({
   boardId,
   list,
 }: ArchivedTaskListItemProps) {
-  const {
-    showDeleteDialog,
-    setShowDeleteDialog,
-    handleDeleteTaskList,
-    isPending: isDeletePending,
-  } = useDeleteTaskListConfirmation({ taskListName: list.name });
+  const { delete: deleteAction } = useTaskListActions();
 
   const { mutateAsync: restoreTaskList, isPending: isRestorePending } =
     useRestoreTaskList();
@@ -62,15 +57,15 @@ export function ArchivedTaskListItem({
                 onClick={() =>
                   restoreTaskList({ taskListId: list.id, boardId })
                 }
-                disabled={isRestorePending || isDeletePending}
+                disabled={isRestorePending || deleteAction.isPending}
                 variant="outline"
                 size="sm"
               >
                 {isRestorePending ? "Restoring..." : "Restore"}
               </Button>
               <Button
-                onClick={() => setShowDeleteDialog(true)}
-                disabled={isRestorePending || isDeletePending}
+                onClick={() => deleteAction.setIsOpen(true)}
+                disabled={isRestorePending || deleteAction.isPending}
                 variant="destructive"
                 size="sm"
               >
@@ -83,13 +78,13 @@ export function ArchivedTaskListItem({
 
       {/* Delete Task List Dialog */}
       <DeleteConfirmationDialog
-        open={showDeleteDialog}
-        onOpenChange={setShowDeleteDialog}
-        onConfirm={() => handleDeleteTaskList(list.id, boardId)}
+        open={deleteAction.isOpen}
+        onOpenChange={deleteAction.setIsOpen}
+        onConfirm={() => deleteAction.execute({ taskListId: list.id, boardId })}
         title="Delete Task List"
         description={`This action will archive "${list.name}". All data will be preserved but moved to trash. You can restore it later if needed.`}
         confirmText="Delete List"
-        isPending={isDeletePending}
+        isPending={deleteAction.isPending}
         requireConfirmation
         expectedText={list.name}
       />

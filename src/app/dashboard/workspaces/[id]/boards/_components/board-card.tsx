@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/card";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
-import { useArchiveBoardConfirmation } from "@/hooks/use-archive-board-confirmation";
 import { DeleteConfirmationDialog } from "@/components/delete-confirmation-dialog";
 import BoardEllipsisDropdown from "./board-ellipsis-dropdown";
+import { useBoardActions } from "@/hooks/boards/use-board-actions";
 
 interface Board {
   id: string;
@@ -52,12 +52,7 @@ interface BoardCardProps {
 }
 
 export function BoardCard({ board, workspace, user }: BoardCardProps) {
-  const {
-    showArchiveDialog,
-    setShowArchiveDialog,
-    handleArchiveBoard,
-    isPending: isArchivePending,
-  } = useArchiveBoardConfirmation({ boardName: board.name });
+  const { archive: archiveAction } = useBoardActions();
 
   // Check if user can perform actions on a specific board
   const canUserManageBoard = (board: Board) => {
@@ -99,8 +94,8 @@ export function BoardCard({ board, workspace, user }: BoardCardProps) {
           {canManageBoard && (
             <BoardEllipsisDropdown
               boardId={board.id}
-              setShowArchiveDialog={() => setShowArchiveDialog(true)}
-              isArchivePending={isArchivePending}
+              setShowArchiveDialog={() => archiveAction.setIsOpen(true)}
+              isArchivePending={archiveAction.isPending}
             />
           )}
         </div>
@@ -122,13 +117,18 @@ export function BoardCard({ board, workspace, user }: BoardCardProps) {
       </CardContent>
 
       <DeleteConfirmationDialog
-        open={showArchiveDialog}
-        onOpenChange={setShowArchiveDialog}
-        onConfirm={() => handleArchiveBoard(board.id, workspace.id)}
+        open={archiveAction.isOpen}
+        onOpenChange={archiveAction.setIsOpen}
+        onConfirm={() =>
+          archiveAction.execute({
+            boardId: board.id,
+            workspaceId: workspace.id,
+          })
+        }
         title="Archive Board"
         description={`This action will archive "${board.name}". All data will be preserved but moved to trash. You can restore it later if needed.`}
         confirmText="Archive Board"
-        isPending={isArchivePending}
+        isPending={archiveAction.isPending}
         loadingText="Archiving..."
       />
     </Card>

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createTaskList,
   updateTaskList,
-  archiveTasklist,
+  archiveTaskList,
   deleteTaskList,
   restoreTaskList,
 } from "@/actions/tasklist";
@@ -81,7 +81,7 @@ export const useArchiveTaskList = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: archiveTasklist,
+    mutationFn: archiveTaskList,
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["task-lists", variables.boardId],

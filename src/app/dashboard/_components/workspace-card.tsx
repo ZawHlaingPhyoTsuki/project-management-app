@@ -1,4 +1,3 @@
-// components/workspace-card.tsx (updated)
 "use client";
 
 import { Calendar, Layout, MoreHorizontal, Users } from "lucide-react";
@@ -14,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useDeleteWorkspaceConfirmation } from "@/hooks/use-delete-workspace-confirmation";
+import { useWorkspaceActions } from "@/hooks/workspaces/use-workspace-actions";
 
 interface WorkspaceCardProps {
   workspace: {
@@ -40,14 +39,7 @@ interface WorkspaceCardProps {
 export default function WorkspaceCard({ workspace }: WorkspaceCardProps) {
   const router = useRouter();
 
-  const {
-    showDeleteDialog,
-    setShowDeleteDialog,
-    handleDeleteWorkspace,
-    isPending,
-  } = useDeleteWorkspaceConfirmation({
-    workspaceName: workspace.name,
-  });
+  const { delete: deleteAction } = useWorkspaceActions();
 
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString("en-US", {
@@ -98,7 +90,7 @@ export default function WorkspaceCard({ workspace }: WorkspaceCardProps) {
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => setShowDeleteDialog(true)}
+                onClick={() => deleteAction.setIsOpen(true)}
                 className="text-destructive focus:text-destructive"
               >
                 Delete
@@ -172,15 +164,15 @@ export default function WorkspaceCard({ workspace }: WorkspaceCardProps) {
 
       {/* Delete Confirmation Dialog */}
       <DeleteConfirmationDialog
-        open={showDeleteDialog}
-        onOpenChange={setShowDeleteDialog}
-        onConfirm={() => handleDeleteWorkspace(workspace.id)}
+        open={deleteAction.isOpen}
+        onOpenChange={deleteAction.setIsOpen}
+        onConfirm={() => deleteAction.execute({ workspaceId: workspace.id })}
         title="Are you sure?"
         description={`This action cannot be undone. This will permanently delete the workspace "${workspace.name}" and all of its boards and data.`}
         confirmText="Delete Workspace"
         requireConfirmation={true}
         expectedText={workspace.name}
-        isPending={isPending}
+        isPending={deleteAction.isPending}
       />
     </>
   );

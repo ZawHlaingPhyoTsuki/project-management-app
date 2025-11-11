@@ -9,9 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  useArchivedTaskListsByBoardId,
-} from "@/hooks/use-task-list";
+import { useArchivedTaskListsByBoardId } from "@/hooks/use-task-list";
 import { Archive, List, FileText } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { ArchivedTaskItem } from "./archived-task-item";
@@ -140,7 +138,11 @@ export default function ArchivedTaskDialog({
                 </div>
               ) : (
                 archivedLists.map((list) => (
-                  <ArchivedTaskListItem key={list.id} list={list} />
+                  <ArchivedTaskListItem
+                    key={list.id}
+                    list={list}
+                    boardId={boardId}
+                  />
                 ))
               )}
             </TabsContent>

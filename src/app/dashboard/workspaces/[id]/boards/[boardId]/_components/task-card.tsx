@@ -137,6 +137,7 @@ function ArchiveTag({ task, boardId }: ArchiveTaskProps) {
         description={`This action will archive "${task.name}". All data will be preserved but moved to trash. You can restore it later if needed.`}
         confirmText="Archive Task"
         isPending={isArchivePending}
+        loadingText="Archiving..."
       />
     </>
   );

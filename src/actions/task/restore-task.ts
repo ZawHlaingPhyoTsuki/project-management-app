@@ -7,7 +7,7 @@ import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
 // import { revalidatePath } from "next/cache";
 
-export async function archiveTask({
+export async function restoreTask({
   taskId,
   boardId,
 }: {
@@ -35,11 +35,11 @@ export async function archiveTask({
       return { success: false, error: "Access denied" };
     }
 
-    // Check if user has permission to archive the task
-    if (!can(boardMember.role, Resource.TASK, Action.ARCHIVE)) {
+    // Check if user has permission to restore the task
+    if (!can(boardMember.role, Resource.TASK, Action.RESTORE)) {
       return {
         success: false,
-        error: "You don't have permission to archive this task",
+        error: "You don't have permission to restore this task",
       };
     }
 
@@ -48,8 +48,8 @@ export async function archiveTask({
         id: taskId,
       },
       data: {
-        isArchived: true,
-        archivedAt: new Date(),
+        isArchived: false,
+        archivedAt: null,
       },
     });
 
@@ -58,7 +58,7 @@ export async function archiveTask({
 
     return { success: true, data: task };
   } catch (error) {
-    console.error("Error archiving task:", error);
-    return { success: false, error: "Failed to archive task" };
+    console.error("Error restoring task:", error);
+    return { success: false, error: "Failed to restore task" };
   }
 }

@@ -103,7 +103,7 @@ function AvatarStackItem({
       className={cn(
         "size-full shrink-0 overflow-hidden rounded-full",
         '[&_[data-slot="avatar"]]:size-full',
-        className,
+        className
       )}
       style={{
         width: size,
@@ -156,7 +156,7 @@ function AvatarGroup({
         className={cn(
           "-space-x-1 flex items-center",
           animate && "hover:space-x-0 [&>*]:transition-all",
-          className,
+          className
         )}
         {...props}
       >
@@ -188,7 +188,7 @@ function AvatarGroup({
           "flex items-center",
           variant === "css" && "-space-x-3",
           variant === "motion" && "flex-row -space-x-2 h-8",
-          className,
+          className
         )}
         {...props}
       >

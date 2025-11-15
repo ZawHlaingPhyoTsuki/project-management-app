@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -21,22 +20,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { signUp } from "@/lib/auth-client";
-
-const signUpSchema = z
-  .object({
-    firstName: z.string().min(1, "First name is required."),
-    lastName: z.string().min(1, "Last name is required."),
-    email: z.string().email("Please enter a valid email."),
-    password: z.string().min(6, "Password must be at least 6 characters."),
-    passwordConfirmation: z.string(),
-    image: z.instanceof(File).optional().nullable(),
-  })
-  .refine((data) => data.password === data.passwordConfirmation, {
-    message: "Passwords don't match.",
-    path: ["passwordConfirmation"],
-  });
-
-type SignUpValues = z.infer<typeof signUpSchema>;
+import { signUpSchema, SignUpValues } from "@/lib/validations/auth";
 
 async function convertImageToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -162,7 +146,7 @@ export default function SignUpForm() {
                   <FieldLabel htmlFor="email">Email</FieldLabel>
                   <Input
                     id="email"
-                    type="email"
+                    // type="email"
                     placeholder="m@example.com"
                     {...field}
                   />

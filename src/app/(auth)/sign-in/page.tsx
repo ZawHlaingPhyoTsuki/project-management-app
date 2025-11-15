@@ -6,7 +6,6 @@ import Link from "next/link";
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -20,14 +19,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { signIn } from "@/lib/auth-client";
-
-const loginSchema = z.object({
-  email: z.email("Please enter a valid email."),
-  password: z.string().min(6, "Password must be at least 6 characters."),
-  rememberMe: z.boolean().optional(),
-});
-
-type LoginValues = z.infer<typeof loginSchema>;
+import { loginSchema, LoginValues } from "@/lib/validations/auth";
 
 export default function LoginForm() {
   const [loading, setLoading] = React.useState(false);
@@ -44,19 +36,22 @@ export default function LoginForm() {
   const onSubmit = async (values: LoginValues) => {
     setLoading(true);
     try {
-      await signIn.email(
-        {
-          email: values.email,
-          password: values.password,
-          callbackURL: "/dashboard",
-          rememberMe: values.rememberMe,
-        },
-        {
+      await signIn.email({
+        email: values.email,
+        password: values.password,
+        callbackURL: "/dashboard",
+        rememberMe: values.rememberMe,
+        fetchOptions: {
           onRequest: () => setLoading(true),
+          onSuccess: () => {
+            toast.success("Login successful!");
+          },
+          onError: (ctx) => {
+            toast.error(ctx.error.message);
+          },
           onResponse: () => setLoading(false),
         },
-      );
-      toast.success("Login successful!");
+      });
     } catch {
       toast.error("Invalid email or password.");
     } finally {
@@ -85,7 +80,7 @@ export default function LoginForm() {
                   <FieldLabel htmlFor="email">Email</FieldLabel>
                   <Input
                     id="email"
-                    type="email"
+                    // type="email"
                     placeholder="you@example.com"
                     {...field}
                   />

@@ -1,27 +1,38 @@
 name: CI
 on:
-    push:
-        branches: [main, dev]
-    pull_request:
-        branches: [main, dev, feature/*]
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
 jobs:
-    lint-and-build:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-              
-            - uses: oven-sh/setup-bun@v2
-              with:
-                  bun-version: latest
+  lint-and-build:
+    runs-on: ubuntu-latest
+    env:
+      # Better Auth Configuration
+      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET || 'dummy-secret-for-pr-build' }}
+      BETTER_AUTH_URL: http://localhost:3000
 
-            - name: Install Dependencies
-              run: bun install
+      # Database Configuration
+      DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://user:pass@localhost:5432/db' }}
 
-            - name: Lint
-              run: bun run lint
+      # Resend Configuration
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY || 're_dummy_key_12345' }}
 
-            - name: Format Check
-              run: bun run format
+      # Next.js Configuration
+      NODE_ENV: production
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Build
-              run: bun run build
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Build
+        run: bun run build

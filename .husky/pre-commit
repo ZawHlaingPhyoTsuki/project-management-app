@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-echo "🔍 Linting changed files and auto-fixing..."
+echo "🔍 Linting and formatting changed files..."
 bunx lint-staged
 
-echo "✅ All fixed & formatted. Committing..."
+echo "✅ All checks passed. Committing..."

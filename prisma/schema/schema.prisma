@@ -1,0 +1,241 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated"
+  runtime      = "bun"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -- Workspace
+model Workspace {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  isArchived  Boolean   @default(false)
+  archivedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members       WorkspaceMember[]
+  boards        Board[]
+  ShareableLink ShareableLink[]
+  Invitation    Invitation[]
+  createdById   String
+  createdBy     User              @relation(fields: [createdById], references: [id])
+  Tag           Tag[]
+
+  @@map("workspace")
+}
+
+model WorkspaceMember {
+  id   String @id @default(cuid())
+  role Role   @default(MEMBER)
+
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@map("workspace_member")
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+
+  @@map("role")
+}
+
+// -- Board
+model Board {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  isArchived  Boolean   @default(false)
+  archivedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  taskLists     TaskList[]
+  members       BoardMember[]
+  ShareableLink ShareableLink[]
+  workspaceId   String
+  workspace     Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  Invitation    Invitation[]
+  createdById   String
+  createdBy     User            @relation(fields: [createdById], references: [id])
+
+  @@map("board")
+}
+
+model BoardMember {
+  id   String @id @default(cuid())
+  role Role   @default(MEMBER)
+
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+
+  @@unique([boardId, userId])
+  @@map("board_member")
+}
+
+// -- Task List (columns in the board)
+model TaskList {
+  id         String    @id @default(cuid())
+  name       String
+  position   Int
+  isArchived Boolean   @default(false)
+  archivedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  boardId   String
+  board     Board      @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  taskCards TaskCard[]
+
+  @@map("task_list")
+}
+
+// -- Task Card
+model TaskCard {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  position    Int
+  isArchived  Boolean   @default(false)
+  archivedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  taskListId String
+  taskList   TaskList           @relation(fields: [taskListId], references: [id], onDelete: Cascade)
+  assignees  TaskCardAssignee[]
+  tags       Tag[]
+
+  @@map("card")
+}
+
+model TaskCardAssignee {
+  id         String   @id @default(cuid())
+  taskCardId String
+  taskCard   TaskCard @relation(fields: [taskCardId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  assignedAt DateTime @default(now())
+
+  @@unique([taskCardId, userId])
+  @@map("task_card_assignee")
+}
+
+// -- ShareableLink
+model ShareableLink {
+  id           String       @id @default(cuid())
+  token        String       @unique
+  resourceType ResourceType
+  role         Role         @default(VIEWER) // Default role for joiners
+  expiresAt    DateTime?
+  maxUses      Int? // Maximum number of uses
+  useCount     Int          @default(0) // Track how many times used
+  isActive     Boolean      @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdById String
+  createdBy   User       @relation(fields: [createdById], references: [id])
+  boardId     String?
+  board       Board?     @relation(fields: [boardId], references: [id])
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+
+  @@index([token])
+  @@map("shareable_link")
+}
+
+enum ResourceType {
+  WORKSPACE
+  BOARD
+
+  @@map("resource_type")
+}
+
+// -- Invitation
+model Invitation {
+  id     String           @id @default(cuid())
+  token  String           @unique
+  email  String
+  role   Role
+  status InvitationStatus @default(PENDING)
+
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Resource being invited to
+  resourceType ResourceType
+  workspaceId  String?
+  workspace    Workspace?   @relation(fields: [workspaceId], references: [id])
+  boardId      String?
+  board        Board?       @relation(fields: [boardId], references: [id])
+
+  // Inviter
+  invitedById String
+  invitedBy   User   @relation(fields: [invitedById], references: [id])
+
+  @@index([token])
+  @@index([email, status])
+  @@map("invitation")
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  EXPIRED
+  CANCELLED
+
+  @@map("invitation_status")
+}
+
+// -- Tag
+model Tag {
+  id          String   @id @default(cuid())
+  name        String
+  color       TagColor
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workspaceId String
+  workspace   Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  taskCards   TaskCard[] // Direct many-to-many relationship
+
+  @@unique([workspaceId, name])
+  @@map("tag")
+}
+
+enum TagColor {
+  BLUE
+  RED
+  GREEN
+  YELLOW
+  PURPLE
+  PINK
+
+  @@map("tag_color")
+}

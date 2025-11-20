@@ -1,5 +1,5 @@
 import { Action, Resource } from "@/types/permission";
-import { Role } from "../../prisma/generated/enums";
+import { Role } from "@/app/generated/prisma/enums";
 
 export const permissions: Record<Resource, Partial<Record<Action, Role[]>>> = {
   [Resource.WORKSPACE]: {

@@ -9,7 +9,7 @@ import {
   GetShareLinksSchema,
 } from "@/lib/validations/share-link";
 import { Action, Resource } from "@/types/permission";
-import type { Prisma } from "../../../../../../prisma/generated/client";
+import type { Prisma } from "@/app/generated/prisma/client";
 
 // GET /api/v1/share/links - Get all shareable links
 export async function GET(req: NextRequest) {

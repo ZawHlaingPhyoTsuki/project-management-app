@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
-import type { Prisma } from "../../../../../prisma/generated/client";
+import type { Prisma } from "@/app/generated/prisma/client";
 
 // GET /api/v1/cards - Get all task cards
 export async function GET(req: NextRequest) {
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
     if (!title || !taskListId) {
       return Response.json(
         { error: "Title and task list ID are required" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
     if (!can(boardMember.role, Resource.TASK, Action.CREATE)) {
       return Response.json(
         { error: "Insufficient permissions" },
-        { status: 403 },
+        { status: 403 }
       );
     }
 

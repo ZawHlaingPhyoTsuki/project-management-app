@@ -4,11 +4,11 @@ export type {
   TaskCard,
   TaskList,
   User,
-} from "../../prisma/generated/client";
+} from "@/app/generated/prisma/client";
 
 export {
   ResourceType,
   Role,
   TagColor
-} from '../../prisma/generated/enums'
+} from '@/app/generated/prisma/enums'
 

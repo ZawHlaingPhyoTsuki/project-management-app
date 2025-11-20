@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
-import type { Prisma } from "../../../../../prisma/generated/client";
+import type { Prisma } from "@/app/generated/prisma/client";
 
 // GET /api/v1/boards - Get all boards
 /*
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
     if (!name || !workspaceId) {
       return Response.json(
         { error: "Name and workspace ID are required" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
     if (!workspaceMember) {
       return Response.json(
         { error: "Workspace access denied" },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
@@ -112,7 +112,7 @@ export async function POST(req: NextRequest) {
     if (!can(workspaceMember.role, Resource.BOARD, Action.CREATE)) {
       return Response.json(
         { error: "Insufficient permissions" },
-        { status: 403 },
+        { status: 403 }
       );
     }
 

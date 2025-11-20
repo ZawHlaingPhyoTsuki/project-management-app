@@ -7,7 +7,7 @@ import {
   ResourceType,
   Role,
   TagColor,
-} from "./generated/client";
+} from "@/app/generated/prisma/client";
 
 dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
@@ -91,7 +91,7 @@ async function main() {
           : faker.helpers.arrayElement([Role.ADMIN, Role.MEMBER, Role.VIEWER]),
       userId: user.id,
       workspaceId: workspace.id,
-    })),
+    }))
   );
 
   await prisma.workspaceMember.createMany({ data: workspaceMemberData });
@@ -107,7 +107,7 @@ async function main() {
       createdAt: faker.date.past({ years: 1 }),
       updatedAt: faker.date.recent({ days: 30 }),
       workspaceId: workspace.id,
-    })),
+    }))
   );
 
   await prisma.tag.createMany({ data: tagData });
@@ -128,7 +128,7 @@ async function main() {
       updatedAt: faker.date.recent({ days: 30 }),
       workspaceId: workspace.id,
       createdById: faker.helpers.arrayElement(users).id,
-    })),
+    }))
   );
 
   await prisma.board.createMany({ data: boardData });
@@ -142,7 +142,7 @@ async function main() {
       role: faker.helpers.arrayElement([Role.ADMIN, Role.MEMBER, Role.VIEWER]),
       userId: user.id,
       boardId: board.id,
-    })),
+    }))
   );
 
   await prisma.boardMember.createMany({ data: boardMemberData });
@@ -170,8 +170,8 @@ async function main() {
         createdAt: faker.date.past({ years: 1 }),
         updatedAt: faker.date.recent({ days: 30 }),
         boardId: board.id,
-      }),
-    ),
+      })
+    )
   );
 
   await prisma.taskList.createMany({ data: taskListData });
@@ -205,8 +205,8 @@ async function main() {
         createdAt: faker.date.past({ years: 1 }),
         updatedAt: faker.date.recent({ days: 30 }),
         taskListId: taskList.id,
-      }),
-    ),
+      })
+    )
   );
 
   await prisma.taskCard.createMany({ data: taskCardData });
@@ -234,7 +234,7 @@ async function main() {
 
   await prisma.taskCardAssignee.createMany({ data: taskCardAssigneeData });
   console.log(
-    `👥 Created ${taskCardAssigneeData.length} task card assignee relationships`,
+    `👥 Created ${taskCardAssigneeData.length} task card assignee relationships`
   );
 
   // Connect tags to task cards
@@ -246,12 +246,12 @@ async function main() {
     if (!taskList) continue;
 
     const workspaceTags = tags.filter(
-      (tag) => tag.workspaceId === taskList.board.workspaceId,
+      (tag) => tag.workspaceId === taskList.board.workspaceId
     );
 
     const selectedTags = faker.helpers.arrayElements(
       workspaceTags,
-      faker.number.int({ min: 0, max: 3 }),
+      faker.number.int({ min: 0, max: 3 })
     );
 
     if (selectedTags.length > 0) {
@@ -288,7 +288,7 @@ async function main() {
       updatedAt: faker.date.recent({ days: 30 }),
       createdById: adminUser.id,
       workspaceId: workspace.id,
-    })),
+    }))
   );
 
   await prisma.shareableLink.createMany({ data: shareableLinkData });
@@ -314,7 +314,7 @@ async function main() {
       resourceType: ResourceType.WORKSPACE,
       workspaceId: workspace.id,
       invitedById: adminUser.id,
-    })),
+    }))
   );
 
   await prisma.invitation.createMany({ data: invitationData });
@@ -328,7 +328,7 @@ async function main() {
   console.log(`   📝 ${taskLists.length} task lists`);
   console.log(`   📄 ${taskCards.length} task cards`);
   console.log(
-    `   👥 ${taskCardAssigneeData.length} task card assignee relationships`,
+    `   👥 ${taskCardAssigneeData.length} task card assignee relationships`
   );
   console.log(`   🏷️  ${tags.length} tags`);
   console.log(`   🔗 ${shareableLinkData.length} shareable links`);
@@ -371,7 +371,9 @@ async function main() {
     console.log(`      Workspace: ${taskCard.taskList.board.workspace.name}`);
     console.log(`      Board: ${taskCard.taskList.board.name}`);
     console.log(
-      `      Assignees: ${taskCard.assignees.map((a) => a.user.name).join(", ")}`,
+      `      Assignees: ${taskCard.assignees
+        .map((a) => a.user.name)
+        .join(", ")}`
     );
     console.log(`      Total Assignees: ${taskCard.assignees.length}`);
   });

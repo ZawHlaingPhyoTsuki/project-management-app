@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
-import type { Role } from "../../../prisma/generated/enums";
+import type { Role } from "@/app/generated/prisma/enums";
 import { CreateBoardType } from "@/lib/validations/board";
 import { revalidatePath } from "next/cache";
 

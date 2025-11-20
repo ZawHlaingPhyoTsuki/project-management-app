@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import type { NextRequest } from "next/server";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
-import type { Prisma } from "../../../../../prisma/generated/client";
+import type { Prisma } from "@/app/generated/prisma/client";
 
 // GET /api/v1/users - Get all users
 export async function GET(req: NextRequest) {

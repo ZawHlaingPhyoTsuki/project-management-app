@@ -6,7 +6,7 @@ import prisma from "@/lib/db";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
 import { revalidatePath } from "next/cache";
-import { Prisma } from "../../../prisma/generated/client";
+import { Prisma } from "@/app/generated/prisma/client";
 
 export async function updateTask({
   id,

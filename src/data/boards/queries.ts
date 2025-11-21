@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import {
+  getAllBoardsByUserId,
   getBoardById,
   getWorkspaceArchivedBoards,
   getWorkspaceBoards,
@@ -28,6 +29,16 @@ export const useBoardById = (boardId: string) => {
     queryFn: () => getBoardById(boardId),
     enabled: !!boardId,
     // select: (data) => data?.data,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+};
+
+export const useAllBoardsByUserId = (userId: string) => {
+  return useQuery({
+    queryKey: ["boards", userId],
+    queryFn: () => getAllBoardsByUserId(userId),
+    enabled: !!userId,
+    // select: (data) => data?.data ?? [],
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };

@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { getActiveWorkspaceById } from "@/actions/workspaces";
-import { CreateBoardDialog } from "../../../../../components/features/board/create-board-dialog";
-import { BoardGrid } from "../../../../../components/features/board/board-grid";
-import { BoardArchive } from "../../../../../components/features/board/board-archive";
+import { CreateBoardDialog } from "@/components/features/board/create-board-dialog";
+import { BoardGrid } from "@/components/features/board/board-grid";
+import { BoardArchive } from "@/components/features/board/board-archive";
 import DashboardContentWrapper from "@/components/shared/dashboard-content-wrapper";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";

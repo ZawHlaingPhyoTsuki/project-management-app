@@ -7,6 +7,7 @@ import EmptySection from "@/components/shared/empty-section";
 import { useBoardStore } from "@/stores/board";
 import { BoardCard } from "./board-card";
 import { useBoardsByWorkspaceId } from "@/data/boards/queries";
+import { Spinner } from "@/components/ui/spinner";
 
 interface Board {
   id: string;
@@ -47,7 +48,11 @@ export function BoardGrid({
   const user = session.data?.user;
 
   if (isLoading || !boards) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex w-full h-full min-h-[600px] items-center justify-center">
+        <Spinner className="w-8 h-8" />
+      </div>
+    );
   }
 
   if (boards.length === 0) {

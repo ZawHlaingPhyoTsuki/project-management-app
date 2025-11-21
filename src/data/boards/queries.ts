@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import {
+  getBoardById,
   getWorkspaceArchivedBoards,
   getWorkspaceBoards,
 } from "@/actions/boards";
@@ -17,6 +18,16 @@ export const useBoardsByWorkspaceId = (
     initialData: initialData ? { success: true, data: initialData } : undefined,
     select: (data) => data?.data ?? [],
     enabled: !!workspaceId,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+};
+
+export const useBoardById = (boardId: string) => {
+  return useQuery({
+    queryKey: ["board", boardId],
+    queryFn: () => getBoardById(boardId),
+    enabled: !!boardId,
+    // select: (data) => data?.data,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };

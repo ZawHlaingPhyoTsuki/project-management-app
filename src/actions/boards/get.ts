@@ -54,6 +54,71 @@ export async function getAllBoards(workspaceId: string) {
   }
 }
 
+export async function getBoardById(boardId: string) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
+    return { success: false, error: "Not authenticated" };
+  }
+
+  try {
+    const board = await prisma.board.findUnique({
+      where: {
+        id: boardId,
+      },
+      include: {
+        workspace: {
+          select: { id: true, name: true },
+        },
+        members: {
+          include: {
+            user: {
+              select: { id: true, name: true, email: true, image: true },
+            },
+          },
+        },
+        _count: {
+          select: {
+            taskLists: true,
+            members: true,
+          },
+        },
+      },
+    });
+
+    if (!board) {
+      return { success: false, error: "Board not found" };
+    }
+
+    // Get user's role in the workspace
+    const workspaceMember = await prisma.workspaceMember.findFirst({
+      where: {
+        workspaceId: board.workspaceId,
+        userId: session.user.id,
+      },
+    });
+
+    if (!workspaceMember) {
+      return { success: false, error: "Access denied" };
+    }
+
+    // Check if user has permission to view this specific board
+    if (!can(workspaceMember.role, Resource.BOARD, Action.VIEW)) {
+      return {
+        success: false,
+        error: "You don't have permission to view this board",
+      };
+    }
+
+    return { success: true, data: board };
+  } catch (error) {
+    console.error("Error fetching board by ID:", error);
+    return { success: false, error: "Failed to fetch board" };
+  }
+}
+
 export const getWorkspaceBoards = async (workspaceId: string) => {
   try {
     const session = await auth.api.getSession({

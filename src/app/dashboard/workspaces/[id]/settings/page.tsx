@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { getActiveWorkspaceById } from "@/actions/workspaces";
-import DangerZone from "../../../../../components/features/workspace/danger-zone";
-import WorkspaceGeneralSettings from "../../../../../components/features/workspace/workspace-general-settings";
-import WorkspaceInvitations from "../../../../../components/features/workspace/workspace-invitations";
+import DangerZone from "@/components/features/workspace/danger-zone";
+import WorkspaceGeneralSettings from "@/components/features/workspace/workspace-general-settings";
+import WorkspaceInvitations from "@/components/features/workspace/workspace-invitations";
 import DashboardContentWrapper from "@/components/shared/dashboard-content-wrapper";
 
 export default async function WorkspaceSettingsPage({

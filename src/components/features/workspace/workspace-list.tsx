@@ -5,6 +5,7 @@ import EmptySection from "@/components/shared/empty-section";
 import { Layout } from "lucide-react";
 import { useWorkspaceStore } from "@/stores/workspace";
 import { useWorkspaces } from "@/data/workspaces/queries";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function WorkspaceList() {
   const { data, isLoading } = useWorkspaces();
@@ -14,7 +15,9 @@ export default function WorkspaceList() {
 
   if (isLoading) {
     return (
-      <div className="p-4 text-muted-foreground">Loading workspaces...</div>
+      <div className="flex w-full h-full min-h-[600px] items-center justify-center">
+        <Spinner className="w-8 h-8" />
+      </div>
     );
   }
 

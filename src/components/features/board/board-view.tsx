@@ -22,7 +22,7 @@ export default function BoardView({ boardId, workspaceId }: BoardViewProps) {
 
   if (isLoading) {
     return (
-      <div className="flex w-full h-full min-h-[400px] items-center justify-center">
+      <div className="flex w-full h-full min-h-[500px] items-center justify-center">
         <Spinner className="w-8 h-8" />
       </div>
     );

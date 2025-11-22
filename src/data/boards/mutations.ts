@@ -39,12 +39,13 @@ export const useArchiveBoard = (userId: string) => {
   });
 };
 
-export const useRestoreBoard = () => {
+export const useRestoreBoard = (userId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: restoreBoard,
     onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["user", userId, "boards"] });
       queryClient.invalidateQueries({ queryKey: ["workspace"] });
       queryClient.invalidateQueries({ queryKey: ["board", variables] });
     },

@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+// import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
@@ -43,7 +43,7 @@ export const deleteWorkspace = async ({
     });
 
     // Revalidate and redirect after deletion
-    revalidatePath("/dashboard");
+    // revalidatePath("/dashboard");
 
     return {
       success: true,

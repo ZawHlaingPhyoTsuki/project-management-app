@@ -32,7 +32,7 @@ export function BoardArchiveCard({
   user: User
 }) {
   const { mutateAsync: restoreBoard, isPending: isRestoring } =
-    useRestoreBoard();
+    useRestoreBoard(user.id);
   const { delete: deleteAction } = useBoardActions({
     workspaceId,
     userId: user.id,

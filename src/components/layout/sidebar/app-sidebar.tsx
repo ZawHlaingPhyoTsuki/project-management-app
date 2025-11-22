@@ -30,6 +30,14 @@ interface AppSideBarProps extends React.ComponentProps<typeof Sidebar> {
   user: User;
 }
 
+/**
+ * Render the application's sidebar containing primary and secondary navigation, a workspaces section, and the user area.
+ *
+ * The sidebar highlights the current path-derived item and passes through additional Sidebar props. The provided `user` is used to populate the user area; the user's `image` is used as the avatar.
+ *
+ * @param user - The current signed-in user whose information is displayed in the sidebar
+ * @returns The `JSX.Element` representing the application sidebar
+ */
 export function AppSidebar({ user, ...props }: AppSideBarProps) {
   const pathname = usePathname();
 

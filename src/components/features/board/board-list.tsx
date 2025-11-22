@@ -11,6 +11,12 @@ interface BoardListProps {
   userId: string;
 }
 
+/**
+ * Render a responsive grid of boards for the specified user and handle loading, empty, and error states.
+ *
+ * @param userId - The user ID whose boards will be fetched and displayed
+ * @returns A React element containing either: an error alert if the fetch failed, a skeleton grid while loading, an empty-state panel if there are no boards, or a responsive grid of board cards linking to each board
+ */
 export default function BoardList({ userId }: BoardListProps) {
   const { data, isLoading, error, isError } = useAllBoardsByUserId(
     userId as string

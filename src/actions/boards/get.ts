@@ -54,6 +54,12 @@ export async function getAllBoards(workspaceId: string) {
   }
 }
 
+/**
+ * Retrieve a board by its ID, including workspace info, members, and counts, and enforce workspace-level view permission for the session user.
+ *
+ * @param boardId - The ID of the board to fetch
+ * @returns An object with `success: true` and `data` set to the board (includes `workspace` with `id` and `name`, `members` with each member's `user` {id, name, email, image}, and `_count` for `taskLists` and `members`) on success; otherwise `success: false` and `error` with a short message
+ */
 export async function getBoardById(boardId: string) {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -119,6 +125,12 @@ export async function getBoardById(boardId: string) {
   }
 }
 
+/**
+ * Retrieve all boards in workspaces the specified user is a member of, validating the current session user matches `userId`.
+ *
+ * @param userId - The ID of the user whose workspace boards to fetch; must equal the authenticated session user's ID
+ * @returns On success, an object `{ success: true, data: Board[] }` where each board includes its `workspace` and `_count` for `taskLists` and `members`. On failure, an object `{ success: false, error: string }`.
+ */
 export async function getAllBoardsByUserId(userId: string) {
   try {
     const session = await auth.api.getSession({

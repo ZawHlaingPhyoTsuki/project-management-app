@@ -19,6 +19,13 @@ const alertVariants = cva(
   }
 )
 
+/**
+ * Render an alert container with variant-driven styling.
+ *
+ * @param className - Additional CSS class names to merge with the component's default classes
+ * @param variant - Visual variant to apply; supported values: `"default"`, `"destructive"`
+ * @returns A div element with role `alert`, `data-slot="alert"`, and classes produced by the alert variants merged with `className`
+ */
 function Alert({
   className,
   variant,
@@ -34,6 +41,13 @@ function Alert({
   )
 }
 
+/**
+ * Renders the alert title container.
+ *
+ * @param className - Additional CSS classes merged with the component's default class list.
+ * @param props - Additional div attributes spread onto the title element.
+ * @returns The rendered alert title element with predefined layout and typography classes.
+ */
 function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -47,6 +61,12 @@ function AlertTitle({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * Renders the alert description container used inside an Alert.
+ *
+ * @param className - Additional CSS classes to merge with the component's default classes
+ * @returns A div element with `data-slot="alert-description"` and styling for alert body text
+ */
 function AlertDescription({
   className,
   ...props

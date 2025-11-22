@@ -51,7 +51,7 @@ export const deleteWorkspace = async ({
       data: null,
     };
   } catch (error) {
-    console.error("Error fetching workspace:", error);
-    return { success: false, data: null, error: "Failed to fetch workspace" };
+    console.error("Error deleting workspace:", error);
+    return { success: false, data: null, error: "Failed to delete workspace" };
   }
 };

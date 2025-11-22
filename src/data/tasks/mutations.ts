@@ -61,7 +61,7 @@ export const useDeleteTask = () => {
         queryKey: ["board", variables.boardId, "task-lists"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["board", variables.boardId, "task", "archived"],
+        queryKey: ["board", variables.boardId, "tasks", "archived"],
       });
     },
   });

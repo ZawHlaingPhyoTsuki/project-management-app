@@ -58,16 +58,9 @@ export const useDeleteBoard = (workspaceId: string) => {
   return useMutation({
     mutationFn: deleteBoard,
     onSuccess: (_, variables) => {
-      // queryClient.invalidateQueries({ queryKey: ["workspace-boards"] });
-      // queryClient.invalidateQueries({
-      //   queryKey: ["archived-workspace-boards"],
-      // });
       queryClient.invalidateQueries({
         queryKey: ["workspace", workspaceId, "boards"],
       });
-      // queryClient.invalidateQueries({
-      //   queryKey: ["workspace", workspaceId, "boards", "archived"],
-      // });
       queryClient.invalidateQueries({ queryKey: ["board", variables.boardId] });
     },
   });

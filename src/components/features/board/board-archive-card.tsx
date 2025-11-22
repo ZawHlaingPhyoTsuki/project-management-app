@@ -39,11 +39,6 @@ export function BoardArchiveCard({
   });
 
   const handleRestoreBoard = async (boardId: string) => {
-    // if (!user?.role || !can(user.role, Resource.BOARD, Action.RESTORE)) {
-    //   toast.error("You don't have permission to restore boards");
-    //   return;
-    // }
-
     try {
       await restoreBoard(boardId);
     } catch (error) {
@@ -106,8 +101,8 @@ export function BoardArchiveCard({
         onOpenChange={deleteAction.setIsOpen}
         onConfirm={() => deleteAction.execute({ boardId: board.id })}
         title="Are you sure?"
-        description={`This action cannot be undone. This will permanently delete the workspace "${board.name}" and all of its boards and data.`}
-        confirmText="Delete Workspace"
+        description={`This action cannot be undone. This will permanently delete the board "${board.name}" and all of its data.`}
+        confirmText="Delete Board"
         requireConfirmation={true}
         expectedText={board.name}
         isPending={deleteAction.isPending}

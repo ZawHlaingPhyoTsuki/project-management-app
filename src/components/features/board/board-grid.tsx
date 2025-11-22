@@ -1,13 +1,12 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-// import { toast } from "sonner";
-import { useSession } from "@/lib/auth-client";
 import EmptySection from "@/components/shared/empty-section";
 import { useBoardStore } from "@/stores/board";
 import { BoardCard } from "./board-card";
-import { useBoardsByWorkspaceId } from "@/data/boards/queries";
+import { useWorkspaceBoards } from "@/data/boards/queries";
 import { Spinner } from "@/components/ui/spinner";
+import { User } from "better-auth";
 
 interface Board {
   id: string;
@@ -33,19 +32,20 @@ interface BoardGridProps {
     id: string;
     name: string;
   };
+  user: User
 }
 
 export function BoardGrid({
   initialBoardData,
   initialWorkspaceData,
+  user
 }: BoardGridProps) {
   const { setIsBoardModalOpen } = useBoardStore();
-  const { data: boards = [], isLoading } = useBoardsByWorkspaceId(
+  const { data, isLoading } = useWorkspaceBoards(
     initialWorkspaceData.id,
     initialBoardData
   );
-  const session = useSession();
-  const user = session.data?.user;
+  const boards = data?.data;
 
   if (isLoading || !boards) {
     return (

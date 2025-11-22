@@ -13,6 +13,8 @@ import { Action, Resource } from "@/types/permission";
 import { DeleteConfirmationDialog } from "@/components/shared/delete-confirmation-dialog";
 import BoardEllipsisDropdown from "./board-ellipsis-dropdown";
 import { useBoardActions } from "@/hooks/boards/use-board-actions";
+import { useRouter } from "next/navigation";
+import { User } from "better-auth";
 
 interface Board {
   id: string;
@@ -38,42 +40,47 @@ interface BoardCardProps {
     id: string;
     name: string;
   };
-  user:
-    | {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        email: string;
-        emailVerified: boolean;
-        name: string;
-        image?: string | null | undefined;
-      }
-    | undefined;
+  user: User;
 }
 
 export function BoardCard({ board, workspace, user }: BoardCardProps) {
-  const { archive: archiveAction } = useBoardActions();
+  const { archive: archiveAction } = useBoardActions({
+    workspaceId: workspace.id,
+    userId: user.id,
+  });
+  const router = useRouter();
 
-  // Check if user can perform actions on a specific board
-  const canUserManageBoard = (board: Board) => {
-    if (!user) return false;
-
-    const userMember = board.members?.find(
-      (member) => member.userId === user.id
-    );
-    if (!userMember) return false;
-
-    return (
-      can(userMember.role, Resource.BOARD, Action.UPDATE) ||
-      can(userMember.role, Resource.BOARD, Action.ARCHIVE) ||
-      can(userMember.role, Resource.BOARD, Action.INVITE)
-    );
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Only navigate if the click is directly on the card, not on interactive elements
+    if ((e.target as HTMLElement).closest('button, a, [role="button"]')) {
+      return;
+    }
+    router.push(`/dashboard/workspaces/${workspace.id}/boards/${board.id}`);
   };
 
-  const canManageBoard = canUserManageBoard(board);
+  // Check if user can perform actions on a specific board
+  // const canUserManageBoard = (board: Board) => {
+  //   if (!user) return false;
+
+  //   const userMember = board.members?.find(
+  //     (member) => member.userId === user.id
+  //   );
+  //   if (!userMember) return false;
+
+  //   return (
+  //     can(userMember.role, Resource.BOARD, Action.UPDATE) ||
+  //     can(userMember.role, Resource.BOARD, Action.ARCHIVE) ||
+  //     can(userMember.role, Resource.BOARD, Action.INVITE)
+  //   );
+  // };
+
+  // const canManageBoard = canUserManageBoard(board);
 
   return (
-    <Card key={board.id} className="hover:shadow-md transition-shadow">
+    <Card
+      onClick={handleCardClick}
+      className="rounded-md hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"
+    >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="space-y-1 flex-1 min-w-0">
@@ -81,6 +88,7 @@ export function BoardCard({ board, workspace, user }: BoardCardProps) {
               <Link
                 href={`/dashboard/workspaces/${workspace.id}/boards/${board.id}`}
                 className="hover:underline"
+                onClick={(e) => e.stopPropagation()} // Prevent card click when link is clicked
               >
                 {board.name}
               </Link>
@@ -91,24 +99,26 @@ export function BoardCard({ board, workspace, user }: BoardCardProps) {
               </CardDescription>
             )}
           </div>
-          {canManageBoard && (
+          {/* {canManageBoard && ( */}
+          <div onClick={(e) => e.stopPropagation()}>
+            {/* Stop propagation for dropdown */}
             <BoardEllipsisDropdown
               boardId={board.id}
               setShowArchiveDialog={() => archiveAction.setIsOpen(true)}
               isArchivePending={archiveAction.isPending}
             />
-          )}
+          </div>
+          {/* )} */}
         </div>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center gap-4">
-            {board._count && (
-              <>
-                <span>{board._count.taskLists} lists</span>
-                <span>{board._count.members} members</span>
-              </>
-            )}
+        <div className="flex items-end justify-between text-xs text-muted-foreground">
+          <div className="flex flex-col gap-1">
+            <div className="">{workspace.name}</div>
+            <div className="flex gap-4 ">
+              <span>{board._count?.taskLists || 0} lists</span>
+              <span>{board._count?.members || 0} members</span>
+            </div>
           </div>
           <time dateTime={board.updatedAt.toString()}>
             {new Date(board.updatedAt).toLocaleDateString()}
@@ -119,12 +129,7 @@ export function BoardCard({ board, workspace, user }: BoardCardProps) {
       <DeleteConfirmationDialog
         open={archiveAction.isOpen}
         onOpenChange={archiveAction.setIsOpen}
-        onConfirm={() =>
-          archiveAction.execute({
-            boardId: board.id,
-            workspaceId: workspace.id,
-          })
-        }
+        onConfirm={() => archiveAction.execute(board.id)}
         title="Archive Board"
         description={`This action will archive "${board.name}". All data will be preserved but moved to trash. You can restore it later if needed.`}
         confirmText="Archive Board"

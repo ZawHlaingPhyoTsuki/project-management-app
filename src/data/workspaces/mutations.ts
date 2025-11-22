@@ -13,7 +13,7 @@ export const useCreateWorkspace = () => {
   return useMutation({
     mutationFn: createWorkspace,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+      queryClient.invalidateQueries({ queryKey: ["workspace"] });
     },
   });
 };
@@ -23,9 +23,8 @@ export const useUpdateWorkspace = () => {
 
   return useMutation({
     mutationFn: updateWorkspace,
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
-      queryClient.invalidateQueries({ queryKey: ["workspaces", variables.id] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workspace"] });
     },
   });
 };
@@ -36,7 +35,7 @@ export const useDeleteWorkspace = () => {
   return useMutation({
     mutationFn: deleteWorkspace,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+      queryClient.invalidateQueries({ queryKey: ["workspace"] });
     },
   });
 };
@@ -46,13 +45,8 @@ export const useArchiveWorkspace = () => {
 
   return useMutation({
     mutationFn: archiveWorkspace,
-    onSuccess: (_, variables) => {
-      // Invalidate relevant queries
-      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
-      queryClient.invalidateQueries({
-        queryKey: ["workspace", variables.workspaceId],
-      });
-      // queryClient.invalidateQueries({ queryKey: ["archived-workspaces"] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workspace"] });
     },
   });
 };
@@ -62,12 +56,8 @@ export const useRestoreWorkspace = () => {
 
   return useMutation({
     mutationFn: restoreWorkspace,
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
-      queryClient.invalidateQueries({
-        queryKey: ["workspace", variables.workspaceId],
-      });
-      // queryClient.invalidateQueries({ queryKey: ["archived-workspaces"] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workspace"] });
     },
   });
 };

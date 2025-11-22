@@ -4,9 +4,9 @@ import { DeleteConfirmationDialog } from "@/components/shared/delete-confirmatio
 import { Button } from "@/components/ui/button";
 import { useRestoreBoard } from "@/data/boards/mutations";
 import { useBoardActions } from "@/hooks/boards/use-board-actions";
-import { useSession } from "@/lib/auth-client";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
+import { User } from "better-auth";
 import { RefreshCw, Trash2 } from "lucide-react";
 
 interface Board {
@@ -22,12 +22,21 @@ interface Board {
   }>;
 }
 
-export function BoardArchiveCard({ board }: { board: Board }) {
-  const session = useSession();
-  const user = session.data?.user;
+export function BoardArchiveCard({
+  board,
+  workspaceId,
+  user
+}: {
+  board: Board;
+  workspaceId: string;
+  user: User
+}) {
   const { mutateAsync: restoreBoard, isPending: isRestoring } =
     useRestoreBoard();
-  const { delete: deleteAction } = useBoardActions();
+  const { delete: deleteAction } = useBoardActions({
+    workspaceId,
+    userId: user.id,
+  });
 
   const handleRestoreBoard = async (boardId: string) => {
     // if (!user?.role || !can(user.role, Resource.BOARD, Action.RESTORE)) {

@@ -129,6 +129,7 @@ export async function getAllBoardsByUserId(userId: string) {
       return { success: false, error: "Not authenticated" };
     }
 
+    // Check if user has permission to workspace
     const workspaceMemberships = await prisma.workspaceMember.findMany({
       where: {
         userId: userId,
@@ -146,11 +147,29 @@ export async function getAllBoardsByUserId(userId: string) {
       return { success: true, data: [] };
     }
 
+    // const boardMemberships = await prisma.boardMember.findMany({
+    //   where: {
+    //     userId: userId,
+    //   },
+    //   select: {
+    //     boardId: true,
+    //   },
+    // })
+
+    // const boardIds = boardMemberships.map(
+    //   (membership) => membership.boardId
+    // );
+
+    // if (boardIds.length === 0) {
+    //   return { success: true, data: [] };
+    // }
+
     const boards = await prisma.board.findMany({
       where: {
         workspaceId: {
           in: workspaceIds,
         },
+        isArchived: false,
       },
       include: {
         workspace: true,

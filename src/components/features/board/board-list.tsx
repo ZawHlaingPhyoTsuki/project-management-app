@@ -1,21 +1,21 @@
 "use client";
 
-import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAllBoardsByUserId } from "@/data/boards/queries";
-import { AlertCircle, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useUserBoards } from "@/data/boards/queries";
+import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import EmptySection from "@/components/shared/empty-section";
+import { useBoardStore } from "@/stores/board";
+import { BoardCard } from "./board-card";
+import { User } from "better-auth";
 
 interface BoardListProps {
-  userId: string;
+  user: User;
 }
 
-export default function BoardList({ userId }: BoardListProps) {
-  const { data, isLoading, error, isError } = useAllBoardsByUserId(
-    userId as string
-   
-  );
+export default function BoardList({ user }: BoardListProps) {
+  const { data, isLoading, error, isError } = useUserBoards(user.id);
+  const { setIsBoardModalOpen } = useBoardStore();
 
   const boards = data?.data;
 
@@ -48,40 +48,25 @@ export default function BoardList({ userId }: BoardListProps) {
   // Empty state
   if (!boards?.length) {
     return (
-      <div className="flex h-40 w-full items-center justify-center rounded-md border border-dashed bg-muted/50 p-8 text-center animate-in fade-in-50">
-        <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
-          <h3 className="mt-4 text-lg font-semibold">No boards created</h3>
-          <p className="mb-4 mt-2 text-sm text-muted-foreground">
-            You don&apos;t have any boards yet. Start creating content.
-          </p>
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            Create Board
-          </Button>
-        </div>
-      </div>
+      <EmptySection
+        title="No boards yet"
+        description="Create your first board to start organizing tasks"
+        showButton={true}
+        buttonText="Create board"
+        onClick={() => setIsBoardModalOpen(true)}
+      />
     );
   }
 
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
       {boards.map((board) => (
-        <Link
+        <BoardCard
           key={board.id}
-          href={`/board/${board.id}`}
-          className="group relative flex h-32 flex-col justify-between overflow-hidden rounded-md border bg-card p-4 hover:bg-accent hover:text-accent-foreground transition-colors"
-        >
-          <div className="font-semibold line-clamp-2">{board.name}</div>
-          <div className="flex flex-col gap-1">
-            <div className="text-xs text-muted-foreground">
-              {board.workspace.name}
-            </div>
-            <div className="flex gap-4 text-xs text-muted-foreground">
-              <span>{board._count?.taskLists || 0} lists</span>
-              <span>{board._count?.members || 0} members</span>
-            </div>
-          </div>
-        </Link>
+          board={board}
+          workspace={{ name: board.workspace.name, id: board.workspaceId }}
+          user={user}
+        />
       ))}
     </div>
   );

@@ -1,3 +1,5 @@
+"use client";
+
 import { useQuery } from "@tanstack/react-query";
 import {
   getTasklistByBoardId,
@@ -6,18 +8,16 @@ import {
 
 export const useTaskListsByBoardId = (boardId: string) => {
   return useQuery({
-    queryKey: ["task-lists", boardId],
+    queryKey: ["board", boardId, "task-lists"],
     queryFn: () => getTasklistByBoardId(boardId),
     enabled: !!boardId,
-    staleTime: 1000 * 60 * 5,
   });
 };
 
 export const useArchivedTaskListsByBoardId = (boardId: string) => {
   return useQuery({
-    queryKey: ["archived-task-lists", boardId],
+    queryKey: ["board", boardId, "task-lists", "archived"],
     queryFn: () => getArchivedTaskListsByBoardId(boardId),
     enabled: !!boardId,
-    staleTime: 1000 * 60 * 5,
   });
 };

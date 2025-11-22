@@ -32,13 +32,13 @@ export default async function WorkspaceBoardsPage({
     <DashboardContentWrapper
       title={`${workspace.data.name} - Boards`}
       description="Manage and organize your workspace boards"
-      ActionButton={<CreateBoardDialog workspaceId={id} />}
+      ActionButton={<CreateBoardDialog userId={session.user.id} workspaceId={id} />}
     >
       {/* Active Boards */}
-      <BoardGrid initialWorkspaceData={workspace.data} />
+      <BoardGrid initialWorkspaceData={workspace.data} user={session.user} />
 
       {/* Archived Boards (collapsible) */}
-      <BoardArchive workspaceId={id} />
+      <BoardArchive workspaceId={id} user={session.user} />
     </DashboardContentWrapper>
   );
 }

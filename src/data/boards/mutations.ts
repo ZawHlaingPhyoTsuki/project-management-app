@@ -8,74 +8,66 @@ import {
   deleteBoard,
 } from "@/actions/boards";
 
-
-export const useCreateBoard = () => {
+export const useCreateBoard = (userId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createBoard2,
     onSuccess: (_data, variables) => {
-      // Invalidate and refetch boards for the specific workspace
+      // Invalidate workspace boards and user boards
+      queryClient.invalidateQueries({ queryKey: ["workspace"] });
       queryClient.invalidateQueries({
-        queryKey: ["boards", variables.workspaceId],
+        queryKey: ["workspace", variables.workspaceId, "boards"],
       });
+      queryClient.invalidateQueries({ queryKey: ["user", userId, "boards"] });
+    },
+  });
+};
+
+export const useArchiveBoard = (userId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: archiveBoard,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["user", userId, "boards"] });
+      queryClient.invalidateQueries({ queryKey: ["workspace"] });
       queryClient.invalidateQueries({
-        queryKey: ["workspaces"],
+        queryKey: ["board", variables],
       });
     },
   });
 };
 
-export function useArchiveBoard() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      boardId,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      workspaceId,
-    }: {
-      boardId: string;
-      workspaceId: string;
-    }) => archiveBoard(boardId),
-    onSuccess: (result, variables) => {
-      if (result.success) {
-        queryClient.invalidateQueries({
-          queryKey: ["boards", variables.workspaceId],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["workspaces", variables.workspaceId],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["archived-boards", variables.workspaceId],
-        });
-      }
-    },
-  });
-}
-
-export function useRestoreBoard() {
+export const useRestoreBoard = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: restoreBoard,
-    onSuccess: (_result, _variables) => {
-      queryClient.invalidateQueries({ queryKey: ["boards"] });
-      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
-      queryClient.invalidateQueries({ queryKey: ["archived-boards"] });
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["workspace"] });
+      queryClient.invalidateQueries({ queryKey: ["board", variables] });
     },
   });
-}
+};
 
-export function useDeleteBoard() {
+export const useDeleteBoard = (workspaceId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: deleteBoard,
-    onSuccess: (_result, _variables) => {
-      queryClient.invalidateQueries({ queryKey: ["boards"] });
-      queryClient.invalidateQueries({ queryKey: ["workspaces"] });
-      queryClient.invalidateQueries({ queryKey: ["archived-boards"] });
+    onSuccess: (_, variables) => {
+      // queryClient.invalidateQueries({ queryKey: ["workspace-boards"] });
+      // queryClient.invalidateQueries({
+      //   queryKey: ["archived-workspace-boards"],
+      // });
+      queryClient.invalidateQueries({
+        queryKey: ["workspace", workspaceId, "boards"],
+      });
+      // queryClient.invalidateQueries({
+      //   queryKey: ["workspace", workspaceId, "boards", "archived"],
+      // });
+      queryClient.invalidateQueries({ queryKey: ["board", variables.boardId] });
     },
   });
-}
+};

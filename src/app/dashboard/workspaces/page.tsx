@@ -5,7 +5,7 @@ import CreateWorkspaceDialog from "@/components/features/workspace/create-worksp
 import WorkspaceList from "@/components/features/workspace/workspace-list";
 import DashboardContentWrapper from "@/components/shared/dashboard-content-wrapper";
 
-export default async function DasbhoardWorkspacePage() {
+export default async function DashboardWorkspacePage() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });

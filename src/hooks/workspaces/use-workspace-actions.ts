@@ -11,13 +11,13 @@ export function useWorkspaceActions() {
   const archive = useConfirmation({
     mutationFn: archiveWorkspace,
     successMessage: "Workspace archived successfully",
-    redirectOnSuccess: "/dashboard",
+    redirectOnSuccess: "/dashboard/workspaces",
   });
 
   const deleteAction = useConfirmation({
     mutationFn: deleteWorkspace,
     successMessage: "Workspace deleted successfully",
-    redirectOnSuccess: "/dashboard",
+    redirectOnSuccess: "/dashboard/workspaces",
   });
 
   return {

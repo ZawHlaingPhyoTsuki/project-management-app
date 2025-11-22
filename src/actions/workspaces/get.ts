@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 
-export const getAllWorkspaces = async () => {
+export const getWorkspaces = async (archived: boolean = false) => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -21,7 +21,7 @@ export const getAllWorkspaces = async () => {
             userId: session?.user.id,
           },
         },
-        isArchived: false,
+        isArchived: archived,
       },
       include: {
         members: {
@@ -106,53 +106,5 @@ export const getActiveWorkspaceById = async (
   } catch (error) {
     console.error("Error fetching workspace:", error);
     return { success: false, data: null, error: "Failed to fetch workspace" };
-  }
-};
-
-export const getArchivedWorkspaces = async () => {
-  try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    if (!session?.user) {
-      throw new Error("Not authenticated");
-    }
-
-    const workspaces = await prisma.workspace.findMany({
-      where: {
-        members: {
-          some: {
-            userId: session?.user.id,
-          },
-        },
-        isArchived: true,
-      },
-      include: {
-        members: {
-          include: {
-            user: {
-              select: { id: true, name: true, email: true, image: true },
-            },
-          },
-        },
-        _count: {
-          select: {
-            boards: {
-              where: {
-                isArchived: false,
-              },
-            },
-            members: true,
-          },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-    });
-
-    return { success: true, data: workspaces };
-  } catch (error) {
-    console.error("Error fetching workspaces:", error);
-    return { success: false, error: "Failed to fetch workspaces" };
   }
 };

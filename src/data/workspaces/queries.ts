@@ -2,15 +2,14 @@
 
 import { useQuery } from "@tanstack/react-query";
 import {
-  getAllWorkspaces,
   getActiveWorkspaceById,
-  getArchivedWorkspaces,
+  getWorkspaces,
 } from "@/actions/workspaces";
 
 export const useWorkspaces = () => {
   return useQuery({
     queryKey: ["workspace"],
-    queryFn: getAllWorkspaces,
+    queryFn: () => getWorkspaces(false),
   });
 };
 
@@ -25,6 +24,6 @@ export const useWorkspaceById = (workspaceId?: string) => {
 export const useArchivedWorkspaces = () => {
   return useQuery({
     queryKey: ["workspace", "archived"],
-    queryFn: getArchivedWorkspaces,
+    queryFn: () => getWorkspaces(true),
   });
 };

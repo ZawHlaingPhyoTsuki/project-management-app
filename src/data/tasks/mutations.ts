@@ -58,7 +58,10 @@ export const useDeleteTask = () => {
     mutationFn: deleteTask,
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: ["archived-tasks", variables.boardId],
+        queryKey: ["board", variables.boardId, "task-lists"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["board", variables.boardId, "task-lists", "archived"],
       });
     },
   });
@@ -71,10 +74,10 @@ export const useRestoreTask = () => {
     mutationFn: restoreTask,
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: ["task-lists", variables.boardId],
+        queryKey: ["board", variables.boardId, "task-lists"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["archived-tasks", variables.boardId],
+        queryKey: ["board", variables.boardId, "tasks", "archived"],
       });
     },
   });

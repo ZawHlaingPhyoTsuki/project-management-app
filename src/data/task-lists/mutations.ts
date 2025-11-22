@@ -1,3 +1,5 @@
+"use client";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createTaskList,
@@ -14,7 +16,7 @@ export const useCreateTaskList = () => {
     mutationFn: createTaskList,
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: ["task-lists", variables.boardId],
+        queryKey: ["board", variables.boardId, "task-lists"],
       });
     },
   });
@@ -27,22 +29,23 @@ export const useUpdateTaskList = () => {
     mutationFn: updateTaskList,
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: ["task-lists", variables.boardId],
+        queryKey: ["board", variables.boardId, "task-lists"],
       });
     },
     onMutate: async (variables) => {
       await queryClient.cancelQueries({
-        queryKey: ["task-lists", variables.boardId],
+        queryKey: ["board", variables.boardId, "task-lists"],
       });
 
       const previousTaskLists = queryClient.getQueryData([
-        "task-lists",
+        "board",
         variables.boardId,
+        "task-lists",
       ]);
 
       // Optimistic update
       queryClient.setQueryData(
-        ["task-lists", variables.boardId],
+        ["board", variables.boardId, "task-lists"],
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (old: any) => {
           if (!old?.success) return old;
@@ -65,14 +68,16 @@ export const useUpdateTaskList = () => {
       // Rollback on error
       if (context?.previousTaskLists) {
         queryClient.setQueryData(
-          ["task-lists", variables.boardId],
+          ["board", variables.boardId, "task-lists"],
           context.previousTaskLists
         );
       }
     },
-    onSettled: () => {
+    onSettled: (_data, _error, variables) => {
       // Sync with server
-      queryClient.invalidateQueries({ queryKey: ["task-lists"] });
+      queryClient.invalidateQueries({
+        queryKey: ["board", variables.boardId, "task-lists"],
+      });
     },
   });
 };
@@ -84,10 +89,10 @@ export const useArchiveTaskList = () => {
     mutationFn: archiveTaskList,
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: ["task-lists", variables.boardId],
+        queryKey: ["board", variables.boardId, "task-lists"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["archived-task-lists", variables.boardId],
+        queryKey: ["board", variables.boardId, "task-lists", "archived"],
       });
     },
   });
@@ -100,10 +105,10 @@ export const useDeleteTaskList = () => {
     mutationFn: deleteTaskList,
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: ["task-lists", variables.boardId],
+        queryKey: ["board", variables.boardId, "task-lists"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["archived-task-lists", variables.boardId],
+        queryKey: ["board", variables.boardId, "task-lists", "archived"],
       });
     },
   });
@@ -115,14 +120,11 @@ export const useRestoreTaskList = () => {
   return useMutation({
     mutationFn: restoreTaskList,
     onSuccess: (_data, variables) => {
-      // queryClient.invalidateQueries({
-      //   queryKey: ["tasks", variables.boardId],
-      // });
       queryClient.invalidateQueries({
-        queryKey: ["task-lists", variables.boardId],
+        queryKey: ["board", variables.boardId, "task-lists"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["archived-task-lists", variables.boardId],
+        queryKey: ["board", variables.boardId, "task-lists", "archived"],
       });
     },
   });

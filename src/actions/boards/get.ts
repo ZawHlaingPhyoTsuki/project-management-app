@@ -119,6 +119,64 @@ export async function getBoardById(boardId: string) {
   }
 }
 
+export async function getAllBoardsByUserId(userId: string) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!session?.user || session.user.id !== userId) {
+      return { success: false, error: "Not authenticated" };
+    }
+
+    // Check if user has permission to workspace
+    const workspaceMemberships = await prisma.workspaceMember.findMany({
+      where: {
+        userId: userId,
+      },
+      select: {
+        workspaceId: true,
+      },
+    });
+
+    const workspaceIds = workspaceMemberships.map(
+      (membership) => membership.workspaceId
+    );
+
+    if (workspaceIds.length === 0) {
+      return { success: true, data: [] };
+    }
+
+    const boards = await prisma.board.findMany({
+      where: {
+        members: {
+          some: {
+            userId: session.user.id,
+          },
+        },
+        workspaceId: {
+          in: workspaceIds,
+        },
+        isArchived: false,
+      },
+      include: {
+        workspace: true,
+        _count: {
+          select: {
+            taskLists: true,
+            members: true,
+          },
+        },
+      },
+    });
+
+    return { success: true, data: boards };
+  } catch (error) {
+    console.error("Error fetching all boards by user ID:", error);
+    return { success: false, error: "Failed to fetch boards" };
+  }
+}
+
 export const getWorkspaceBoards = async (workspaceId: string) => {
   try {
     const session = await auth.api.getSession({

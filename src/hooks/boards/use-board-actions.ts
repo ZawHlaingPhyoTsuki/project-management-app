@@ -1,11 +1,16 @@
 import { useConfirmation } from "@/hooks/shared/use-confirmation";
 import { useArchiveBoard, useDeleteBoard } from "@/data/boards/mutations";
 
-export function useBoardActions() {
-  const { mutateAsync: archiveBoard } = useArchiveBoard();
-  const { mutateAsync: deleteBoard } = useDeleteBoard();
+interface useBoardActionsProps {
+  workspaceId: string;
+  userId: string;
+}
 
-  const archive = useConfirmation({
+export function useBoardActions({ workspaceId, userId }: useBoardActionsProps) {
+  const { mutateAsync: archiveBoard } = useArchiveBoard(userId);
+  const { mutateAsync: deleteBoard } = useDeleteBoard(workspaceId);
+
+  const archiveAction = useConfirmation({
     mutationFn: archiveBoard,
     successMessage: "Board archived successfully",
   });
@@ -16,7 +21,7 @@ export function useBoardActions() {
   });
 
   return {
-    archive,
+    archive: archiveAction,
     delete: deleteAction,
   };
 }

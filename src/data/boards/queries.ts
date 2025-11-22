@@ -2,42 +2,46 @@
 
 import { useQuery } from "@tanstack/react-query";
 import {
+  getAllBoardsByUserId,
   getBoardById,
   getWorkspaceArchivedBoards,
   getWorkspaceBoards,
 } from "@/actions/boards";
 
-export const useBoardsByWorkspaceId = (
-  workspaceId: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  initialData?: any
-) => {
+// Get boards for a specific workspace
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const useWorkspaceBoards = (workspaceId: string, initialData?: any) => {
   return useQuery({
-    queryKey: ["boards", workspaceId],
+    queryKey: ["workspace", workspaceId, "boards"],
     queryFn: () => getWorkspaceBoards(workspaceId),
     initialData: initialData ? { success: true, data: initialData } : undefined,
-    select: (data) => data?.data ?? [],
     enabled: !!workspaceId,
-    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };
 
-export const useBoardById = (boardId: string) => {
+// Get archived boards for a workspace
+export const useArchivedWorkspaceBoards = (workspaceId: string) => {
   return useQuery({
-    queryKey: ["board", boardId],
-    queryFn: () => getBoardById(boardId),
-    enabled: !!boardId,
-    // select: (data) => data?.data,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  });
-};
-
-export const useWorkspaceArchivedBoards = (workspaceId: string) => {
-  return useQuery({
-    queryKey: ["archived-boards", workspaceId],
+    queryKey: ["workspace", workspaceId, "boards", "archived"],
     queryFn: () => getWorkspaceArchivedBoards(workspaceId),
     enabled: !!workspaceId,
-    select: (data) => data?.data ?? [],
-    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+};
+
+// Get a single board by ID
+export const useBoardById = (boardId?: string) => {
+  return useQuery({
+    queryKey: ["board", boardId],
+    queryFn: () => (boardId ? getBoardById(boardId) : Promise.resolve(null)),
+    enabled: !!boardId,
+  });
+};
+
+// Get all boards for a user (across all workspaces)
+export const useUserBoards = (userId: string) => {
+  return useQuery({
+    queryKey: ["user", userId, "boards"],
+    queryFn: () => getAllBoardsByUserId(userId),
+    enabled: !!userId,
   });
 };

@@ -33,12 +33,16 @@ import { useCreateBoard } from "@/data/boards/mutations";
 // import { can, Resource, Action } from "@/lib/permissions";
 
 interface CreateBoardDialogProps {
-  workspaceId: string;
+  userId: string;
+  workspaceId?: string; // Make workspaceId optional
 }
 
-export function CreateBoardDialog({ workspaceId }: CreateBoardDialogProps) {
+export function CreateBoardDialog({
+  userId,
+  workspaceId,
+}: CreateBoardDialogProps) {
   const { isBoardModalOpen, setIsBoardModalOpen } = useBoardStore();
-  const { mutateAsync: createBoard, isPending } = useCreateBoard();
+  const { mutateAsync: createBoard, isPending } = useCreateBoard(userId);
   //   const { user } = useCurrentUser();
 
   //   const canCreateBoard = user?.role
@@ -50,25 +54,39 @@ export function CreateBoardDialog({ workspaceId }: CreateBoardDialogProps) {
     defaultValues: {
       name: "",
       description: "",
-      workspaceId,
+      workspaceId: workspaceId || "", // Set to empty string if not provided
     },
   });
 
   const handleOpenChange = (isOpen: boolean) => {
     setIsBoardModalOpen(isOpen);
     if (!isOpen) {
-      form.reset();
+      form.reset({
+        name: "",
+        description: "",
+        workspaceId: workspaceId || "", // Reset to empty string if not provided
+      });
     }
   };
 
   const onSubmit = async (data: CreateBoardType) => {
     try {
+      // Validate workspaceId if not provided via props
+      if (!data.workspaceId) {
+        toast.error("Workspace ID is required");
+        return;
+      }
+
       const result = await createBoard(data);
 
       if (result.success) {
         toast.success("Board created successfully");
         handleOpenChange(false);
-        form.reset();
+        form.reset({
+          name: "",
+          description: "",
+          workspaceId: workspaceId || "", // Reset to empty string if not provided
+        });
       } else {
         toast.error(result.error || "Failed to create board");
       }
@@ -102,6 +120,21 @@ export function CreateBoardDialog({ workspaceId }: CreateBoardDialogProps) {
 
           <div className="grid gap-4 py-4">
             <FieldGroup>
+              {/* Show workspace ID field only when workspaceId is not provided */}
+              {!workspaceId && (
+                <Field>
+                  <FieldLabel htmlFor="workspaceId">Workspace ID</FieldLabel>
+                  <Input
+                    id="workspaceId"
+                    placeholder="Enter workspace ID"
+                    {...form.register("workspaceId")}
+                  />
+                  {form.formState.errors.workspaceId && (
+                    <FieldError errors={[form.formState.errors.workspaceId]} />
+                  )}
+                </Field>
+              )}
+
               <Field>
                 <FieldLabel htmlFor="name">Board Name</FieldLabel>
                 <Input

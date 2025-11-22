@@ -8,7 +8,7 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 import type { User } from "better-auth";
-import { BarChart3, Calendar, Layout } from "lucide-react";
+import { BarChart3, Calendar, KanbanSquare, Layout } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type * as React from "react";
@@ -37,8 +37,13 @@ export function AppSidebar({ user, ...props }: AppSideBarProps) {
     navMain: [
       {
         title: "Workspaces",
-        url: "/dashboard",
+        url: "/dashboard/workspaces",
         icon: Layout,
+      },
+      {
+        title: "Boards",
+        url: "/dashboard/boards",
+        icon: KanbanSquare,
       },
       {
         title: "My Tasks",

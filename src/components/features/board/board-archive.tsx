@@ -10,12 +10,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { BoardArchiveCard } from "./board-archive-card";
-import { useWorkspaceArchivedBoards } from "@/data/boards/queries";
+import { useArchivedWorkspaceBoards } from "@/data/boards/queries";
+import { User } from "better-auth";
 
-export function BoardArchive({ workspaceId }: { workspaceId: string }) {
+interface BoardArchiveProps {
+  workspaceId: string;
+  user: User;
+}
+
+export function BoardArchive({ workspaceId, user }: BoardArchiveProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const { data: boards } = useWorkspaceArchivedBoards(workspaceId);
+  const { data } = useArchivedWorkspaceBoards(workspaceId);
+  const boards = data?.data;
 
   if (boards?.length === 0 || !boards) {
     return null;
@@ -46,7 +53,12 @@ export function BoardArchive({ workspaceId }: { workspaceId: string }) {
         <CardContent className="pt-0">
           <div className="space-y-3">
             {boards.map((board) => (
-              <BoardArchiveCard key={board.id} board={board} />
+              <BoardArchiveCard
+                key={board.id}
+                board={board}
+                workspaceId={workspaceId}
+                user={user}
+              />
             ))}
           </div>
         </CardContent>

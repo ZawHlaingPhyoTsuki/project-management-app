@@ -4,9 +4,9 @@ import { DeleteConfirmationDialog } from "@/components/shared/delete-confirmatio
 import { Button } from "@/components/ui/button";
 import { useRestoreBoard } from "@/data/boards/mutations";
 import { useBoardActions } from "@/hooks/boards/use-board-actions";
-import { useSession } from "@/lib/auth-client";
 import { can } from "@/lib/permissions";
 import { Action, Resource } from "@/types/permission";
+import { User } from "better-auth";
 import { RefreshCw, Trash2 } from "lucide-react";
 
 interface Board {
@@ -22,19 +22,23 @@ interface Board {
   }>;
 }
 
-export function BoardArchiveCard({ board }: { board: Board }) {
-  const session = useSession();
-  const user = session.data?.user;
+export function BoardArchiveCard({
+  board,
+  workspaceId,
+  user
+}: {
+  board: Board;
+  workspaceId: string;
+  user: User
+}) {
   const { mutateAsync: restoreBoard, isPending: isRestoring } =
-    useRestoreBoard();
-  const { delete: deleteAction } = useBoardActions();
+    useRestoreBoard(user.id);
+  const { delete: deleteAction } = useBoardActions({
+    workspaceId,
+    userId: user.id,
+  });
 
   const handleRestoreBoard = async (boardId: string) => {
-    // if (!user?.role || !can(user.role, Resource.BOARD, Action.RESTORE)) {
-    //   toast.error("You don't have permission to restore boards");
-    //   return;
-    // }
-
     try {
       await restoreBoard(boardId);
     } catch (error) {
@@ -97,8 +101,8 @@ export function BoardArchiveCard({ board }: { board: Board }) {
         onOpenChange={deleteAction.setIsOpen}
         onConfirm={() => deleteAction.execute({ boardId: board.id })}
         title="Are you sure?"
-        description={`This action cannot be undone. This will permanently delete the workspace "${board.name}" and all of its boards and data.`}
-        confirmText="Delete Workspace"
+        description={`This action cannot be undone. This will permanently delete the board "${board.name}" and all of its data.`}
+        confirmText="Delete Board"
         requireConfirmation={true}
         expectedText={board.name}
         isPending={deleteAction.isPending}

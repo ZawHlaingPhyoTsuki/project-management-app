@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
 
-export const getAllWorkspaces = async () => {
+export const getWorkspaces = async (archived: boolean = false) => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -21,7 +21,7 @@ export const getAllWorkspaces = async () => {
             userId: session?.user.id,
           },
         },
-        isArchived: false,
+        isArchived: archived,
       },
       include: {
         members: {

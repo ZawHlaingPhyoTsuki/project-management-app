@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+// import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
@@ -47,8 +47,8 @@ export const archiveWorkspace = async ({
     });
 
     // Revalidate relevant paths
-    revalidatePath(`/dashboard/workspaces/${workspaceId}/settings`);
-    revalidatePath("/dashboard");
+    // revalidatePath(`/dashboard/workspaces/${workspaceId}/settings`);
+    // revalidatePath("/dashboard");
     // revalidatePath("/dashboard/archived"); // If you have an archived workspaces page
 
     return {

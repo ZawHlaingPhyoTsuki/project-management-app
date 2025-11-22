@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+// import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/db";
@@ -43,7 +43,7 @@ export const deleteWorkspace = async ({
     });
 
     // Revalidate and redirect after deletion
-    revalidatePath("/dashboard");
+    // revalidatePath("/dashboard");
 
     return {
       success: true,
@@ -51,7 +51,7 @@ export const deleteWorkspace = async ({
       data: null,
     };
   } catch (error) {
-    console.error("Error fetching workspace:", error);
-    return { success: false, data: null, error: "Failed to fetch workspace" };
+    console.error("Error deleting workspace:", error);
+    return { success: false, data: null, error: "Failed to delete workspace" };
   }
 };

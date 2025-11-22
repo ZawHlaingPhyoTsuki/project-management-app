@@ -6,6 +6,7 @@ import { BoardArchive } from "@/components/features/board/board-archive";
 import DashboardContentWrapper from "@/components/shared/dashboard-content-wrapper";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { getWorkspaceBoards } from "@/actions/boards";
 
 export default async function WorkspaceBoardsPage({
   params,
@@ -22,7 +23,10 @@ export default async function WorkspaceBoardsPage({
     redirect("/sign-in");
   }
 
-  const [workspace] = await Promise.all([getActiveWorkspaceById(id)]);
+  const [workspace, boards] = await Promise.all([
+    getActiveWorkspaceById(id),
+    getWorkspaceBoards(id),
+  ]);
 
   if (!workspace.success || !workspace.data) {
     redirect("/dashboard");
@@ -32,13 +36,19 @@ export default async function WorkspaceBoardsPage({
     <DashboardContentWrapper
       title={`${workspace.data.name} - Boards`}
       description="Manage and organize your workspace boards"
-      ActionButton={<CreateBoardDialog workspaceId={id} />}
+      ActionButton={
+        <CreateBoardDialog userId={session.user.id} workspaceId={id} />
+      }
     >
       {/* Active Boards */}
-      <BoardGrid initialWorkspaceData={workspace.data} />
+      <BoardGrid
+        initialWorkspaceData={workspace.data}
+        initialBoardData={boards.data}
+        user={session.user}
+      />
 
       {/* Archived Boards (collapsible) */}
-      <BoardArchive workspaceId={id} />
+      <BoardArchive workspaceId={id} user={session.user} />
     </DashboardContentWrapper>
   );
 }

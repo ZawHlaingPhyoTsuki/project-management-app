@@ -41,10 +41,4 @@ export const workflowList = [
     img: "/workflow_4.png",
     color: "bg-[#ffc400]",
   },
-  {
-    title: "Resource hub",
-    desc: "Save time with a well-designed hub that helps teams find information easily and quickly.",
-    img: "/workflow_5.png",
-    color: "bg-[#f99cdb]",
-  },
 ];

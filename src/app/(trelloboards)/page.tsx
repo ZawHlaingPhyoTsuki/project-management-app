@@ -4,7 +4,7 @@ import { Workflow } from "@/components/Workflow";
 
 export default function Home() {
   return (
-    <main className="">
+    <main className="min-h-screen">
       <Hero />
       <div className="py-16 bg-[#e6fafc]">
         <Productivity />

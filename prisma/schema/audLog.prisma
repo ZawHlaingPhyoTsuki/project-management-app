@@ -1,0 +1,26 @@
+enum ACTION {
+    CREATE
+    UPDATE
+    DELETE
+}
+
+enum TABLE_TYPE {
+    BOARD
+    LIST
+    CARD
+}
+
+model AudLog {
+    id         String     @id @default(uuid())
+    orgId      String?
+    action     ACTION
+    tableId    String
+    tableType  TABLE_TYPE
+    tableTitle String
+    userId     String
+    userImage  String
+    userName   String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

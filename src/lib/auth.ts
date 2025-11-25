@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { openAPI } from "better-auth/plugins";
 import prisma from "./db";
+import { organization } from "better-auth/plugins";
 // import { getEnvVar } from "./utils";
 
 export const auth = betterAuth({
@@ -32,5 +33,5 @@ export const auth = betterAuth({
   //     clientSecret: getEnvVar("GITHUB_CLIENT_SECRET"),
   //   },
   // },
-  plugins: [openAPI()],
+  plugins: [openAPI(), organization()],
 });

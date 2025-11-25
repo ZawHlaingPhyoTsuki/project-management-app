@@ -25,13 +25,14 @@ export const auth = betterAuth({
   },
   // socialProviders: {
   //   google: {
-  //     clientId: getEnvVar("GOOGLE_CLIENT_ID"),
-  //     clientSecret: getEnvVar("GOOGLE_CLIENT_SECRET"),
+  //     clientId: process.env.GOOGLE_CLIENT_ID as string,
+  //     clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
   //   },
   //   github: {
   //     clientId: getEnvVar("GITHUB_CLIENT_ID"),
   //     clientSecret: getEnvVar("GITHUB_CLIENT_SECRET"),
   //   },
   // },
-  plugins: [openAPI(), organization()],
+  // plugins: [openAPI(), organization()],
+  plugins: [openAPI()],
 });

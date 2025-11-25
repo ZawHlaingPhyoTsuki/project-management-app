@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client"
+  output       = "../src/app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  orgIds        String[] // from mongo
+  organizations Organization[] @relation("OrganizationToUser")
+  boardIds String[] // from mongo
+  boards        Board[]        @relation("BoardToUser")
+  cardIds String[] // from mongo
+  cards         Card[]         @relation("CardToUser")
+
+  @@map("users")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
+}
+
+model Organization {
+  id    String @id @default(uuid())
+  title String
+  image String
+
+  userIds String[] // from mongo
+  users User[] @relation("OrganizationToUser")
+
+  boardIds String[] // from mongo
+  boards Board[]
+
+  createdAt DateTime @default(now())
+
+  @@map("organizations")
+}
+
+model Board {
+  id    String @id @default(uuid())
+  title String
+  image String
+
+  orgId        String
+  organization Organization @relation(fields: [orgId], references: [id])
+
+  userIds String[] // from mongo
+  users User[] @relation("BoardToUser")
+
+  lists List[]
+  cards Card[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("boards")
+}
+
+model List {
+  id      String @id @default(uuid())
+  title   String
+  order   Int
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  cards Card[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("lists")
+}
+
+model Card {
+  id          String  @id @default(uuid())
+  title       String
+  order       Int
+  description String?
+  
+  listId  String
+  list    List   @relation(fields: [listId], references: [id], onDelete: Cascade)
+  
+  boardId String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  
+  userIds String[] // from mongo
+  users User[] @relation("CardToUser")
+
+  labels Label[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cards")
+}
+
+enum ACTION {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum TABLE_TYPE {
+  BOARD
+  LIST
+  CARD
+}
+
+model AuditLog {
+  id         String    @id @default(uuid())
+  orgId      String?
+  action     ACTION
+  tableId    String
+  tableType  TABLE_TYPE
+  tableTitle String
+  userId     String
+  userImage  String
+  userName   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("audit_logs")
+}
+
+model Label {
+  id    String @id @default(uuid())
+  name  String
+  color String
+
+  cardId String?
+  card   Card?  @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@map("labels")
+}

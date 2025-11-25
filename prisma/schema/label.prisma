@@ -1,8 +1,0 @@
-model Label {
-  id    String @id @default(uuid())
-  name  String
-  color String
-
-  cardId String?
-  card   Card?   @relation(fields: [cardId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-}

@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-
-echo "🔍 Linting and formatting changed files..."
-bunx lint-staged
-
-echo "✅ All checks passed. Committing..."
